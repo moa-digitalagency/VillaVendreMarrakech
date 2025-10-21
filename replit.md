@@ -68,6 +68,7 @@ Application web complète pour la vente en ligne de villas de luxe à Marrakech 
 │   └── uploads/                     # Photos uploadées
 ├── DEPLOYMENT.md                    # Guide de déploiement complet (Replit + VPS)
 ├── VPS_QUICK_START.md              # Guide rapide VPS (15 min)
+├── VPS_ERROR_FIX.md                # Guide de correction d'erreurs VPS (EN) ⭐
 ├── TROUBLESHOOTING.md              # Guide de dépannage complet ⭐
 ├── DATABASE_TOOLS.md               # Documentation outils de base de données
 ├── SEO.md                          # Documentation SEO complète
