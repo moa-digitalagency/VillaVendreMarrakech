@@ -35,7 +35,7 @@
                 {% set site_url = request.url_root %}
                 {% set whatsapp_message = "Bonjour, je souhaite prendre rendez-vous pour visiter la villa " ~ villa.title ~ " et obtenir plus d'informations. Lien: " ~ site_url %}
                 <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-search">
-                    📱 WhatsApp
+                    Nous Contacter
                 </a>
             </div>
         </div>
