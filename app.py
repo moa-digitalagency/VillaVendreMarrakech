@@ -1,14 +1,17 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from flask_cors import CORS
 from models import db, Villa
 import os
 from werkzeug.utils import secure_filename
+from werkzeug.security import check_password_hash, generate_password_hash
 import requests
 import json
 from PIL import Image
 import time
 import uuid
 from PyPDF2 import PdfReader
+from functools import wraps
+import shutil
 
 app = Flask(__name__)
 CORS(app)
@@ -26,10 +29,19 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', '@4dm1n')
 
 db.init_app(app)
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('admin_logged_in'):
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -101,18 +113,22 @@ Réponds UNIQUEMENT avec un objet JSON valide contenant ces champs (mets des val
             "https://openrouter.ai/api/v1/chat/completions",
             headers={
                 "Authorization": f"Bearer {openrouter_key}",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "HTTP-Referer": "https://villaeden.replit.app",
+                "X-Title": "Villa Eden Admin"
             },
             json={
-                "model": "meta-llama/llama-3.1-70b-instruct",
+                "model": "anthropic/claude-3.5-sonnet",
                 "messages": [
                     {
                         "role": "user",
                         "content": prompt
                     }
-                ]
+                ],
+                "temperature": 0.3,
+                "max_tokens": 4000
             },
-            timeout=60
+            timeout=90
         )
         
         if response.status_code == 200:
@@ -146,18 +162,22 @@ def enhance_text_with_ai(text, context=""):
             "https://openrouter.ai/api/v1/chat/completions",
             headers={
                 "Authorization": f"Bearer {openrouter_key}",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "HTTP-Referer": "https://villaeden.replit.app",
+                "X-Title": "Villa Eden Admin"
             },
             json={
-                "model": "meta-llama/llama-3.1-8b-instruct:free",
+                "model": "mistralai/mistral-large-latest",
                 "messages": [
                     {
                         "role": "user",
-                        "content": f"Améliore ce texte pour une annonce immobilière de luxe. {context}\n\nTexte: {text}\n\nRéponds uniquement avec le texte amélioré, sans explication."
+                        "content": f"Améliore ce texte pour une annonce immobilière de luxe en français. {context}\n\nTexte: {text}\n\nRéponds uniquement avec le texte amélioré, sans explication ni commentaire."
                     }
-                ]
+                ],
+                "temperature": 0.7,
+                "max_tokens": 1000
             },
-            timeout=30
+            timeout=45
         )
         
         if response.status_code == 200:
@@ -175,7 +195,24 @@ def index():
     villa = Villa.query.filter_by(is_active=True).first()
     return render_template('index.html', villa=villa)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if password == ADMIN_PASSWORD:
+            session['admin_logged_in'] = True
+            return redirect(url_for('admin'))
+        else:
+            return render_template('login.html', error='Mot de passe incorrect')
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('admin_logged_in', None)
+    return redirect(url_for('login'))
+
 @app.route('/admin')
+@login_required
 def admin():
     villa = Villa.query.first()
     return render_template('admin.html', villa=villa)
@@ -189,6 +226,7 @@ def safe_int(value, default=0):
         return default
 
 @app.route('/admin/save', methods=['POST'])
+@login_required
 def admin_save():
     data = request.form
     
@@ -226,6 +264,7 @@ def admin_save():
         return f"Erreur lors de la sauvegarde: {str(e)}", 500
 
 @app.route('/admin/upload', methods=['POST'])
+@login_required
 def upload_image():
     if 'image' not in request.files:
         return jsonify({'error': 'No file'}), 400
@@ -258,6 +297,7 @@ def upload_image():
     return jsonify({'error': 'Invalid file type'}), 400
 
 @app.route('/admin/delete-image/<filename>', methods=['POST'])
+@login_required
 def delete_image(filename):
     villa = Villa.query.first()
     if villa:
@@ -276,6 +316,7 @@ def delete_image(filename):
     return jsonify({'error': 'Image not found'}), 404
 
 @app.route('/admin/upload-pdf', methods=['POST'])
+@login_required
 def upload_pdf():
     if 'pdf' not in request.files:
         return jsonify({'error': 'No PDF file'}), 400
@@ -313,6 +354,7 @@ def upload_pdf():
         return jsonify({'error': f'Error processing PDF: {str(e)}'}), 500
 
 @app.route('/api/enhance', methods=['POST'])
+@login_required
 def enhance():
     data = request.json
     if not data:
@@ -324,6 +366,29 @@ def enhance():
     enhanced = enhance_text_with_ai(text, f"Contexte: {field}")
     
     return jsonify({'enhanced': enhanced})
+
+@app.route('/admin/reset', methods=['POST'])
+@login_required
+def reset_data():
+    try:
+        confirmation = request.form.get('confirmation')
+        if confirmation != 'SUPPRIMER':
+            return jsonify({'error': 'Confirmation incorrecte'}), 400
+        
+        Villa.query.delete()
+        db.session.commit()
+        
+        upload_dir = app.config['UPLOAD_FOLDER']
+        if os.path.exists(upload_dir):
+            for filename in os.listdir(upload_dir):
+                file_path = os.path.join(upload_dir, filename)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+        
+        return jsonify({'success': True, 'message': 'Toutes les données ont été supprimées'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/villa', methods=['GET'])
 def get_villa():

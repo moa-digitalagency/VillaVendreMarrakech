@@ -10,7 +10,10 @@
     <div class="admin-container">
         <header>
             <h1>🏡 Administration - Villa de Prestige</h1>
-            <a href="/" class="btn-preview">Voir le site</a>
+            <div class="header-actions">
+                <a href="/" class="btn-preview">Voir le site</a>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Déconnexion</a>
+            </div>
         </header>
 
         <div class="section pdf-upload-section">
@@ -172,8 +175,23 @@
 
             <div class="form-actions">
                 <button type="submit" class="btn-save">💾 Enregistrer</button>
+                <button type="button" class="btn-reset" onclick="openResetModal()">🗑️ Réinitialiser</button>
             </div>
         </form>
+    </div>
+
+    <!-- Modal de confirmation de réinitialisation -->
+    <div id="resetModal" class="modal">
+        <div class="modal-content">
+            <h3>⚠️ Réinitialisation Totale</h3>
+            <p>Cette action va <strong>supprimer définitivement</strong> toutes les données de la villa et toutes les photos uploadées.</p>
+            <p>Pour confirmer, tapez <strong>SUPPRIMER</strong> ci-dessous :</p>
+            <input type="text" id="confirmInput" placeholder="Tapez SUPPRIMER">
+            <div class="modal-actions">
+                <button class="btn-confirm" onclick="confirmReset()">Confirmer la suppression</button>
+                <button class="btn-cancel" onclick="closeResetModal()">Annuler</button>
+            </div>
+        </div>
     </div>
 
     <script src="/static/js/admin.js"></script>

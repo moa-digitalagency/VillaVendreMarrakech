@@ -158,3 +158,52 @@ document.getElementById('villaForm')?.addEventListener('submit', function(e) {
     button.textContent = '💾 Enregistrement...';
     button.disabled = true;
 });
+
+function openResetModal() {
+    document.getElementById('resetModal').classList.add('active');
+    document.getElementById('confirmInput').value = '';
+    document.getElementById('confirmInput').focus();
+}
+
+function closeResetModal() {
+    document.getElementById('resetModal').classList.remove('active');
+}
+
+async function confirmReset() {
+    const confirmInput = document.getElementById('confirmInput');
+    const confirmation = confirmInput.value.trim();
+    
+    if (confirmation !== 'SUPPRIMER') {
+        alert('Veuillez taper exactement "SUPPRIMER" pour confirmer.');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('confirmation', confirmation);
+    
+    try {
+        const response = await fetch('/admin/reset', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('✅ ' + result.message);
+            window.location.reload();
+        } else {
+            alert('❌ Erreur: ' + result.error);
+        }
+    } catch (error) {
+        alert('❌ Erreur réseau: ' + error.message);
+    } finally {
+        closeResetModal();
+    }
+}
+
+document.getElementById('resetModal')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeResetModal();
+    }
+});
