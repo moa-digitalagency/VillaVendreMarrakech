@@ -16,7 +16,29 @@ import shutil
 app = Flask(__name__)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+# Configure database URL
+# Try DATABASE_URL first, then build from PG* variables if not available
+database_url = os.environ.get('DATABASE_URL')
+if not database_url:
+    # Build DATABASE_URL from individual PostgreSQL variables (for VPS deployment)
+    pg_user = os.environ.get('PGUSER', 'postgres')
+    pg_password = os.environ.get('PGPASSWORD', '')
+    pg_host = os.environ.get('PGHOST', 'localhost')
+    pg_port = os.environ.get('PGPORT', '5432')
+    pg_database = os.environ.get('PGDATABASE', 'villa_sales')
+    
+    if pg_password:
+        database_url = f'postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_database}'
+    else:
+        database_url = f'postgresql://{pg_user}@{pg_host}:{pg_port}/{pg_database}'
+    
+    print(f"Built DATABASE_URL from PG* variables: postgresql://{pg_user}:***@{pg_host}:{pg_port}/{pg_database}")
+
+# Fix for postgres:// vs postgresql:// (Heroku compatibility)
+if database_url and database_url.startswith('postgres://'):
+    database_url = database_url.replace('postgres://', 'postgresql://', 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     'pool_pre_ping': True,
@@ -34,6 +56,30 @@ ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', '@4dm1n')
 db.init_app(app)
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# Initialize database tables automatically on startup
+def init_db():
+    """Initialize database tables if they don't exist"""
+    with app.app_context():
+        try:
+            # Import all models to ensure they're registered
+            from models import Villa
+            
+            # Create all tables
+            db.create_all()
+            print("✅ Database tables initialized successfully")
+            
+            # Check if we have any villas
+            villa_count = Villa.query.count()
+            print(f"📊 Current villas in database: {villa_count}")
+            
+        except Exception as e:
+            print(f"❌ Error initializing database: {e}")
+            print("⚠️  Make sure PostgreSQL is running and credentials are correct")
+            raise
+
+# Initialize database on startup
+init_db()
 
 def login_required(f):
     @wraps(f)

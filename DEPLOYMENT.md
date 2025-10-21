@@ -184,6 +184,272 @@ python app.py
 gunicorn --bind 0.0.0.0:5000 --workers 4 app:app
 ```
 
+### Production Deployment (VPS - Ubuntu/Debian)
+
+#### Prerequisites
+- Ubuntu 20.04+ or Debian 11+ VPS
+- Root or sudo access
+- Domain name pointed to your VPS IP (e.g., villaavendremarrakech.com)
+
+#### Step-by-Step VPS Deployment
+
+**1. Update system and install dependencies**
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y python3 python3-pip python3-venv postgresql postgresql-contrib nginx git
+```
+
+**2. Create PostgreSQL database and user**
+```bash
+# Switch to postgres user
+sudo -u postgres psql
+
+# In PostgreSQL console:
+CREATE DATABASE villa_sales;
+CREATE USER villa_user WITH PASSWORD 'your_secure_password_here';
+GRANT ALL PRIVILEGES ON DATABASE villa_sales TO villa_user;
+\q
+```
+
+**3. Clone and setup application**
+```bash
+# Create app directory
+sudo mkdir -p /var/www/villaavendremarrakech
+cd /var/www/villaavendremarrakech
+
+# Clone your repository
+sudo git clone <your-repo-url> .
+
+# Set permissions
+sudo chown -R $USER:www-data /var/www/villaavendremarrakech
+chmod -R 755 /var/www/villaavendremarrakech
+
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+**4. Create uploads directory**
+```bash
+mkdir -p static/uploads
+chmod 775 static/uploads
+sudo chown -R $USER:www-data static/uploads
+```
+
+**5. Configure environment variables**
+```bash
+# Create .env file
+nano .env
+```
+
+Add the following content (replace with your values):
+```env
+# Database Configuration (REQUIRED for VPS)
+PGHOST=localhost
+PGPORT=5432
+PGUSER=villa_user
+PGPASSWORD=your_secure_password_here
+PGDATABASE=villa_sales
+
+# Flask Configuration (REQUIRED)
+SECRET_KEY=generate_with_python_secrets_token_hex_32
+FLASK_ENV=production
+FLASK_DEBUG=0
+
+# Admin Authentication (REQUIRED)
+ADMIN_PASSWORD=your_secure_admin_password
+
+# OpenRouter API (REQUIRED for AI features)
+OPENROUTER_API_KEY=your_openrouter_api_key
+
+# Application Settings (Optional)
+UPLOAD_FOLDER=static/uploads
+MAX_CONTENT_LENGTH=16777216
+```
+
+**Generate SECRET_KEY:**
+```bash
+python3 -c "import secrets; print(secrets.token_hex(32))"
+```
+
+**6. Test the application**
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Run the app (this will auto-create database tables)
+python app.py
+
+# You should see:
+# ✅ Database tables initialized successfully
+# 📊 Current villas in database: 0
+```
+
+Press `Ctrl+C` to stop.
+
+**7. Create systemd service for auto-start**
+```bash
+sudo nano /etc/systemd/system/villaavendremarrakech.service
+```
+
+Add this content:
+```ini
+[Unit]
+Description=Villa à Vendre Marrakech - Flask Application
+After=network.target postgresql.service
+
+[Service]
+Type=notify
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/villaavendremarrakech
+Environment="PATH=/var/www/villaavendremarrakech/venv/bin"
+EnvironmentFile=/var/www/villaavendremarrakech/.env
+ExecStart=/var/www/villaavendremarrakech/venv/bin/gunicorn --bind 127.0.0.1:8000 --workers 4 --timeout 120 --access-logfile - --error-logfile - app:app
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+**8. Start and enable the service**
+```bash
+sudo systemctl daemon-reload
+sudo systemctl start villaavendremarrakech
+sudo systemctl enable villaavendremarrakech
+sudo systemctl status villaavendremarrakech
+```
+
+**9. Configure Nginx reverse proxy**
+```bash
+sudo nano /etc/nginx/sites-available/villaavendremarrakech
+```
+
+Add this content:
+```nginx
+server {
+    listen 80;
+    server_name villaavendremarrakech.com www.villaavendremarrakech.com;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+
+    # Logs
+    access_log /var/log/nginx/villaavendremarrakech_access.log;
+    error_log /var/log/nginx/villaavendremarrakech_error.log;
+
+    # Max upload size (16MB)
+    client_max_body_size 16M;
+
+    # Static files
+    location /static/ {
+        alias /var/www/villaavendremarrakech/static/;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # Proxy to Flask app
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_redirect off;
+        proxy_buffering off;
+    }
+}
+```
+
+**Enable the site:**
+```bash
+sudo ln -s /etc/nginx/sites-available/villaavendremarrakech /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+**10. Install SSL certificate (HTTPS) with Let's Encrypt**
+```bash
+# Install certbot
+sudo apt install -y certbot python3-certbot-nginx
+
+# Get SSL certificate
+sudo certbot --nginx -d villaavendremarrakech.com -d www.villaavendremarrakech.com
+
+# Follow prompts and select option 2 (redirect HTTP to HTTPS)
+```
+
+**11. Configure firewall**
+```bash
+sudo ufw allow 22/tcp    # SSH
+sudo ufw allow 80/tcp    # HTTP
+sudo ufw allow 443/tcp   # HTTPS
+sudo ufw enable
+sudo ufw status
+```
+
+**12. Verify deployment**
+```bash
+# Check service status
+sudo systemctl status villaavendremarrakech
+
+# Check logs
+sudo journalctl -u villaavendremarrakech -f
+
+# Test locally
+curl http://localhost:8000/
+
+# Test domain
+curl https://villaavendremarrakech.com/
+```
+
+**Access your application:**
+- Public page: `https://villaavendremarrakech.com/`
+- Admin login: `https://villaavendremarrakech.com/login`
+
+#### VPS Maintenance Commands
+
+**Restart application:**
+```bash
+sudo systemctl restart villaavendremarrakech
+```
+
+**View logs:**
+```bash
+# Application logs
+sudo journalctl -u villaavendremarrakech -n 100 -f
+
+# Nginx access logs
+sudo tail -f /var/log/nginx/villaavendremarrakech_access.log
+
+# Nginx error logs
+sudo tail -f /var/log/nginx/villaavendremarrakech_error.log
+```
+
+**Update application:**
+```bash
+cd /var/www/villaavendremarrakech
+source venv/bin/activate
+git pull
+pip install -r requirements.txt
+sudo systemctl restart villaavendremarrakech
+```
+
+**Database backup:**
+```bash
+# Backup
+sudo -u postgres pg_dump villa_sales > backup_$(date +%Y%m%d_%H%M%S).sql
+
+# Restore
+sudo -u postgres psql villa_sales < backup_20251021_120000.sql
+```
+
 ### Production Deployment (Replit)
 
 1. **Set environment secrets** in Replit:
