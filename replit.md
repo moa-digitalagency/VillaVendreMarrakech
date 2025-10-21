@@ -52,6 +52,7 @@ Application web complète pour la vente en ligne de villas de luxe à Marrakech 
 ```
 ├── app.py                  # Application Flask principale
 ├── models.py              # Modèles de base de données
+├── fix_database.py        # Script de correction/migration automatique de la DB
 ├── templates/
 │   ├── admin.html         # Interface d'administration
 │   ├── login.html         # Page de connexion (thème clair)
@@ -63,7 +64,10 @@ Application web complète pour la vente en ligne de villas de luxe à Marrakech 
 │   ├── js/
 │   │   └── admin.js       # Scripts admin (gestion modes, event listeners)
 │   └── uploads/           # Photos uploadées
-├── README.md              # Documentation complète
+├── DEPLOYMENT.md          # Guide de déploiement complet (Replit + VPS)
+├── VPS_QUICK_START.md    # Guide rapide VPS (15 min)
+├── SEO.md                 # Documentation SEO complète
+├── .env.example           # Template des variables d'environnement
 └── replit.md              # Documentation technique
 ```
 
@@ -200,10 +204,27 @@ Upload photos (min. 5) → Enregistrer → Terminé
 Le projet inclut une documentation complète de déploiement :
 
 ### Fichiers de Déploiement
-- **DEPLOYMENT.md** : Guide complet bilingue (EN/FR) avec schémas DB, scripts init, env vars
-- **init_database.sql** : Script PostgreSQL d'initialisation automatique avec triggers et index
+- **DEPLOYMENT.md** : Guide complet (EN/FR) avec instructions détaillées Replit + VPS
+- **VPS_QUICK_START.md** : Guide rapide VPS (15 minutes, copy-paste)
+- **fix_database.py** : Script de correction/migration automatique de la base de données ⭐
 - **requirements.txt** : Liste complète des dépendances Python
 - **.env.example** : Template de configuration des variables d'environnement
+
+### Script fix_database.py ⭐ OBLIGATOIRE pour VPS
+Script automatique qui :
+- ✅ Crée la table `villa` si elle n'existe pas
+- ✅ Ajoute toutes les colonnes manquantes (22 colonnes)
+- ✅ Crée les triggers pour `updated_at`
+- ✅ Crée les index optimisés (created_at, price, location)
+- ✅ Affiche un résumé complet de la base de données
+
+**Utilisation** :
+```bash
+source venv/bin/activate
+python fix_database.py
+```
+
+**Note** : Ce script résout l'erreur `column villa.reference does not exist` lors du déploiement VPS
 
 ### Schéma de Base de Données
 - Table `villa` avec 18 colonnes (titre, prix, localisation, surface, etc.)

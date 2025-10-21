@@ -81,9 +81,35 @@ python3 -c "import secrets; print('SECRET_KEY=' + secrets.token_hex(32))" >> .en
 nano .env  # Edit and paste the SECRET_KEY
 ```
 
-### 5️⃣ Test Application (1 min)
+### 5️⃣ Fix/Initialize Database (1 min) ⭐ OBLIGATOIRE
 ```bash
 source venv/bin/activate
+
+# Lancer le script de correction de la base de données
+python fix_database.py
+
+# Output attendu:
+# 🔗 Connexion à la base de données...
+# ✅ Connexion établie avec succès
+# ✅ La table villa existe (ou sera créée)
+# ⚠️  Colonnes manquantes détectées: XX
+# ✅ Ajouté: reference (VARCHAR(50))
+# ✅ Ajouté: title (VARCHAR(200))
+# ... (toutes les colonnes manquantes)
+# ✅ Triggers créés avec succès
+# 🚀 Création des index...
+# ✅ CORRECTION TERMINÉE AVEC SUCCÈS !
+```
+
+**Ce script est OBLIGATOIRE** - Il crée/corrige automatiquement :
+- La table `villa` si elle n'existe pas
+- Toutes les colonnes manquantes
+- Les triggers pour `updated_at`
+- Les index pour la performance
+
+### 6️⃣ Test Application (1 min)
+```bash
+# Test avec Flask dev server
 python app.py
 
 # You should see:
@@ -93,7 +119,7 @@ python app.py
 # Press Ctrl+C to stop
 ```
 
-### 6️⃣ Create Systemd Service (2 min)
+### 7️⃣ Create Systemd Service (2 min)
 ```bash
 sudo cat > /etc/systemd/system/villaavendremarrakech.service << 'EOF'
 [Unit]
@@ -120,7 +146,7 @@ sudo systemctl enable villaavendremarrakech
 sudo systemctl status villaavendremarrakech
 ```
 
-### 7️⃣ Configure Nginx (2 min)
+### 8️⃣ Configure Nginx (2 min)
 ```bash
 sudo cat > /etc/nginx/sites-available/villaavendremarrakech << 'EOF'
 server {
@@ -149,7 +175,7 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-### 8️⃣ Install SSL Certificate (2 min)
+### 9️⃣ Install SSL Certificate (2 min)
 ```bash
 sudo apt install -y certbot python3-certbot-nginx
 sudo certbot --nginx -d villaavendremarrakech.com -d www.villaavendremarrakech.com
@@ -157,7 +183,7 @@ sudo certbot --nginx -d villaavendremarrakech.com -d www.villaavendremarrakech.c
 # Follow prompts and select option 2 (redirect HTTP to HTTPS)
 ```
 
-### 9️⃣ Configure Firewall (1 min)
+### 🔟 Configure Firewall (1 min)
 ```bash
 sudo ufw allow 22/tcp
 sudo ufw allow 80/tcp

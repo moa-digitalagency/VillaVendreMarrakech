@@ -275,12 +275,36 @@ MAX_CONTENT_LENGTH=16777216
 python3 -c "import secrets; print(secrets.token_hex(32))"
 ```
 
-**6. Test the application**
+**6. Fix/Initialize the database** ⭐ IMPORTANT
 ```bash
 # Activate virtual environment
 source venv/bin/activate
 
-# Run the app (this will auto-create database tables)
+# Run the database fix script (ajoute toutes les colonnes manquantes)
+python fix_database.py
+
+# You should see:
+# 🔗 Connexion à la base de données...
+# ✅ Connexion établie avec succès
+# ✅ La table villa existe
+# ⚠️  Colonnes manquantes détectées: X
+# ✅ Ajouté: reference (VARCHAR(50))
+# ✅ Ajouté: title (VARCHAR(200))
+# ... (toutes les colonnes)
+# ✅ Triggers créés avec succès
+# 🚀 Création des index...
+# ✅ CORRECTION TERMINÉE AVEC SUCCÈS !
+```
+
+**Note**: Ce script est **OBLIGATOIRE** lors du premier déploiement. Il :
+- Crée la table `villa` si elle n'existe pas
+- Ajoute toutes les colonnes manquantes
+- Crée les triggers pour `updated_at`
+- Crée les index pour optimiser les performances
+
+**7. Test the application**
+```bash
+# Test avec Flask dev server
 python app.py
 
 # You should see:
@@ -290,7 +314,7 @@ python app.py
 
 Press `Ctrl+C` to stop.
 
-**7. Create systemd service for auto-start**
+**8. Create systemd service for auto-start**
 ```bash
 sudo nano /etc/systemd/system/villaavendremarrakech.service
 ```
@@ -316,7 +340,7 @@ RestartSec=10
 WantedBy=multi-user.target
 ```
 
-**8. Start and enable the service**
+**9. Start and enable the service**
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl start villaavendremarrakech
@@ -324,7 +348,7 @@ sudo systemctl enable villaavendremarrakech
 sudo systemctl status villaavendremarrakech
 ```
 
-**9. Configure Nginx reverse proxy**
+**10. Configure Nginx reverse proxy**
 ```bash
 sudo nano /etc/nginx/sites-available/villaavendremarrakech
 ```
@@ -374,7 +398,7 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-**10. Install SSL certificate (HTTPS) with Let's Encrypt**
+**11. Install SSL certificate (HTTPS) with Let's Encrypt**
 ```bash
 # Install certbot
 sudo apt install -y certbot python3-certbot-nginx
@@ -385,7 +409,7 @@ sudo certbot --nginx -d villaavendremarrakech.com -d www.villaavendremarrakech.c
 # Follow prompts and select option 2 (redirect HTTP to HTTPS)
 ```
 
-**11. Configure firewall**
+**12. Configure firewall**
 ```bash
 sudo ufw allow 22/tcp    # SSH
 sudo ufw allow 80/tcp    # HTTP
@@ -394,7 +418,7 @@ sudo ufw enable
 sudo ufw status
 ```
 
-**12. Verify deployment**
+**13. Verify deployment**
 ```bash
 # Check service status
 sudo systemctl status villaavendremarrakech
