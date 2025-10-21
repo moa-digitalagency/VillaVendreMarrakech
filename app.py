@@ -8,6 +8,7 @@ import json
 from PIL import Image
 import time
 import uuid
+from PyPDF2 import PdfReader
 
 app = Flask(__name__)
 CORS(app)
@@ -45,6 +46,89 @@ def optimize_image(filepath):
     except Exception as e:
         print(f"Error optimizing image: {e}")
         return filepath
+
+def extract_text_from_pdf(pdf_path):
+    try:
+        reader = PdfReader(pdf_path)
+        text = ""
+        for page in reader.pages:
+            text += page.extract_text() + "\n"
+        return text
+    except Exception as e:
+        print(f"Error extracting PDF text: {e}")
+        return ""
+
+def extract_villa_data_with_ai(pdf_text):
+    openrouter_key = os.environ.get('OPENROUTER_API_KEY')
+    if not openrouter_key:
+        return None
+    
+    try:
+        prompt = f"""Analyse ce texte extrait d'un PDF de vente de villa et extrait les informations structurées.
+
+Texte du PDF:
+{pdf_text}
+
+Réponds UNIQUEMENT avec un objet JSON valide contenant ces champs (mets des valeurs vides "" ou 0 si l'information n'est pas disponible):
+{{
+    "reference": "référence de la villa",
+    "title": "titre court et attractif de la villa",
+    "price": nombre entier du prix en euros,
+    "location": "ville ou région",
+    "distance_city": "distance depuis la ville principale",
+    "description": "description complète et attractive",
+    "terrain_area": nombre entier de la surface du terrain en m²,
+    "built_area": nombre entier de la surface construite en m²,
+    "bedrooms": nombre de chambres/suites,
+    "pool_size": "dimensions de la piscine",
+    "features": "liste des caractéristiques principales, une par ligne",
+    "equipment": "liste des équipements et confort, une par ligne",
+    "business_info": "informations sur l'exploitation commerciale",
+    "investment_benefits": "atouts pour investisseurs",
+    "documents": "documents disponibles",
+    "contact_phone": "numéro de téléphone",
+    "contact_email": "email",
+    "contact_website": "site web"
+}}"""
+
+        response = requests.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {openrouter_key}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": "meta-llama/llama-3.1-70b-instruct",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ]
+            },
+            timeout=60
+        )
+        
+        if response.status_code == 200:
+            result = response.json()
+            content = result['choices'][0]['message']['content'].strip()
+            
+            if content.startswith('```json'):
+                content = content[7:]
+            if content.startswith('```'):
+                content = content[3:]
+            if content.endswith('```'):
+                content = content[:-3]
+            content = content.strip()
+            
+            data = json.loads(content)
+            return data
+        else:
+            print(f"OpenRouter API error: {response.status_code}")
+            return None
+    except Exception as e:
+        print(f"AI extraction error: {e}")
+        return None
 
 def enhance_text_with_ai(text, context=""):
     openrouter_key = os.environ.get('OPENROUTER_API_KEY')
@@ -184,6 +268,42 @@ def delete_image(filename):
             return jsonify({'success': True})
     
     return jsonify({'error': 'Image not found'}), 404
+
+@app.route('/admin/upload-pdf', methods=['POST'])
+def upload_pdf():
+    if 'pdf' not in request.files:
+        return jsonify({'error': 'No PDF file'}), 400
+    
+    file = request.files['pdf']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+    
+    if not file.filename.lower().endswith('.pdf'):
+        return jsonify({'error': 'File must be a PDF'}), 400
+    
+    try:
+        temp_filename = f"temp_{uuid.uuid4()}.pdf"
+        temp_filepath = os.path.join(app.config['UPLOAD_FOLDER'], temp_filename)
+        file.save(temp_filepath)
+        
+        pdf_text = extract_text_from_pdf(temp_filepath)
+        
+        os.remove(temp_filepath)
+        
+        if not pdf_text:
+            return jsonify({'error': 'Could not extract text from PDF'}), 400
+        
+        villa_data = extract_villa_data_with_ai(pdf_text)
+        
+        if not villa_data:
+            return jsonify({'error': 'Could not extract villa data. Make sure OPENROUTER_API_KEY is configured.'}), 400
+        
+        return jsonify({'success': True, 'data': villa_data})
+    
+    except Exception as e:
+        if os.path.exists(temp_filepath):
+            os.remove(temp_filepath)
+        return jsonify({'error': f'Error processing PDF: {str(e)}'}), 500
 
 @app.route('/api/enhance', methods=['POST'])
 def enhance():
