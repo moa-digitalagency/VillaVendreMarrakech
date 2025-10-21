@@ -943,12 +943,12 @@ body {
     
     /* Contact mobile - en colonne */
     .contact-modern {
-        padding: 50px 15px;
+        padding: 50px 10px;
         background-attachment: scroll;
     }
     
     .contact-box {
-        padding: 35px 20px;
+        padding: 35px 25px;
         max-width: 100%;
     }
     
@@ -968,8 +968,8 @@ body {
     }
     
     .contact-method {
-        padding: 15px;
-        gap: 15px;
+        padding: 15px 12px;
+        gap: 12px;
         flex-direction: row;
         align-items: center;
     }
@@ -990,7 +990,8 @@ body {
     }
     
     .contact-details a {
-        font-size: 1rem;
+        font-size: 0.95rem;
+        word-break: break-all;
     }
     
     .btn-contact-large {
