@@ -26,13 +26,36 @@
             <div id="pdfStatus" class="pdf-status"></div>
         </div>
 
+        <div class="section photo-upload-section">
+            <h2>📸 Photos de la Villa</h2>
+            <p class="section-description">Ajoutez les photos de votre villa (optimisation automatique en JPEG).</p>
+            
+            <div id="imageGallery" class="image-gallery">
+                {% if villa and villa.get_images_list() %}
+                    {% for img in villa.get_images_list() %}
+                    <div class="image-item" data-filename="{{ img }}">
+                        <img src="/static/uploads/{{ img }}" alt="Villa">
+                        <button type="button" class="btn-delete" onclick="deleteImage('{{ img }}')">×</button>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="upload-area">
+                <input type="file" id="imageUpload" accept="image/*" multiple onchange="uploadImages(this)">
+                <label for="imageUpload" class="upload-label">
+                    📸 Cliquez pour ajouter des photos
+                </label>
+            </div>
+        </div>
+
         <div class="divider">
-            <span>OU</span>
+            <span>PUIS</span>
         </div>
 
         <form id="villaForm" method="POST" action="/admin/save">
             <div class="section">
-                <h2>Informations Principales</h2>
+                <h2>Informations de la Villa</h2>
+                <p class="section-description">Vérifiez et ajustez les informations (remplies automatiquement si vous avez uploadé un PDF).</p>
                 
                 <div class="form-group">
                     <label>Référence</label>
@@ -100,26 +123,6 @@
                 <div class="form-group">
                     <label>Équipements (un par ligne)</label>
                     <textarea name="features" rows="6">{{ villa.features if villa else '' }}</textarea>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>Photos</h2>
-                <div id="imageGallery" class="image-gallery">
-                    {% if villa and villa.get_images_list() %}
-                        {% for img in villa.get_images_list() %}
-                        <div class="image-item" data-filename="{{ img }}">
-                            <img src="/static/uploads/{{ img }}" alt="Villa">
-                            <button type="button" class="btn-delete" onclick="deleteImage('{{ img }}')">×</button>
-                        </div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                <div class="upload-area">
-                    <input type="file" id="imageUpload" accept="image/*" multiple onchange="uploadImages(this)">
-                    <label for="imageUpload" class="upload-label">
-                        📸 Cliquez pour ajouter des photos
-                    </label>
                 </div>
             </div>
 

@@ -65,6 +65,19 @@ form {
     border-bottom: 3px solid rgba(255, 255, 255, 0.3);
 }
 
+.photo-upload-section {
+    padding: 40px;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: white;
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.photo-upload-section h2 {
+    color: white;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+}
+
 .section-description {
     font-size: 1.1rem;
     margin-bottom: 25px;
@@ -153,13 +166,20 @@ form {
     display: inline-block;
     background: white;
     padding: 10px 30px;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 700;
     color: #667eea;
     position: relative;
     z-index: 1;
     border: 2px solid #667eea;
     border-radius: 50px;
+}
+
+.section .section-description {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: #7f8c8d;
+    font-weight: normal;
 }
 
 .section {
