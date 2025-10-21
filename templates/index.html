@@ -39,6 +39,8 @@
                 </a>
             </div>
         </div>
+        <!-- Dégradé de transition vers stats -->
+        <div class="hero-gradient-transition"></div>
     </section>
 
     <!-- Quick Stats -->
@@ -77,7 +79,7 @@
         </div>
     </section>
 
-    <!-- Description -->
+    <!-- Description avec 3 Images -->
     {% if villa.description %}
     <section class="content-image-section">
         <div class="container-wide">
@@ -94,15 +96,20 @@
                         📱 Prendre Rendez-vous sur WhatsApp
                     </a>
                 </div>
-                <div class="image-block-double">
+                <div class="image-block-triple">
                     {% if villa.get_images_list()|length > 3 %}
-                    <div class="double-img-main">
+                    <div class="triple-img-main">
                         <img src="/static/uploads/{{ villa.get_images_list()[3] }}" alt="Villa principale">
                     </div>
                     {% endif %}
                     {% if villa.get_images_list()|length > 4 %}
-                    <div class="double-img-small">
-                        <img src="/static/uploads/{{ villa.get_images_list()[4] }}" alt="Villa détail">
+                    <div class="triple-img-small">
+                        <img src="/static/uploads/{{ villa.get_images_list()[4] }}" alt="Villa détail 1">
+                    </div>
+                    {% endif %}
+                    {% if villa.get_images_list()|length > 5 %}
+                    <div class="triple-img-small">
+                        <img src="/static/uploads/{{ villa.get_images_list()[5] }}" alt="Villa détail 2">
                     </div>
                     {% endif %}
                 </div>
@@ -140,9 +147,9 @@
         </div>
     </section>
 
-    <!-- Features avec Background Parallax -->
+    <!-- Features avec Background Image -->
     {% if villa.features %}
-    <section class="features-parallax">
+    <section class="features-parallax" {% if villa.get_images_list()|length > 6 %}style="background-image: url('/static/uploads/{{ villa.get_images_list()[6] }}')"{% endif %}>
         <div class="parallax-overlay"></div>
         <div class="container">
             <h2 class="section-title-center white">Caractéristiques Principales</h2>
@@ -190,12 +197,12 @@
     {% endif %}
 
     <!-- Galerie Photos Complète -->
-    {% if villa.get_images_list()|length > 5 %}
+    {% if villa.get_images_list()|length > 6 %}
     <section class="gallery-modern">
         <div class="container">
             <h2 class="section-title-center">Galerie Photos</h2>
             <div class="gallery-masonry">
-                {% for img in villa.get_images_list()[5:] %}
+                {% for img in villa.get_images_list()[6:] %}
                 <div class="gallery-item-modern">
                     <img src="/static/uploads/{{ img }}" alt="Photo {{ loop.index }}">
                     <div class="gallery-hover">
@@ -208,8 +215,8 @@
     </section>
     {% endif %}
 
-    <!-- Contact Section -->
-    <section class="contact-modern" id="contact">
+    <!-- Contact Section avec Background Image -->
+    <section class="contact-modern" id="contact" {% if villa.get_images_list()|length > 7 %}style="background-image: url('/static/uploads/{{ villa.get_images_list()[7] }}')"{% endif %}>
         <div class="contact-overlay"></div>
         <div class="container">
             <div class="contact-box">
