@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session, send_from_directory
 from flask_cors import CORS
 from models import db, Villa
 import os
@@ -194,6 +194,14 @@ def enhance_text_with_ai(text, context=""):
 def index():
     villa = Villa.query.filter_by(is_active=True).first()
     return render_template('index.html', villa=villa)
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory('static', 'robots.txt', mimetype='text/plain')
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory('static', 'sitemap.xml', mimetype='application/xml')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

@@ -1,0 +1,18 @@
+# robots.txt pour villaavendremarrakech.com
+# Optimisé pour le référencement naturel des villas de luxe à Marrakech
+
+User-agent: *
+Allow: /
+Allow: /static/
+Allow: /static/uploads/
+
+# Bloquer l'interface admin
+Disallow: /admin
+Disallow: /login
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://villaavendremarrakech.com/sitemap.xml
+
+# Crawler-Delay (optionnel, pour éviter la surcharge serveur)
+Crawl-delay: 1

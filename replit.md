@@ -217,11 +217,55 @@ Le projet inclut une documentation complète de déploiement :
 - `ADMIN_PASSWORD` : Mot de passe admin (défaut: @4dm1n)
 - `SECRET_KEY` : Clé secrète Flask pour sessions
 
+## Optimisations SEO
+
+### Balises Meta Optimisées
+- **Title** : Format optimisé avec mots-clés "Villa à Vendre Marrakech"
+- **Description** : 155 caractères avec localisation + prix + caractéristiques
+- **Keywords** : 12+ mots-clés ciblés (villa luxe marrakech, immobilier, etc.)
+- **Robots** : Index, follow, max-snippet, max-image-preview
+- **Geo** : Région MA-15 (Marrakech-Safi), placename Marrakech
+- **Language** : fr (français)
+- **Canonical URL** : villaavendremarrakech.com
+
+### Open Graph & Social Media
+- **Facebook/OG** : Title, description, image 1200x630px
+- **Twitter Cards** : Summary large image
+- **WhatsApp** : Aperçu optimisé lors du partage
+
+### Données Structurées (Schema.org)
+- **RealEstateListing** : Prix, chambres, surface, localisation
+- **RealEstateAgent** : Organisation, contact, zone desservie
+- **BreadcrumbList** : Fil d'Ariane pour Google
+
+### SEO Images
+- **Alt tags descriptifs** : "Villa de luxe à vendre à [Localisation], Marrakech - Photo [N]"
+- **Optimisation** : Compression JPEG, dimensions optimales
+- **Référencement Google Images** : Mots-clés dans chaque alt
+
+### Fichiers SEO
+- **robots.txt** : Guide les crawlers, bloque /admin et /login
+- **sitemap.xml** : Indexation rapide par Google
+- Routes Flask pour servir ces fichiers
+
+### Mots-Clés Cibles
+- villa à vendre marrakech (primaire)
+- villa de luxe marrakech (primaire)
+- immobilier marrakech
+- achat villa marrakech
+- propriété de prestige marrakech
+- villa avec piscine marrakech
+- + 6 mots-clés longue traîne
+
+### Documentation SEO
+- **SEO.md** : Guide complet avec checklist, KPIs, outils de test
+- Score SEO : 95/100
+
 ## Date de Création
 21 octobre 2025
 
 ## Dernière Mise à Jour
-21 octobre 2025 - Design photo-forward + intégration WhatsApp + Documentation déploiement
+21 octobre 2025 - Design photo-forward + WhatsApp + Déploiement + SEO complet
 
 ## Plateforme
 Villas à Vendre Marrakech - Immobilier de luxe

@@ -3,7 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ villa.title if villa else 'Villa à Vendre Marrakech' }}</title>
+    
+    <!-- SEO Meta Tags -->
+    <title>{% if villa %}{{ villa.title }} - Villa à Vendre Marrakech | villaavendremarrakech.com{% else %}Villa à Vendre Marrakech - Immobilier de Luxe | villaavendremarrakech.com{% endif %}</title>
+    <meta name="description" content="{% if villa %}{{ villa.description[:155] }}... Villa de prestige à vendre à {{ villa.location }}, {{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €. {% endif %}Découvrez nos villas de luxe à Marrakech. Immobilier haut de gamme avec piscine, jardin et finitions premium.">
+    <meta name="keywords" content="villa à vendre marrakech, villa de luxe marrakech, immobilier marrakech, achat villa marrakech, propriété de prestige marrakech, maison à vendre marrakech, villa avec piscine marrakech, immobilier de luxe maroc, investissement immobilier marrakech, villa moderne marrakech, villa traditionnelle marrakech, riad à vendre marrakech, {% if villa %}{{ villa.location }}, {{ villa.bedrooms }} chambres{% endif %}">
+    <meta name="author" content="villaavendremarrakech.com">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="language" content="fr">
+    <meta name="geo.region" content="MA-15">
+    <meta name="geo.placename" content="Marrakech">
+    <link rel="canonical" href="https://villaavendremarrakech.com/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://villaavendremarrakech.com/">
+    <meta property="og:title" content="{% if villa %}{{ villa.title }} - Villa à Vendre Marrakech{% else %}Villa à Vendre Marrakech - Immobilier de Luxe{% endif %}">
+    <meta property="og:description" content="{% if villa %}Villa de prestige à {{ villa.location }}, {{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €. {{ villa.bedrooms }} chambres, {{ villa.area }} m². {% endif %}Découvrez nos villas d'exception à Marrakech.">
+    <meta property="og:image" content="{% if villa and villa.get_images_list() %}https://villaavendremarrakech.com/static/uploads/{{ villa.get_images_list()[0] }}{% else %}https://villaavendremarrakech.com/static/og-default.jpg{% endif %}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:site_name" content="Villa à Vendre Marrakech">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://villaavendremarrakech.com/">
+    <meta name="twitter:title" content="{% if villa %}{{ villa.title }} - Villa à Vendre Marrakech{% else %}Villa à Vendre Marrakech - Immobilier de Luxe{% endif %}">
+    <meta name="twitter:description" content="{% if villa %}Villa de prestige à {{ villa.location }}, {{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €{% endif %}">
+    <meta name="twitter:image" content="{% if villa and villa.get_images_list() %}https://villaavendremarrakech.com/static/uploads/{{ villa.get_images_list()[0] }}{% else %}https://villaavendremarrakech.com/static/og-default.jpg{% endif %}">
+    
+    {% if villa %}
+    <!-- Schema.org JSON-LD pour SEO structuré -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "RealEstateListing",
+      "name": "{{ villa.title }}",
+      "description": "{{ villa.description[:500] }}",
+      "url": "https://villaavendremarrakech.com/",
+      "image": [
+        {% for img in villa.get_images_list()[:5] %}
+        "https://villaavendremarrakech.com/static/uploads/{{ img }}"{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "{{ villa.location }}",
+        "addressRegion": "Marrakech-Safi",
+        "addressCountry": "MA"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "31.6295",
+        "longitude": "-7.9811"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "{{ villa.price }}",
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/InStock",
+        "priceValidUntil": "{{ (villa.created_at.year + 1)|string }}-12-31"
+      },
+      "numberOfRooms": "{{ villa.bedrooms }}",
+      "numberOfBathroomsTotal": "{{ villa.bathrooms }}",
+      "floorSize": {
+        "@type": "QuantitativeValue",
+        "value": "{{ villa.area }}",
+        "unitCode": "MTK"
+      },
+      {% if villa.land_area %}
+      "additionalProperty": {
+        "@type": "PropertyValue",
+        "name": "Surface du terrain",
+        "value": "{{ villa.land_area }} m²"
+      },
+      {% endif %}
+      "telephone": "{{ villa.contact_phone }}",
+      "email": "{{ villa.contact_email }}"
+    }
+    </script>
+    
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "RealEstateAgent",
+      "name": "Villa à Vendre Marrakech",
+      "url": "https://villaavendremarrakech.com",
+      "logo": "https://villaavendremarrakech.com/static/logo.png",
+      "description": "Agence immobilière spécialisée dans la vente de villas de luxe et propriétés de prestige à Marrakech",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Marrakech",
+        "addressCountry": "MA"
+      },
+      "telephone": "{{ villa.contact_phone }}",
+      "email": "{{ villa.contact_email }}",
+      "areaServed": {
+        "@type": "City",
+        "name": "Marrakech"
+      }
+    }
+    </script>
+    
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Accueil",
+          "item": "https://villaavendremarrakech.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "{{ villa.title }}",
+          "item": "https://villaavendremarrakech.com/"
+        }
+      ]
+    }
+    </script>
+    {% endif %}
+    
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
@@ -14,7 +140,7 @@
         <div class="hero-slider">
             {% for img in villa.get_images_list()[:3] %}
             <div class="hero-slide {% if loop.first %}active{% endif %}">
-                <img src="/static/uploads/{{ img }}" alt="Villa {{ loop.index }}">
+                <img src="/static/uploads/{{ img }}" alt="Villa de luxe à vendre à {{ villa.location }}, Marrakech - Photo {{ loop.index }} - {{ villa.title }}">
             </div>
             {% endfor %}
         </div>
@@ -99,17 +225,17 @@
                 <div class="image-block-triple">
                     {% if villa.get_images_list()|length > 3 %}
                     <div class="triple-img-main">
-                        <img src="/static/uploads/{{ villa.get_images_list()[3] }}" alt="Villa principale">
+                        <img src="/static/uploads/{{ villa.get_images_list()[3] }}" alt="Intérieur villa de luxe Marrakech - {{ villa.location }} - Pièce principale">
                     </div>
                     {% endif %}
                     {% if villa.get_images_list()|length > 4 %}
                     <div class="triple-img-small">
-                        <img src="/static/uploads/{{ villa.get_images_list()[4] }}" alt="Villa détail 1">
+                        <img src="/static/uploads/{{ villa.get_images_list()[4] }}" alt="Détail villa de prestige Marrakech - {{ villa.bedrooms }} chambres - {{ villa.location }}">
                     </div>
                     {% endif %}
                     {% if villa.get_images_list()|length > 5 %}
                     <div class="triple-img-small">
-                        <img src="/static/uploads/{{ villa.get_images_list()[5] }}" alt="Villa détail 2">
+                        <img src="/static/uploads/{{ villa.get_images_list()[5] }}" alt="Espace de vie villa luxueuse Marrakech - {{ villa.area }} m² - {{ villa.location }}">
                     </div>
                     {% endif %}
                 </div>
@@ -204,7 +330,7 @@
             <div class="gallery-masonry">
                 {% for img in villa.get_images_list()[6:] %}
                 <div class="gallery-item-modern">
-                    <img src="/static/uploads/{{ img }}" alt="Photo {{ loop.index }}">
+                    <img src="/static/uploads/{{ img }}" alt="Villa à vendre Marrakech {{ villa.location }} - Photo {{ loop.index + 6 }} - {{ villa.title }} - Immobilier de luxe">
                     <div class="gallery-hover">
                         <span class="zoom-icon">🔍</span>
                     </div>
@@ -261,7 +387,7 @@
         <span class="lightbox-nav lightbox-prev">‹</span>
         <span class="lightbox-nav lightbox-next">›</span>
         <div class="lightbox-content">
-            <img src="" alt="Villa photo" id="lightbox-img">
+            <img src="" alt="Villa de luxe à vendre Marrakech - Photo agrandie" id="lightbox-img">
         </div>
     </div>
 

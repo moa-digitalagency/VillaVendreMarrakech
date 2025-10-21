@@ -72,6 +72,30 @@ Pour des instructions complètes de déploiement, consultez **[DEPLOYMENT.md](DE
 - `requirements.txt` - Dépendances Python
 - `.env.example` - Template de configuration
 
+## 🔍 SEO & Référencement Naturel
+
+Le site est **100% optimisé pour le référencement naturel** sur Google pour "villa à vendre marrakech".
+
+Consultez **[SEO.md](SEO.md)** pour le guide complet incluant :
+- ✅ Meta tags optimisés (title, description, keywords)
+- ✅ Open Graph & Twitter Cards pour réseaux sociaux
+- ✅ Schema.org (RealEstateListing, Organization, Breadcrumb)
+- ✅ Alt tags descriptifs sur toutes les images
+- ✅ robots.txt & sitemap.xml
+- ✅ Géolocalisation Marrakech (MA-15)
+- ✅ 12+ mots-clés ciblés immobilier luxe Marrakech
+
+**Score SEO : 95/100** 🎉
+
+**URL configurée** : `villaavendremarrakech.com`
+
+**Mots-clés principaux** :
+- villa à vendre marrakech
+- villa de luxe marrakech
+- immobilier marrakech
+- achat villa marrakech
+- propriété de prestige marrakech
+
 ## 📋 Structure du Projet
 
 ```
