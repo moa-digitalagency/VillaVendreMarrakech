@@ -1,7 +1,7 @@
 # Application Web de Vente de Villa de Prestige
 
 ## Vue d'ensemble
-Application web complète pour la vente en ligne de villas de luxe avec interface d'administration sécurisée et page publique moderne.
+Application web complète pour la vente en ligne de villas de luxe à Marrakech avec interface d'administration sécurisée et page publique moderne.
 
 ## Fonctionnalités Principales
 
@@ -10,9 +10,11 @@ Application web complète pour la vente en ligne de villas de luxe avec interfac
 - **Protection par session Flask** de toutes les routes admin
 - **Bouton de déconnexion** pour sécuriser l'accès
 
-### 🎨 Interface Admin Dark Mode
-- **Design professionnel** avec palette sombre (charcoal, gold, teal)
-- **Interface moderne** avec effets de survol et transitions fluides
+### 🎨 Interface Admin Thème Clair
+- **Design professionnel moderne** avec palette claire (gold, teal, blanc)
+- **Deux modes de saisie distincts** :
+  - **Mode PDF + Photos** : Extraction automatique par Claude 3.5 Sonnet
+  - **Mode Formulaire + Photos** : Saisie manuelle avec amélioration IA
 - **Responsive** adapté à tous les écrans
 - **Sections color-codées** : violet (PDF), vert (photos), doré (formulaires)
 
@@ -35,6 +37,7 @@ Application web complète pour la vente en ligne de villas de luxe avec interfac
 - **Design luxueux** avec effets parallaxe
 - **Galerie photo** avec lightbox et navigation
 - **Responsive** adapté mobile/tablette/desktop
+- **Spécialisé** pour les villas à vendre à Marrakech
 
 ## Structure du Projet
 ```
@@ -42,20 +45,22 @@ Application web complète pour la vente en ligne de villas de luxe avec interfac
 ├── models.py              # Modèles de base de données
 ├── templates/
 │   ├── admin.html         # Interface d'administration
+│   ├── login.html         # Page de connexion (thème clair)
 │   └── index.html         # Page publique de présentation
 ├── static/
 │   ├── css/
 │   │   ├── style.css      # Styles frontend
-│   │   └── admin.css      # Styles admin
+│   │   └── admin.css      # Styles admin (thème clair professionnel)
 │   ├── js/
-│   │   └── admin.js       # Scripts admin
+│   │   └── admin.js       # Scripts admin (gestion modes, event listeners)
 │   └── uploads/           # Photos uploadées
-└── replit.md              # Documentation
+├── README.md              # Documentation complète
+└── replit.md              # Documentation technique
 ```
 
 ## Technologies
 - **Backend**: Flask, SQLAlchemy, PostgreSQL
-- **Frontend**: HTML5, CSS3, JavaScript (Design Dark Mode professionnel)
+- **Frontend**: HTML5, CSS3, JavaScript (Design thème clair professionnel)
 - **IA**: OpenRouter API
   - **Claude 3.5 Sonnet** (Anthropic) - Extraction PDF structurée
   - **Mistral Large** - Amélioration de texte en français
@@ -95,26 +100,28 @@ Variables d'environnement:
 2. Entrez le mot de passe : `@4dm1n` (ou votre mot de passe personnalisé)
 3. Vous êtes redirigé vers l'interface d'administration
 
-### Méthode 1 : Extraction automatique depuis PDF (Recommandé)
+### Deux Modes Distincts
+
+#### Mode 1 : PDF + Photos (Recommandé)
 1. Connectez-vous à `/admin`
-2. Dans la section "🚀 Remplissage Automatique par IA" (violet), uploadez un PDF de la villa
-3. **Claude 3.5 Sonnet** analyse le PDF et remplit automatiquement tous les champs (60-90 secondes)
-4. Dans la section "📸 Photos de la Villa" (vert), uploadez les photos
-5. Vérifiez et ajustez les données extraites si nécessaire
-6. Cliquez sur "💾 Enregistrer"
+2. Cliquez sur **"Mode PDF + Photos"** dans le sélecteur de mode
+3. Uploadez un PDF de la villa dans la section violette
+4. **Claude 3.5 Sonnet** analyse le PDF et extrait automatiquement toutes les données (60-90 secondes)
+5. Ajoutez les photos dans la section verte
+6. Cliquez sur "💾 Enregistrer la Villa"
 7. Consultez `/` pour voir le résultat
 
-### Méthode 2 : Saisie manuelle
+#### Mode 2 : Formulaire + Photos
 1. Connectez-vous à `/admin`
-2. Ignorez la section PDF
-3. Uploadez directement vos photos dans la section verte
-4. Remplissez manuellement les informations dans le formulaire
-5. Utilisez les boutons ✨ AI pour améliorer vos textes avec **Mistral Large**
-6. Cliquez sur "💾 Enregistrer"
+2. Cliquez sur **"Mode Formulaire + Photos"** dans le sélecteur de mode
+3. Remplissez manuellement tous les champs du formulaire
+4. Utilisez les boutons ✨ AI pour améliorer vos textes avec **Mistral Large**
+5. Ajoutez les photos dans la section verte
+6. Cliquez sur "💾 Enregistrer la Villa"
 7. Consultez `/` pour voir le résultat
 
 ### Réinitialisation des données
-1. Dans l'admin, cliquez sur "🗑️ Réinitialiser"
+1. Dans l'admin (peu importe le mode), cliquez sur "🗑️ Réinitialiser"
 2. Une modale s'ouvre avec un avertissement
 3. Tapez exactement "SUPPRIMER" pour confirmer
 4. Toutes les données et photos sont supprimées définitivement
@@ -122,5 +129,36 @@ Variables d'environnement:
 ### Déconnexion
 - Cliquez sur "Déconnexion" dans le header de l'admin
 
+## Workflow des Modes
+
+### Mode PDF + Photos
+```
+Sélection mode → Upload PDF → Extraction IA (60-90s) → 
+Upload photos → Enregistrer → Terminé
+```
+
+### Mode Formulaire + Photos
+```
+Sélection mode → Saisie manuelle → (Optionnel: Amélioration IA) → 
+Upload photos → Enregistrer → Terminé
+```
+
+## Architecture Technique
+
+### Event Listeners (JavaScript)
+- Tous les événements sont gérés via `addEventListener` (plus de `onclick` inline)
+- Délégation d'événements pour les boutons dynamiques (suppression d'images)
+- Gestion centralisée des modes PDF vs Formulaire
+- Stockage temporaire des données extraites du PDF dans `window.pdfExtractedData`
+
+### Modes Distincts
+- Sélecteur de mode en haut de l'interface
+- Basculement CSS avec classes `.active` sur les divs `.mode-content`
+- Mode PDF : formulaire simplifié avec extraction automatique
+- Mode Formulaire : formulaire complet avec tous les champs éditables
+
 ## Date de Création
 21 octobre 2025
+
+## Plateforme
+Villas à Vendre Marrakech - Immobilier de luxe

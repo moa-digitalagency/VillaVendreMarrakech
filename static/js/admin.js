@@ -1,3 +1,7 @@
+// Mode switching
+document.getElementById('mode-pdf')?.addEventListener('click', () => switchMode('pdf'));
+document.getElementById('mode-manual')?.addEventListener('click', () => switchMode('manual'));
+
 function switchMode(mode) {
     const pdfOption = document.getElementById('mode-pdf');
     const manualOption = document.getElementById('mode-manual');
@@ -17,8 +21,9 @@ function switchMode(mode) {
     }
 }
 
-async function uploadPDF(input) {
-    const file = input.files[0];
+// PDF Upload
+document.getElementById('pdfUpload')?.addEventListener('change', async function() {
+    const file = this.files[0];
     if (!file) return;
 
     const statusDiv = document.getElementById('pdfStatus');
@@ -38,41 +43,73 @@ async function uploadPDF(input) {
         if (result.success && result.data) {
             statusDiv.innerHTML = '<div class="pdf-success">✅ PDF analysé avec succès ! Les données ont été extraites. Ajoutez maintenant les photos puis cliquez sur Enregistrer.</div>';
             
-            const data = result.data;
-            document.getElementById('pdf-reference').value = data.reference || '';
-            document.getElementById('pdf-title').value = data.title || '';
-            document.getElementById('pdf-price').value = data.price || '';
-            document.getElementById('pdf-location').value = data.location || '';
-            document.getElementById('pdf-distance_city').value = data.distance_city || '';
-            document.getElementById('pdf-description').value = data.description || '';
-            document.getElementById('pdf-terrain_area').value = data.terrain_area || '';
-            document.getElementById('pdf-built_area').value = data.built_area || '';
-            document.getElementById('pdf-bedrooms').value = data.bedrooms || '';
-            document.getElementById('pdf-pool_size').value = data.pool_size || '';
-            document.getElementById('pdf-features').value = data.features || '';
-            document.getElementById('pdf-equipment').value = data.equipment || '';
-            document.getElementById('pdf-business_info').value = data.business_info || '';
-            document.getElementById('pdf-investment_benefits').value = data.investment_benefits || '';
-            document.getElementById('pdf-documents').value = data.documents || '';
-            document.getElementById('pdf-contact_phone').value = data.contact_phone || '';
-            document.getElementById('pdf-contact_email').value = data.contact_email || '';
-            document.getElementById('pdf-contact_website').value = data.contact_website || '';
+            // Stocker les données extraites temporairement
+            window.pdfExtractedData = result.data;
         } else {
             statusDiv.innerHTML = `<div class="pdf-error">❌ Erreur: ${result.error || 'Impossible d\'extraire les données'}</div>`;
         }
     } catch (error) {
         statusDiv.innerHTML = `<div class="pdf-error">❌ Erreur réseau: ${error.message}</div>`;
     } finally {
-        input.value = '';
+        this.value = '';
     }
-}
+});
 
-async function uploadImages(input) {
+// Save button for PDF mode
+document.getElementById('btn-save-pdf')?.addEventListener('click', async function() {
+    if (!window.pdfExtractedData) {
+        alert('Veuillez d\'abord uploader et analyser un PDF.');
+        return;
+    }
+
+    this.textContent = '💾 Enregistrement...';
+    this.disabled = true;
+
+    try {
+        const formData = new FormData();
+        const data = window.pdfExtractedData;
+        
+        for (let key in data) {
+            if (data[key]) {
+                formData.append(key, data[key]);
+            }
+        }
+
+        const response = await fetch('/admin/save', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            alert('✅ ' + result.message);
+            window.location.reload();
+        } else {
+            alert('❌ Erreur: ' + result.error);
+        }
+    } catch (error) {
+        alert('❌ Erreur: ' + error.message);
+    } finally {
+        this.textContent = '💾 Enregistrer la Villa';
+        this.disabled = false;
+    }
+});
+
+// Image uploads
+document.getElementById('imageUploadPDF')?.addEventListener('change', function() {
+    uploadImages(this, 'imageGalleryPDF');
+});
+
+document.getElementById('imageUploadManual')?.addEventListener('change', function() {
+    uploadImages(this, 'imageGalleryManual');
+});
+
+async function uploadImages(input, galleryId) {
     const files = input.files;
     if (!files.length) return;
 
-    const isPDFMode = document.getElementById('content-pdf').classList.contains('active');
-    const gallery = isPDFMode ? document.getElementById('imageGalleryPDF') : document.getElementById('imageGalleryManual');
+    const gallery = document.getElementById(galleryId);
     
     for (let file of files) {
         const formData = new FormData();
@@ -92,7 +129,7 @@ async function uploadImages(input) {
                 div.dataset.filename = result.filename;
                 div.innerHTML = `
                     <img src="/static/uploads/${result.filename}" alt="Villa Marrakech">
-                    <button type="button" class="btn-delete" onclick="deleteImage('${result.filename}')">×</button>
+                    <button type="button" class="btn-delete" data-filename="${result.filename}">×</button>
                 `;
                 gallery.appendChild(div);
             } else {
@@ -106,76 +143,92 @@ async function uploadImages(input) {
     input.value = '';
 }
 
-async function deleteImage(filename) {
-    if (!confirm('Voulez-vous vraiment supprimer cette image ?')) {
-        return;
-    }
+// Delete image - Event delegation
+document.addEventListener('click', async function(e) {
+    if (e.target.classList.contains('btn-delete')) {
+        const filename = e.target.dataset.filename || e.target.closest('.image-item')?.dataset.filename;
+        if (!filename) return;
 
-    try {
-        const response = await fetch(`/admin/delete-image/${filename}`, {
-            method: 'POST'
-        });
-
-        const result = await response.json();
-        
-        if (result.success) {
-            const item = document.querySelector(`[data-filename="${filename}"]`);
-            if (item) {
-                item.remove();
-            }
-        } else {
-            alert('Erreur lors de la suppression: ' + result.error);
+        if (!confirm('Voulez-vous vraiment supprimer cette image ?')) {
+            return;
         }
-    } catch (error) {
-        alert('Erreur réseau: ' + error.message);
-    }
-}
 
-async function enhanceField(fieldId) {
-    const field = document.getElementById(fieldId);
-    const button = event.target;
-    const originalText = field.value.trim();
-    
-    if (!originalText) {
-        alert('Veuillez d\'abord saisir du texte à améliorer.');
-        return;
-    }
+        try {
+            const response = await fetch(`/admin/delete-image/${filename}`, {
+                method: 'POST'
+            });
 
-    button.disabled = true;
-    button.textContent = '⏳';
-    
-    try {
-        const response = await fetch('/api/enhance', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                text: originalText,
-                field: fieldId
-            })
-        });
-
-        const result = await response.json();
-        
-        if (result.enhanced) {
-            if (confirm('Texte amélioré par l\'IA. Voulez-vous le remplacer ?\n\nNouveau texte:\n' + result.enhanced)) {
-                field.value = result.enhanced;
+            const result = await response.json();
+            
+            if (result.success) {
+                const item = document.querySelector(`[data-filename="${filename}"]`);
+                if (item) {
+                    item.remove();
+                }
+            } else {
+                alert('Erreur lors de la suppression: ' + result.error);
             }
+        } catch (error) {
+            alert('Erreur réseau: ' + error.message);
         }
-    } catch (error) {
-        alert('Erreur lors de l\'amélioration: ' + error.message);
-    } finally {
-        button.disabled = false;
-        button.textContent = '✨ AI';
     }
-}
+});
 
+// AI enhancement buttons
+document.querySelectorAll('.btn-ai').forEach(button => {
+    button.addEventListener('click', async function() {
+        const fieldId = this.dataset.field;
+        const field = document.getElementById(fieldId);
+        const originalText = field.value.trim();
+        
+        if (!originalText) {
+            alert('Veuillez d\'abord saisir du texte à améliorer.');
+            return;
+        }
+
+        this.disabled = true;
+        this.textContent = '⏳';
+        
+        try {
+            const response = await fetch('/api/enhance', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    text: originalText,
+                    field: fieldId
+                })
+            });
+
+            const result = await response.json();
+            
+            if (result.enhanced) {
+                if (confirm('Texte amélioré par l\'IA. Voulez-vous le remplacer ?\n\nNouveau texte:\n' + result.enhanced)) {
+                    field.value = result.enhanced;
+                }
+            }
+        } catch (error) {
+            alert('Erreur lors de l\'amélioration: ' + error.message);
+        } finally {
+            this.disabled = false;
+            this.textContent = '✨ AI';
+        }
+    });
+});
+
+// Form submit
 document.getElementById('villaForm')?.addEventListener('submit', function(e) {
     const button = this.querySelector('.btn-save');
     button.textContent = '💾 Enregistrement...';
     button.disabled = true;
 });
+
+// Reset modal
+document.getElementById('btn-reset')?.addEventListener('click', openResetModal);
+document.getElementById('btn-reset-manual')?.addEventListener('click', openResetModal);
+document.getElementById('cancel-reset-btn')?.addEventListener('click', closeResetModal);
+document.getElementById('confirm-reset-btn')?.addEventListener('click', confirmReset);
 
 function openResetModal() {
     document.getElementById('resetModal').classList.add('active');
@@ -220,6 +273,7 @@ async function confirmReset() {
     }
 }
 
+// Close modal on background click
 document.getElementById('resetModal')?.addEventListener('click', function(e) {
     if (e.target === this) {
         closeResetModal();

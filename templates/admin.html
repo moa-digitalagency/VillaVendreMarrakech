@@ -22,12 +22,12 @@
             <p>Sélectionnez la méthode qui vous convient le mieux pour ajouter une villa</p>
             
             <div class="mode-options">
-                <div class="mode-option active" onclick="switchMode('pdf')" id="mode-pdf">
+                <div class="mode-option active" id="mode-pdf">
                     <h3>📄 Mode PDF + Photos</h3>
                     <p>Uploadez un PDF de la villa et l'IA extraira automatiquement toutes les informations. Ensuite, ajoutez les photos.</p>
                 </div>
                 
-                <div class="mode-option" onclick="switchMode('manual')" id="mode-manual">
+                <div class="mode-option" id="mode-manual">
                     <h3>✍️ Mode Formulaire + Photos</h3>
                     <p>Remplissez manuellement les informations dans le formulaire. Vous pouvez utiliser l'IA pour améliorer vos textes. Ajoutez ensuite les photos.</p>
                 </div>
@@ -41,7 +41,7 @@
                 <p class="section-description">Uploadez le PDF et l'IA (Claude 3.5 Sonnet) extraira automatiquement toutes les informations.</p>
                 
                 <div class="pdf-upload-area">
-                    <input type="file" id="pdfUpload" accept="application/pdf" onchange="uploadPDF(this)">
+                    <input type="file" id="pdfUpload" accept="application/pdf">
                     <label for="pdfUpload" class="pdf-upload-label">
                         📄 Cliquez pour uploader un PDF
                     </label>
@@ -58,13 +58,13 @@
                         {% for img in villa.get_images_list() %}
                         <div class="image-item" data-filename="{{ img }}">
                             <img src="/static/uploads/{{ img }}" alt="Villa Marrakech">
-                            <button type="button" class="btn-delete" onclick="deleteImage('{{ img }}')">×</button>
+                            <button type="button" class="btn-delete">×</button>
                         </div>
                         {% endfor %}
                     {% endif %}
                 </div>
                 <div class="upload-area">
-                    <input type="file" id="imageUploadPDF" accept="image/*" multiple onchange="uploadImages(this)">
+                    <input type="file" id="imageUploadPDF" accept="image/*" multiple>
                     <label for="imageUploadPDF" class="upload-label">
                         📸 Cliquez pour ajouter des photos
                     </label>
@@ -72,8 +72,8 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" form="villaForm" class="btn-save">💾 Enregistrer la Villa</button>
-                <button type="button" class="btn-reset" onclick="openResetModal()">🗑️ Réinitialiser</button>
+                <button type="button" class="btn-save" id="btn-save-pdf">💾 Enregistrer la Villa</button>
+                <button type="button" class="btn-reset" id="btn-reset">🗑️ Réinitialiser</button>
             </div>
         </div>
 
@@ -85,38 +85,38 @@
                     
                     <div class="form-group">
                         <label>Référence</label>
-                        <input type="text" name="reference" value="{{ villa.reference if villa else '' }}" required>
+                        <input type="text" name="reference" id="reference" value="{{ villa.reference if villa else '' }}" required>
                     </div>
 
                     <div class="form-group">
                         <label>Titre</label>
                         <div class="input-with-ai">
                             <input type="text" name="title" id="title" value="{{ villa.title if villa else '' }}" required>
-                            <button type="button" class="btn-ai" onclick="enhanceField('title')">✨ AI</button>
+                            <button type="button" class="btn-ai" data-field="title">✨ AI</button>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label>Prix (€)</label>
-                            <input type="number" name="price" value="{{ villa.price if villa else '' }}" required>
+                            <input type="number" name="price" id="price" value="{{ villa.price if villa else '' }}" required>
                         </div>
                         <div class="form-group">
                             <label>Localisation (Marrakech)</label>
-                            <input type="text" name="location" value="{{ villa.location if villa else '' }}" required>
+                            <input type="text" name="location" id="location" value="{{ villa.location if villa else '' }}" required>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Distance de la ville</label>
-                        <input type="text" name="distance_city" value="{{ villa.distance_city if villa else '' }}">
+                        <input type="text" name="distance_city" id="distance_city" value="{{ villa.distance_city if villa else '' }}">
                     </div>
 
                     <div class="form-group">
                         <label>Description</label>
                         <div class="input-with-ai">
                             <textarea name="description" id="description" rows="6" required>{{ villa.description if villa else '' }}</textarea>
-                            <button type="button" class="btn-ai" onclick="enhanceField('description')">✨ AI</button>
+                            <button type="button" class="btn-ai" data-field="description">✨ AI</button>
                         </div>
                     </div>
                 </div>
@@ -127,28 +127,28 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Surface terrain (m²)</label>
-                            <input type="number" name="terrain_area" value="{{ villa.terrain_area if villa else '' }}">
+                            <input type="number" name="terrain_area" id="terrain_area" value="{{ villa.terrain_area if villa else '' }}">
                         </div>
                         <div class="form-group">
                             <label>Surface construite (m²)</label>
-                            <input type="number" name="built_area" value="{{ villa.built_area if villa else '' }}">
+                            <input type="number" name="built_area" id="built_area" value="{{ villa.built_area if villa else '' }}">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label>Nombre de chambres</label>
-                            <input type="number" name="bedrooms" value="{{ villa.bedrooms if villa else '' }}">
+                            <input type="number" name="bedrooms" id="bedrooms" value="{{ villa.bedrooms if villa else '' }}">
                         </div>
                         <div class="form-group">
                             <label>Taille piscine</label>
-                            <input type="text" name="pool_size" value="{{ villa.pool_size if villa else '' }}">
+                            <input type="text" name="pool_size" id="pool_size" value="{{ villa.pool_size if villa else '' }}">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Équipements (un par ligne)</label>
-                        <textarea name="features" rows="6">{{ villa.features if villa else '' }}</textarea>
+                        <textarea name="features" id="features" rows="6">{{ villa.features if villa else '' }}</textarea>
                     </div>
                 </div>
 
@@ -157,22 +157,22 @@
                     
                     <div class="form-group">
                         <label>Équipement & Confort</label>
-                        <textarea name="equipment" rows="6">{{ villa.equipment if villa else '' }}</textarea>
+                        <textarea name="equipment" id="equipment" rows="6">{{ villa.equipment if villa else '' }}</textarea>
                     </div>
 
                     <div class="form-group">
                         <label>Exploitation Commerciale</label>
-                        <textarea name="business_info" rows="6">{{ villa.business_info if villa else '' }}</textarea>
+                        <textarea name="business_info" id="business_info" rows="6">{{ villa.business_info if villa else '' }}</textarea>
                     </div>
 
                     <div class="form-group">
                         <label>Atouts Investisseurs</label>
-                        <textarea name="investment_benefits" rows="6">{{ villa.investment_benefits if villa else '' }}</textarea>
+                        <textarea name="investment_benefits" id="investment_benefits" rows="6">{{ villa.investment_benefits if villa else '' }}</textarea>
                     </div>
 
                     <div class="form-group">
                         <label>Documents Disponibles</label>
-                        <textarea name="documents" rows="4">{{ villa.documents if villa else '' }}</textarea>
+                        <textarea name="documents" id="documents" rows="4">{{ villa.documents if villa else '' }}</textarea>
                     </div>
                 </div>
 
@@ -182,17 +182,17 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Téléphone</label>
-                            <input type="text" name="contact_phone" value="{{ villa.contact_phone if villa else '' }}">
+                            <input type="text" name="contact_phone" id="contact_phone" value="{{ villa.contact_phone if villa else '' }}">
                         </div>
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" name="contact_email" value="{{ villa.contact_email if villa else '' }}">
+                            <input type="email" name="contact_email" id="contact_email" value="{{ villa.contact_email if villa else '' }}">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label>Site Web</label>
-                        <input type="url" name="contact_website" value="{{ villa.contact_website if villa else '' }}">
+                        <input type="url" name="contact_website" id="contact_website" value="{{ villa.contact_website if villa else '' }}">
                     </div>
                 </div>
             </form>
@@ -206,13 +206,13 @@
                         {% for img in villa.get_images_list() %}
                         <div class="image-item" data-filename="{{ img }}">
                             <img src="/static/uploads/{{ img }}" alt="Villa Marrakech">
-                            <button type="button" class="btn-delete" onclick="deleteImage('{{ img }}')">×</button>
+                            <button type="button" class="btn-delete">×</button>
                         </div>
                         {% endfor %}
                     {% endif %}
                 </div>
                 <div class="upload-area">
-                    <input type="file" id="imageUploadManual" accept="image/*" multiple onchange="uploadImages(this)">
+                    <input type="file" id="imageUploadManual" accept="image/*" multiple>
                     <label for="imageUploadManual" class="upload-label">
                         📸 Cliquez pour ajouter des photos
                     </label>
@@ -221,32 +221,10 @@
 
             <div class="form-actions">
                 <button type="submit" form="villaForm" class="btn-save">💾 Enregistrer la Villa</button>
-                <button type="button" class="btn-reset" onclick="openResetModal()">🗑️ Réinitialiser</button>
+                <button type="button" class="btn-reset" id="btn-reset-manual">🗑️ Réinitialiser</button>
             </div>
         </div>
     </div>
-
-    <!-- Formulaire caché pour le mode PDF (données extraites) -->
-    <form id="villaForm" method="POST" action="/admin/save" style="display: none;">
-        <input type="text" name="reference" id="pdf-reference">
-        <input type="text" name="title" id="pdf-title">
-        <input type="number" name="price" id="pdf-price">
-        <input type="text" name="location" id="pdf-location">
-        <input type="text" name="distance_city" id="pdf-distance_city">
-        <textarea name="description" id="pdf-description"></textarea>
-        <input type="number" name="terrain_area" id="pdf-terrain_area">
-        <input type="number" name="built_area" id="pdf-built_area">
-        <input type="number" name="bedrooms" id="pdf-bedrooms">
-        <input type="text" name="pool_size" id="pdf-pool_size">
-        <textarea name="features" id="pdf-features"></textarea>
-        <textarea name="equipment" id="pdf-equipment"></textarea>
-        <textarea name="business_info" id="pdf-business_info"></textarea>
-        <textarea name="investment_benefits" id="pdf-investment_benefits"></textarea>
-        <textarea name="documents" id="pdf-documents"></textarea>
-        <input type="text" name="contact_phone" id="pdf-contact_phone">
-        <input type="email" name="contact_email" id="pdf-contact_email">
-        <input type="url" name="contact_website" id="pdf-contact_website">
-    </form>
 
     <!-- Modal de confirmation de réinitialisation -->
     <div id="resetModal" class="modal">
@@ -256,8 +234,8 @@
             <p>Pour confirmer, tapez <strong>SUPPRIMER</strong> ci-dessous :</p>
             <input type="text" id="confirmInput" placeholder="Tapez SUPPRIMER">
             <div class="modal-actions">
-                <button class="btn-confirm" onclick="confirmReset()">Confirmer la suppression</button>
-                <button class="btn-cancel" onclick="closeResetModal()">Annuler</button>
+                <button class="btn-confirm" id="confirm-reset-btn">Confirmer la suppression</button>
+                <button class="btn-cancel" id="cancel-reset-btn">Annuler</button>
             </div>
         </div>
     </div>
