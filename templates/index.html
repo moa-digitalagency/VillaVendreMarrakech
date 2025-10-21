@@ -242,15 +242,6 @@
                         </div>
                     </div>
                     {% endif %}
-                    {% if villa.contact_website %}
-                    <div class="contact-method">
-                        <div class="contact-icon">🌐</div>
-                        <div class="contact-details">
-                            <span class="contact-label">Site Web</span>
-                            <a href="{{ villa.contact_website }}" target="_blank">Visiter</a>
-                        </div>
-                    </div>
-                    {% endif %}
                 </div>
                 
                 {% set whatsapp_number = villa.contact_phone.replace('+', '').replace(' ', '').replace('-', '') if villa.contact_phone else '' %}
