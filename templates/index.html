@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ villa.title if villa else 'Villa de Prestige' }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    {% if villa %}
+    <div class="parallax-container">
+        <section class="hero" id="hero">
+            {% if villa.get_images_list() %}
+            <div class="hero-image" style="background-image: url('/static/uploads/{{ villa.get_images_list()[0] }}')"></div>
+            {% endif %}
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1 class="fade-in">{{ villa.title }}</h1>
+                <p class="hero-subtitle fade-in-delay">{{ villa.location }}</p>
+                <div class="hero-price fade-in-delay-2">{{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €</div>
+                <a href="#contact" class="btn-primary fade-in-delay-3">Nous Contacter</a>
+            </div>
+            <div class="scroll-indicator">
+                <span></span>
+            </div>
+        </section>
+
+        <section class="quick-info">
+            <div class="container">
+                <div class="info-grid">
+                    {% if villa.terrain_area %}
+                    <div class="info-card">
+                        <div class="info-icon">🏞️</div>
+                        <div class="info-value">{{ '{:,}'.format(villa.terrain_area).replace(',', ' ') }} m²</div>
+                        <div class="info-label">Terrain</div>
+                    </div>
+                    {% endif %}
+                    {% if villa.built_area %}
+                    <div class="info-card">
+                        <div class="info-icon">🏠</div>
+                        <div class="info-value">{{ '{:,}'.format(villa.built_area).replace(',', ' ') }} m²</div>
+                        <div class="info-label">Surface</div>
+                    </div>
+                    {% endif %}
+                    {% if villa.bedrooms %}
+                    <div class="info-card">
+                        <div class="info-icon">🛏️</div>
+                        <div class="info-value">{{ villa.bedrooms }}</div>
+                        <div class="info-label">Suites</div>
+                    </div>
+                    {% endif %}
+                    {% if villa.pool_size %}
+                    <div class="info-card">
+                        <div class="info-icon">🏊</div>
+                        <div class="info-value">{{ villa.pool_size }}</div>
+                        <div class="info-label">Piscine</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <section class="description parallax-section">
+            <div class="container">
+                <h2 class="section-title">Présentation</h2>
+                <div class="description-content">
+                    {{ villa.description | safe }}
+                </div>
+            </div>
+        </section>
+
+        {% if villa.get_images_list()|length > 1 %}
+        <section class="gallery">
+            <div class="container-full">
+                <h2 class="section-title">Galerie Photos</h2>
+                <div class="gallery-grid">
+                    {% for img in villa.get_images_list()[1:] %}
+                    <div class="gallery-item" onclick="openLightbox({{ loop.index0 }})">
+                        <img src="/static/uploads/{{ img }}" alt="Villa {{ loop.index }}">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        {% if villa.features %}
+        <section class="features parallax-section">
+            <div class="container">
+                <h2 class="section-title">Caractéristiques Principales</h2>
+                <div class="features-grid">
+                    {% for feature in villa.get_features_list() %}
+                    {% if feature.strip() %}
+                    <div class="feature-item">
+                        <span class="feature-check">✓</span>
+                        <span>{{ feature.strip() }}</span>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        {% if villa.equipment %}
+        <section class="equipment">
+            <div class="container">
+                <h2 class="section-title">Équipements & Confort</h2>
+                <div class="content-box">
+                    {{ villa.equipment | replace('\n', '<br>') | safe }}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        {% if villa.business_info %}
+        <section class="business parallax-section">
+            <div class="container">
+                <h2 class="section-title">Exploitation Commerciale</h2>
+                <div class="content-box highlight">
+                    {{ villa.business_info | replace('\n', '<br>') | safe }}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        {% if villa.investment_benefits %}
+        <section class="investment">
+            <div class="container">
+                <h2 class="section-title">Atouts pour Investisseurs</h2>
+                <div class="content-box">
+                    {{ villa.investment_benefits | replace('\n', '<br>') | safe }}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <section class="contact" id="contact">
+            <div class="container">
+                <h2 class="section-title">Contactez-Nous</h2>
+                <div class="contact-info">
+                    {% if villa.contact_phone %}
+                    <a href="tel:{{ villa.contact_phone }}" class="contact-item">
+                        <span class="contact-icon">📞</span>
+                        <span>{{ villa.contact_phone }}</span>
+                    </a>
+                    {% endif %}
+                    {% if villa.contact_email %}
+                    <a href="mailto:{{ villa.contact_email }}" class="contact-item">
+                        <span class="contact-icon">✉️</span>
+                        <span>{{ villa.contact_email }}</span>
+                    </a>
+                    {% endif %}
+                    {% if villa.contact_website %}
+                    <a href="{{ villa.contact_website }}" target="_blank" class="contact-item">
+                        <span class="contact-icon">🌐</span>
+                        <span>{{ villa.contact_website }}</span>
+                    </a>
+                    {% endif %}
+                </div>
+                {% if villa.reference %}
+                <div class="reference">Référence: {{ villa.reference }}</div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-image" src="" alt="">
+        <div class="lightbox-nav">
+            <button class="lightbox-prev" onclick="event.stopPropagation(); changeLightboxImage(-1)">&#10094;</button>
+            <button class="lightbox-next" onclick="event.stopPropagation(); changeLightboxImage(1)">&#10095;</button>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="no-villa">
+        <h1>Aucune villa disponible</h1>
+        <p>Veuillez ajouter une villa depuis l'interface d'administration.</p>
+        <a href="/admin" class="btn-primary">Administration</a>
+    </div>
+    {% endif %}
+
+    <script>
+        const images = {{ villa.get_images_list()[1:] | tojson if villa and villa.get_images_list()|length > 1 else '[]' | safe }};
+        let currentImageIndex = 0;
+
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.getElementById('hero');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+
+            const parallaxSections = document.querySelectorAll('.parallax-section');
+            parallaxSections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    const offset = (window.innerHeight - rect.top) * 0.1;
+                    section.style.transform = `translateY(${-offset}px)`;
+                }
+            });
+        });
+
+        function openLightbox(index) {
+            currentImageIndex = index;
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-image');
+            img.src = `/static/uploads/${images[currentImageIndex]}`;
+            lightbox.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function changeLightboxImage(direction) {
+            currentImageIndex = (currentImageIndex + direction + images.length) % images.length;
+            document.getElementById('lightbox-image').src = `/static/uploads/${images[currentImageIndex]}`;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('lightbox').style.display === 'flex') {
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowLeft') changeLightboxImage(-1);
+                if (e.key === 'ArrowRight') changeLightboxImage(1);
+            }
+        });
+    </script>
+</body>
+</html>

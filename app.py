@@ -121,7 +121,7 @@ def upload_image():
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
     
-    if file and allowed_file(file.filename):
+    if file and file.filename and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         timestamp = str(int(os.times().system * 1000))
         filename = f"{timestamp}_{filename}"
@@ -162,6 +162,9 @@ def delete_image(filename):
 @app.route('/api/enhance', methods=['POST'])
 def enhance():
     data = request.json
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    
     text = data.get('text', '')
     field = data.get('field', '')
     
