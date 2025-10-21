@@ -34,7 +34,7 @@ body {
     padding: 0 20px;
 }
 
-/* Hero Modern avec Image Background */
+/* Hero Modern avec Slider */
 .hero-modern {
     position: relative;
     height: 100vh;
@@ -44,15 +44,32 @@ body {
     overflow: hidden;
 }
 
-.hero-bg {
+.hero-slider {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+}
+
+.hero-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+.hero-slide.active {
+    opacity: 1;
+}
+
+.hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .hero-overlay-modern {
@@ -126,61 +143,22 @@ body {
 }
 
 .btn-search {
-    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    background: linear-gradient(135deg, #25D366, #128C7E);
     color: white;
-    padding: 15px 40px;
+    padding: 15px 35px;
     border-radius: 50px;
     text-decoration: none;
     font-weight: 600;
     font-size: 1rem;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .btn-search:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
-}
-
-/* Photo Thumbnails Strip */
-.photo-strip {
-    background: white;
-    padding: 40px 20px;
-    margin-top: -60px;
-    position: relative;
-    z-index: 3;
-}
-
-.photo-thumbnails {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-}
-
-.thumb-card {
-    aspect-ratio: 4/3;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-}
-
-.thumb-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-}
-
-.thumb-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.thumb-card:hover img {
-    transform: scale(1.1);
+    box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6);
 }
 
 /* Quick Stats */
@@ -265,23 +243,55 @@ body {
     line-height: 1.9;
     color: var(--text);
     white-space: pre-line;
+    margin-bottom: 30px;
 }
 
-.image-block {
+.btn-description {
+    display: inline-block;
+    padding: 18px 40px;
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+}
+
+.btn-description:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6);
+}
+
+.image-block-double {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.double-img-main {
+    grid-column: 1 / -1;
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 }
 
-.image-block img {
+.double-img-small {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.image-block-double img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
 }
 
-/* Lifestyle Cards */
-.lifestyle-section {
+/* Section Pourquoi Choisir */
+.why-choose {
     padding: 100px 20px;
     background: var(--gray);
 }
@@ -315,48 +325,50 @@ body {
     background: linear-gradient(90deg, var(--white), var(--gold));
 }
 
-.lifestyle-grid {
+.why-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
 }
 
-.lifestyle-card {
-    aspect-ratio: 1;
+.why-card {
+    background: white;
+    padding: 40px 30px;
     border-radius: 20px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
+    border: 2px solid transparent;
 }
 
-.lifestyle-card:hover {
-    transform: scale(1.05);
+.why-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--gold);
+    box-shadow: 0 20px 50px rgba(212, 175, 55, 0.2);
 }
 
-.lifestyle-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-    padding: 30px;
-    color: white;
+.why-icon {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
 }
 
-.lifestyle-overlay h3 {
-    font-size: 1.5rem;
+.why-card h3 {
+    font-size: 1.4rem;
+    color: var(--dark);
+    margin-bottom: 15px;
     font-weight: 700;
 }
 
-/* Features with Parallax Background */
+.why-card p {
+    font-size: 1rem;
+    color: #64748b;
+    line-height: 1.7;
+}
+
+/* Features sans Parallax */
 .features-parallax {
     padding: 100px 20px;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    background: linear-gradient(135deg, var(--dark), #2d3748);
     position: relative;
 }
 
@@ -366,7 +378,6 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.75);
     z-index: 1;
 }
 
@@ -483,8 +494,7 @@ body {
 /* Contact Modern */
 .contact-modern {
     padding: 120px 20px;
-    background-size: cover;
-    background-position: center;
+    background: linear-gradient(135deg, var(--dark), #2d3748);
     position: relative;
 }
 
@@ -494,7 +504,6 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.85), rgba(26, 26, 26, 0.9));
     z-index: 1;
 }
 
@@ -587,22 +596,20 @@ body {
 
 .btn-contact-large {
     display: inline-block;
-    padding: 20px 60px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    padding: 20px 50px;
+    background: linear-gradient(135deg, #25D366, #128C7E);
     color: white;
     text-decoration: none;
     border-radius: 50px;
     font-size: 1.2rem;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
     transition: all 0.3s ease;
-    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
 }
 
 .btn-contact-large:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.6);
+    box-shadow: 0 15px 40px rgba(37, 211, 102, 0.6);
 }
 
 /* Lightbox */
@@ -744,7 +751,7 @@ body {
         align-items: center;
     }
     
-    .lifestyle-grid {
+    .why-grid {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
     
@@ -755,18 +762,22 @@ body {
     .contact-box {
         padding: 40px 30px;
     }
+    
+    .image-block-double {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 768px) {
-    .photo-thumbnails {
-        grid-template-columns: 1fr;
-    }
-    
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
     
     .gallery-masonry {
+        grid-template-columns: 1fr;
+    }
+    
+    .why-grid {
         grid-template-columns: 1fr;
     }
 }

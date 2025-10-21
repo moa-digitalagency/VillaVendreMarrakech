@@ -1,7 +1,7 @@
 # Application Web de Vente de Villa de Prestige
 
 ## Vue d'ensemble
-Application web complète pour la vente en ligne de villas de luxe à Marrakech avec interface d'administration sécurisée et page publique moderne.
+Application web complète pour la vente en ligne de villas de luxe à Marrakech avec interface d'administration sécurisée et page publique moderne ultra-immersive.
 
 ## Fonctionnalités Principales
 
@@ -33,11 +33,20 @@ Application web complète pour la vente en ligne de villas de luxe à Marrakech 
 - **Double confirmation** avec modale sécurisée (saisie de "SUPPRIMER")
 - **Suppression complète** : données + photos
 
-### 🌐 Frontend Public
-- **Design luxueux** avec effets parallaxe
-- **Galerie photo** avec lightbox et navigation
-- **Responsive** adapté mobile/tablette/desktop
-- **Spécialisé** pour les villas à vendre à Marrakech
+### 🌐 Frontend Public Ultra-Moderne
+- **Hero Slider Automatique** : 3 photos qui défilent toutes les 5 secondes
+- **Design Photo-Forward** : Images réparties partout dans la page (hero, description, galerie)
+- **Section Créative** : "Pourquoi Choisir Cette Villa ?" avec 4 cards illustrées
+- **Galerie Lightbox** : Toutes les photos restantes avec navigation clavier/souris
+- **Intégration WhatsApp** : Tous les boutons de contact ouvrent WhatsApp avec message pré-rempli
+- **Responsive Total** : Adapté mobile/tablette/desktop
+- **Palette Gold/Teal** : Design luxueux professionnel
+
+### 📱 Fonctionnalités WhatsApp
+- **Lien automatique** : Numéro WhatsApp formaté automatiquement
+- **Message pré-rempli** : "Bonjour, je souhaite prendre rendez-vous pour visiter la villa [TITRE] et obtenir plus d'informations. Lien: [URL]"
+- **Boutons multiples** : Hero, section description, section contact
+- **Ouverture externe** : WhatsApp s'ouvre dans un nouvel onglet
 
 ## Structure du Projet
 ```
@@ -46,10 +55,10 @@ Application web complète pour la vente en ligne de villas de luxe à Marrakech 
 ├── templates/
 │   ├── admin.html         # Interface d'administration
 │   ├── login.html         # Page de connexion (thème clair)
-│   └── index.html         # Page publique de présentation
+│   └── index.html         # Page publique photo-forward moderne
 ├── static/
 │   ├── css/
-│   │   ├── style.css      # Styles frontend
+│   │   ├── style.css      # Styles frontend (design luxueux)
 │   │   └── admin.css      # Styles admin (thème clair professionnel)
 │   ├── js/
 │   │   └── admin.js       # Scripts admin (gestion modes, event listeners)
@@ -60,17 +69,18 @@ Application web complète pour la vente en ligne de villas de luxe à Marrakech 
 
 ## Technologies
 - **Backend**: Flask, SQLAlchemy, PostgreSQL
-- **Frontend**: HTML5, CSS3, JavaScript (Design thème clair professionnel)
+- **Frontend**: HTML5, CSS3, JavaScript (Design moderne photo-forward)
 - **IA**: OpenRouter API
   - **Claude 3.5 Sonnet** (Anthropic) - Extraction PDF structurée
   - **Mistral Large** - Amélioration de texte en français
 - **Images**: Pillow pour optimisation automatique
+- **Intégration**: WhatsApp Deep Links pour contact direct
 - **Sécurité**: Flask Sessions, protection par mot de passe
 
 ## Routes
 
 ### Publiques
-- `/` - Page publique de la villa
+- `/` - Page publique de la villa (design photo-forward)
 - `/api/villa` - Récupération des données de la villa (JSON)
 
 ### Authentification
@@ -107,7 +117,7 @@ Variables d'environnement:
 2. Cliquez sur **"Mode PDF + Photos"** dans le sélecteur de mode
 3. Uploadez un PDF de la villa dans la section violette
 4. **Claude 3.5 Sonnet** analyse le PDF et extrait automatiquement toutes les données (60-90 secondes)
-5. Ajoutez les photos dans la section verte
+5. Ajoutez au moins **5 photos** dans la section verte (3 pour le slider, 2 pour description, reste en galerie)
 6. Cliquez sur "💾 Enregistrer la Villa"
 7. Consultez `/` pour voir le résultat
 
@@ -116,7 +126,7 @@ Variables d'environnement:
 2. Cliquez sur **"Mode Formulaire + Photos"** dans le sélecteur de mode
 3. Remplissez manuellement tous les champs du formulaire
 4. Utilisez les boutons ✨ AI pour améliorer vos textes avec **Mistral Large**
-5. Ajoutez les photos dans la section verte
+5. Ajoutez au moins **5 photos** dans la section verte
 6. Cliquez sur "💾 Enregistrer la Villa"
 7. Consultez `/` pour voir le résultat
 
@@ -129,18 +139,40 @@ Variables d'environnement:
 ### Déconnexion
 - Cliquez sur "Déconnexion" dans le header de l'admin
 
+## Architecture Frontend (Page Publique)
+
+### Distribution des Photos
+- **Photos 1-3** : Hero slider automatique (rotation 5s)
+- **Photos 4-5** : Section description (double image block)
+- **Photos 6+** : Galerie complète avec lightbox
+
+### Sections de la Page
+1. **Hero Slider** : 3 photos en rotation + titre + prix + bouton WhatsApp
+2. **Quick Stats** : Cards avec icônes (terrain, surface, chambres, piscine)
+3. **Description** : Texte + double image + bouton WhatsApp "Prendre Rendez-vous"
+4. **Pourquoi Choisir** : 4 cards créatives (emplacement, architecture, finitions, extérieurs)
+5. **Caractéristiques** : 3 cards (équipements, confort, avantages)
+6. **Galerie Photos** : Grid masonry responsive avec lightbox
+7. **Contact** : Box centrale + bouton WhatsApp principal
+
+### Fonctionnalités JavaScript
+- **Hero Slider** : Auto-rotation toutes les 5 secondes
+- **Lightbox** : Navigation clavier (←/→/Escape) et clics
+- **Smooth Scroll** : Défilement fluide vers sections
+- **Responsive** : Adaptation automatique aux breakpoints
+
 ## Workflow des Modes
 
 ### Mode PDF + Photos
 ```
 Sélection mode → Upload PDF → Extraction IA (60-90s) → 
-Upload photos → Enregistrer → Terminé
+Upload photos (min. 5) → Enregistrer → Terminé
 ```
 
 ### Mode Formulaire + Photos
 ```
 Sélection mode → Saisie manuelle → (Optionnel: Amélioration IA) → 
-Upload photos → Enregistrer → Terminé
+Upload photos (min. 5) → Enregistrer → Terminé
 ```
 
 ## Architecture Technique
@@ -157,8 +189,17 @@ Upload photos → Enregistrer → Terminé
 - Mode PDF : formulaire simplifié avec extraction automatique
 - Mode Formulaire : formulaire complet avec tous les champs éditables
 
+### WhatsApp Deep Links
+- Format : `https://wa.me/PHONE?text=MESSAGE`
+- Nettoyage automatique du numéro (suppression +, espaces, tirets)
+- Message URL-encodé avec titre villa + lien site
+- Ouverture en nouvel onglet (`target="_blank"`)
+
 ## Date de Création
 21 octobre 2025
+
+## Dernière Mise à Jour
+21 octobre 2025 - Design photo-forward + intégration WhatsApp
 
 ## Plateforme
 Villas à Vendre Marrakech - Immobilier de luxe

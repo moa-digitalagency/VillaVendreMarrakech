@@ -9,11 +9,15 @@
 <body>
     {% if villa %}
     
-    <!-- Hero Section avec Image Background -->
+    <!-- Hero Slider avec 3 Photos -->
     <section class="hero-modern">
-        {% if villa.get_images_list() %}
-        <div class="hero-bg" style="background-image: url('/static/uploads/{{ villa.get_images_list()[0] }}')"></div>
-        {% endif %}
+        <div class="hero-slider">
+            {% for img in villa.get_images_list()[:3] %}
+            <div class="hero-slide {% if loop.first %}active{% endif %}">
+                <img src="/static/uploads/{{ img }}" alt="Villa {{ loop.index }}">
+            </div>
+            {% endfor %}
+        </div>
         <div class="hero-overlay-modern"></div>
         <div class="hero-content-modern">
             <h1>{{ villa.title }}</h1>
@@ -27,25 +31,15 @@
                     <span class="search-label">Prix</span>
                     <span class="search-value">{{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €</span>
                 </div>
-                <a href="#contact" class="btn-search">Contactez-nous</a>
+                {% set whatsapp_number = villa.contact_phone.replace('+', '').replace(' ', '').replace('-', '') if villa.contact_phone else '' %}
+                {% set site_url = request.url_root %}
+                {% set whatsapp_message = "Bonjour, je souhaite prendre rendez-vous pour visiter la villa " ~ villa.title ~ " et obtenir plus d'informations. Lien: " ~ site_url %}
+                <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-search">
+                    📱 WhatsApp
+                </a>
             </div>
         </div>
     </section>
-
-    <!-- Photo Thumbnails Strip -->
-    {% if villa.get_images_list()|length > 1 %}
-    <section class="photo-strip">
-        <div class="container">
-            <div class="photo-thumbnails">
-                {% for img in villa.get_images_list()[1:5] %}
-                <div class="thumb-card">
-                    <img src="/static/uploads/{{ img }}" alt="Photo {{ loop.index }}">
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-    {% endif %}
 
     <!-- Quick Stats -->
     <section class="quick-stats">
@@ -83,7 +77,7 @@
         </div>
     </section>
 
-    <!-- Description avec Image Latérale -->
+    <!-- Description -->
     {% if villa.description %}
     <section class="content-image-section">
         <div class="container-wide">
@@ -91,40 +85,64 @@
                 <div class="content-block">
                     <h2 class="section-title-left">Une Villa d'Exception</h2>
                     <div class="text-content">{{ villa.description }}</div>
+                    
+                    {% set whatsapp_number = villa.contact_phone.replace('+', '').replace(' ', '').replace('-', '') if villa.contact_phone else '' %}
+                    {% set site_url = request.url_root %}
+                    {% set whatsapp_message = "Bonjour, je souhaite prendre rendez-vous pour visiter la villa " ~ villa.title ~ " et obtenir plus d'informations. Lien: " ~ site_url %}
+                    
+                    <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-description">
+                        📱 Prendre Rendez-vous sur WhatsApp
+                    </a>
                 </div>
-                {% if villa.get_images_list()|length > 5 %}
-                <div class="image-block">
-                    <img src="/static/uploads/{{ villa.get_images_list()[5] }}" alt="Villa intérieur">
+                <div class="image-block-double">
+                    {% if villa.get_images_list()|length > 3 %}
+                    <div class="double-img-main">
+                        <img src="/static/uploads/{{ villa.get_images_list()[3] }}" alt="Villa principale">
+                    </div>
+                    {% endif %}
+                    {% if villa.get_images_list()|length > 4 %}
+                    <div class="double-img-small">
+                        <img src="/static/uploads/{{ villa.get_images_list()[4] }}" alt="Villa détail">
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
             </div>
         </div>
     </section>
     {% endif %}
 
-    <!-- Lifestyle Cards avec Background Images -->
-    {% if villa.get_images_list()|length > 6 %}
-    <section class="lifestyle-section">
+    <!-- Section Créative: Pourquoi Choisir Cette Villa -->
+    <section class="why-choose">
         <div class="container">
-            <h2 class="section-title-center">Votre Nouveau Style de Vie</h2>
-            <div class="lifestyle-grid">
-                {% set lifestyle_images = villa.get_images_list()[6:10] %}
-                {% set lifestyle_titles = ["Espaces de Vie", "Extérieurs", "Confort", "Luxe"] %}
-                {% for img in lifestyle_images %}
-                <div class="lifestyle-card" style="background-image: url('/static/uploads/{{ img }}')">
-                    <div class="lifestyle-overlay">
-                        <h3>{{ lifestyle_titles[loop.index0] if loop.index0 < lifestyle_titles|length else "Détail" }}</h3>
-                    </div>
+            <h2 class="section-title-center">Pourquoi Choisir Cette Villa ?</h2>
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="why-icon">🌟</div>
+                    <h3>Emplacement Premium</h3>
+                    <p>Située à {{ villa.location }}, dans l'un des quartiers les plus prisés de Marrakech</p>
                 </div>
-                {% endfor %}
+                <div class="why-card">
+                    <div class="why-icon">🏗️</div>
+                    <h3>Architecture Moderne</h3>
+                    <p>Design contemporain alliant luxe, confort et authenticité marocaine</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">💎</div>
+                    <h3>Finitions Haut de Gamme</h3>
+                    <p>Matériaux nobles et équipements premium pour un confort optimal</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">🌴</div>
+                    <h3>Espaces Extérieurs</h3>
+                    <p>Jardin paysager, terrasses et espaces de vie en plein air exceptionnels</p>
+                </div>
             </div>
         </div>
     </section>
-    {% endif %}
 
     <!-- Features avec Background Parallax -->
     {% if villa.features %}
-    <section class="features-parallax" {% if villa.get_images_list()|length > 10 %}style="background-image: url('/static/uploads/{{ villa.get_images_list()[10] }}')"{% endif %}>
+    <section class="features-parallax">
         <div class="parallax-overlay"></div>
         <div class="container">
             <h2 class="section-title-center white">Caractéristiques Principales</h2>
@@ -171,14 +189,14 @@
     </section>
     {% endif %}
 
-    <!-- Photo Gallery Grid -->
-    {% if villa.get_images_list()|length > 11 %}
+    <!-- Galerie Photos Complète -->
+    {% if villa.get_images_list()|length > 5 %}
     <section class="gallery-modern">
         <div class="container">
             <h2 class="section-title-center">Galerie Photos</h2>
             <div class="gallery-masonry">
-                {% for img in villa.get_images_list()[11:] %}
-                <div class="gallery-item-modern" onclick="openLightbox({{ loop.index0 + 11 }})">
+                {% for img in villa.get_images_list()[5:] %}
+                <div class="gallery-item-modern">
                     <img src="/static/uploads/{{ img }}" alt="Photo {{ loop.index }}">
                     <div class="gallery-hover">
                         <span class="zoom-icon">🔍</span>
@@ -190,8 +208,8 @@
     </section>
     {% endif %}
 
-    <!-- Contact Section avec Background -->
-    <section class="contact-modern" id="contact" {% if villa.get_images_list()|length > 0 %}style="background-image: url('/static/uploads/{{ villa.get_images_list()[0] }}')"{% endif %}>
+    <!-- Contact Section -->
+    <section class="contact-modern" id="contact">
         <div class="contact-overlay"></div>
         <div class="container">
             <div class="contact-box">
@@ -228,8 +246,12 @@
                     {% endif %}
                 </div>
                 
-                <a href="tel:{{ villa.contact_phone if villa.contact_phone else '#' }}" class="btn-contact-large">
-                    Prendre Rendez-vous
+                {% set whatsapp_number = villa.contact_phone.replace('+', '').replace(' ', '').replace('-', '') if villa.contact_phone else '' %}
+                {% set site_url = request.url_root %}
+                {% set whatsapp_message = "Bonjour, je souhaite prendre rendez-vous pour visiter la villa " ~ villa.title ~ " et obtenir plus d'informations. Lien: " ~ site_url %}
+                
+                <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-contact-large">
+                    📱 Prendre Rendez-vous sur WhatsApp
                 </a>
             </div>
         </div>
@@ -246,16 +268,38 @@
     </div>
 
     <script>
-        // Lightbox
-        const allImages = [
-            {% for img in villa.get_images_list() %}
-            '/static/uploads/{{ img }}'{% if not loop.last %},{% endif %}
-            {% endfor %}
-        ];
+        // Hero Slider (3 photos)
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
         
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            if (slides[index]) {
+                slides[index].classList.add('active');
+            }
+        }
+        
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+        
+        if (slides.length > 1) {
+            setInterval(nextSlide, 5000);
+        }
+
+        // Lightbox pour Galerie
+        const galleryItems = document.querySelectorAll('.gallery-item-modern');
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
+        const allImages = Array.from(galleryItems).map(item => item.querySelector('img').src);
         let currentImageIndex = 0;
+
+        galleryItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                openLightbox(index);
+            });
+        });
 
         function openLightbox(index) {
             currentImageIndex = index;
