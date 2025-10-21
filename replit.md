@@ -6,10 +6,13 @@ Application web complète pour la vente en ligne de villas de luxe avec interfac
 ## Fonctionnalités
 - **Backend Python (Flask)** avec PostgreSQL
 - **Interface Admin** pour gérer toutes les informations de la villa
-- **Upload de photos** avec optimisation automatique
-- **Intégration OpenRouter AI** pour améliorer le contenu
+- **🚀 Extraction automatique depuis PDF** - Uploadez un PDF et l'IA extrait toutes les données
+- **Upload de photos** avec optimisation automatique (conversion en JPEG, compression)
+- **Intégration OpenRouter AI** pour :
+  - Extraction intelligente de données depuis PDF
+  - Amélioration de texte en temps réel (bouton ✨ AI)
 - **Frontend moderne** avec effets parallaxe et design responsive
-- **Galerie photo** avec lightbox
+- **Galerie photo** avec lightbox et navigation
 - **Design luxueux** adapté aux propriétés de prestige
 
 ## Structure du Projet
@@ -38,9 +41,12 @@ Application web complète pour la vente en ligne de villas de luxe avec interfac
 ## Routes
 - `/` - Page publique de la villa
 - `/admin` - Interface d'administration
-- `/admin/save` - Sauvegarde des données
-- `/admin/upload` - Upload de photos
+- `/admin/save` - Sauvegarde des données de la villa
+- `/admin/upload` - Upload de photos (avec optimisation automatique)
+- `/admin/upload-pdf` - Upload et extraction de données depuis PDF
+- `/admin/delete-image/<filename>` - Suppression d'une photo
 - `/api/enhance` - Amélioration de texte par IA
+- `/api/villa` - Récupération des données de la villa (JSON)
 
 ## Configuration
 Variables d'environnement nécessaires:
@@ -48,10 +54,21 @@ Variables d'environnement nécessaires:
 - `OPENROUTER_API_KEY` - Clé API OpenRouter (optionnel)
 
 ## Utilisation
-1. Accédez à `/admin` pour configurer votre villa
-2. Remplissez les informations (titre, prix, description, etc.)
-3. Uploadez des photos
-4. Utilisez le bouton ✨ AI pour améliorer vos textes
+
+### Méthode 1 : Extraction automatique depuis PDF (Recommandé)
+1. Accédez à `/admin`
+2. Dans la section "🚀 Remplissage Automatique par IA", uploadez un PDF de la villa
+3. L'IA analyse le PDF et remplit automatiquement tous les champs (30-60 secondes)
+4. Vérifiez et ajustez les données extraites si nécessaire
+5. Uploadez les photos de la villa
+6. Sauvegardez
+7. Consultez `/` pour voir le résultat
+
+### Méthode 2 : Saisie manuelle
+1. Accédez à `/admin`
+2. Remplissez manuellement les informations (titre, prix, description, etc.)
+3. Utilisez le bouton ✨ AI pour améliorer vos textes
+4. Uploadez des photos
 5. Sauvegardez
 6. Consultez `/` pour voir le résultat
 
