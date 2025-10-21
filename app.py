@@ -69,14 +69,20 @@ def init_db():
             db.create_all()
             print("✅ Database tables initialized successfully")
             
-            # Check if we have any villas
-            villa_count = Villa.query.count()
-            print(f"📊 Current villas in database: {villa_count}")
+            # Try to count villas, but don't fail if there's an error
+            try:
+                villa_count = Villa.query.count()
+                print(f"📊 Current villas in database: {villa_count}")
+            except Exception as count_error:
+                print(f"⚠️  Could not count villas (table may need migration): {count_error}")
+                print("💡 Run 'python fix_database.py' to fix missing columns")
             
         except Exception as e:
             print(f"❌ Error initializing database: {e}")
             print("⚠️  Make sure PostgreSQL is running and credentials are correct")
-            raise
+            print("💡 If you see 'column does not exist', run: python fix_database.py")
+            # Don't raise - allow app to continue
+            pass
 
 # Initialize database on startup
 init_db()

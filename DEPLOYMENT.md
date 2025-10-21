@@ -200,6 +200,16 @@ sudo apt install -y python3 python3-pip python3-venv postgresql postgresql-contr
 ```
 
 **2. Create PostgreSQL database and user**
+
+**Option A: Script automatique (RECOMMANDÉ)** ⭐
+```bash
+# Le script configure automatiquement la base de données et les permissions
+sudo bash setup_postgres_permissions.sh
+
+# Entrez votre mot de passe quand demandé, ou modifiez les variables dans le script
+```
+
+**Option B: Configuration manuelle**
 ```bash
 # Switch to postgres user
 sudo -u postgres psql
@@ -207,9 +217,29 @@ sudo -u postgres psql
 # In PostgreSQL console:
 CREATE DATABASE villa_sales;
 CREATE USER villa_user WITH PASSWORD 'your_secure_password_here';
+ALTER USER villa_user CREATEDB;
+
+-- Se connecter à la base de données
+\c villa_sales
+
+-- Donner tous les privilèges
 GRANT ALL PRIVILEGES ON DATABASE villa_sales TO villa_user;
+GRANT ALL PRIVILEGES ON SCHEMA public TO villa_user;
+GRANT CREATE ON SCHEMA public TO villa_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO villa_user;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO villa_user;
+
+-- Permissions par défaut pour les futures tables
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO villa_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON SEQUENCES TO villa_user;
+
+-- Rendre l'utilisateur propriétaire du schéma public
+ALTER SCHEMA public OWNER TO villa_user;
+
 \q
 ```
+
+**⚠️ IMPORTANT**: Les permissions complètes sur le schéma public sont nécessaires pour éviter l'erreur "permission denied for schema public".
 
 **3. Clone and setup application**
 ```bash

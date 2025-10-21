@@ -50,25 +50,29 @@ Application web complète pour la vente en ligne de villas de luxe à Marrakech 
 
 ## Structure du Projet
 ```
-├── app.py                  # Application Flask principale
-├── models.py              # Modèles de base de données
-├── fix_database.py        # Script de correction/migration automatique de la DB
+├── app.py                           # Application Flask principale
+├── models.py                        # Modèles de base de données
+├── fix_database.py                  # Script de correction/migration automatique de la DB ⭐
+├── setup_postgres_permissions.sh    # Script de configuration des permissions PostgreSQL ⭐
+├── init_database.sql                # Script SQL d'initialisation (pour référence)
 ├── templates/
-│   ├── admin.html         # Interface d'administration
-│   ├── login.html         # Page de connexion (thème clair)
-│   └── index.html         # Page publique photo-forward moderne
+│   ├── admin.html                   # Interface d'administration
+│   ├── login.html                   # Page de connexion (thème clair)
+│   └── index.html                   # Page publique photo-forward moderne
 ├── static/
 │   ├── css/
-│   │   ├── style.css      # Styles frontend (design luxueux)
-│   │   └── admin.css      # Styles admin (thème clair professionnel)
+│   │   ├── style.css                # Styles frontend (design luxueux)
+│   │   └── admin.css                # Styles admin (thème clair professionnel)
 │   ├── js/
-│   │   └── admin.js       # Scripts admin (gestion modes, event listeners)
-│   └── uploads/           # Photos uploadées
-├── DEPLOYMENT.md          # Guide de déploiement complet (Replit + VPS)
-├── VPS_QUICK_START.md    # Guide rapide VPS (15 min)
-├── SEO.md                 # Documentation SEO complète
-├── .env.example           # Template des variables d'environnement
-└── replit.md              # Documentation technique
+│   │   └── admin.js                 # Scripts admin (gestion modes, event listeners)
+│   └── uploads/                     # Photos uploadées
+├── DEPLOYMENT.md                    # Guide de déploiement complet (Replit + VPS)
+├── VPS_QUICK_START.md              # Guide rapide VPS (15 min)
+├── TROUBLESHOOTING.md              # Guide de dépannage complet ⭐
+├── DATABASE_TOOLS.md               # Documentation outils de base de données
+├── SEO.md                          # Documentation SEO complète
+├── .env.example                    # Template des variables d'environnement
+└── replit.md                       # Documentation technique
 ```
 
 ## Technologies

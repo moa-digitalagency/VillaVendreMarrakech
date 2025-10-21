@@ -21,13 +21,24 @@ sudo apt install -y python3 python3-pip python3-venv postgresql postgresql-contr
 
 ### 2️⃣ Setup PostgreSQL Database (1 min)
 ```bash
+# Méthode automatique (RECOMMANDÉE) ⭐
+sudo bash setup_postgres_permissions.sh
+
+# OU méthode manuelle :
 sudo -u postgres psql << EOF
 CREATE DATABASE villa_sales;
 CREATE USER villa_user WITH PASSWORD 'CHANGE_THIS_PASSWORD';
+ALTER USER villa_user CREATEDB;
+\c villa_sales
 GRANT ALL PRIVILEGES ON DATABASE villa_sales TO villa_user;
+GRANT ALL PRIVILEGES ON SCHEMA public TO villa_user;
+GRANT CREATE ON SCHEMA public TO villa_user;
+ALTER SCHEMA public OWNER TO villa_user;
 \q
 EOF
 ```
+
+**Note**: Le script automatique configure automatiquement toutes les permissions nécessaires.
 
 ### 3️⃣ Clone and Setup Application (3 min)
 ```bash
