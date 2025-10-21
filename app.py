@@ -258,10 +258,16 @@ def admin_save():
         
         db.session.commit()
         
-        return redirect(url_for('admin'))
+        return jsonify({
+            'success': True,
+            'message': 'Villa enregistrée avec succès !'
+        })
     except Exception as e:
         db.session.rollback()
-        return f"Erreur lors de la sauvegarde: {str(e)}", 500
+        return jsonify({
+            'success': False,
+            'error': f'Erreur lors de la sauvegarde: {str(e)}'
+        }), 500
 
 @app.route('/admin/upload', methods=['POST'])
 @login_required
