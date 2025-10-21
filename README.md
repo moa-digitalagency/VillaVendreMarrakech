@@ -57,6 +57,21 @@ Application web complète pour la vente en ligne de villas de luxe à Marrakech 
 - **Images** : Pillow (optimisation automatique)
 - **Sécurité** : Flask Sessions, authentification
 
+## 📦 Déploiement
+
+Pour des instructions complètes de déploiement, consultez **[DEPLOYMENT.md](DEPLOYMENT.md)** qui inclut :
+- 🗄️ Schémas de base de données complets
+- 🔧 Scripts d'initialisation SQL
+- ⚙️ Configuration des variables d'environnement
+- 🚀 Instructions de déploiement (Replit et serveurs)
+- 📚 Documentation bilingue (EN/FR)
+
+**Fichiers de déploiement** :
+- `DEPLOYMENT.md` - Guide complet de déploiement
+- `init_database.sql` - Script d'initialisation PostgreSQL
+- `requirements.txt` - Dépendances Python
+- `.env.example` - Template de configuration
+
 ## 📋 Structure du Projet
 
 ```

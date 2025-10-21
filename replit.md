@@ -195,11 +195,33 @@ Upload photos (min. 5) → Enregistrer → Terminé
 - Message URL-encodé avec titre villa + lien site
 - Ouverture en nouvel onglet (`target="_blank"`)
 
+## Documentation de Déploiement
+
+Le projet inclut une documentation complète de déploiement :
+
+### Fichiers de Déploiement
+- **DEPLOYMENT.md** : Guide complet bilingue (EN/FR) avec schémas DB, scripts init, env vars
+- **init_database.sql** : Script PostgreSQL d'initialisation automatique avec triggers et index
+- **requirements.txt** : Liste complète des dépendances Python
+- **.env.example** : Template de configuration des variables d'environnement
+
+### Schéma de Base de Données
+- Table `villa` avec 18 colonnes (titre, prix, localisation, surface, etc.)
+- Triggers automatiques pour `updated_at`
+- Index optimisés pour performance (created_at, price, location)
+- Support PostgreSQL 12+
+
+### Variables d'Environnement Requises
+- `DATABASE_URL` : Connexion PostgreSQL (auto sur Replit)
+- `OPENROUTER_API_KEY` : Clé API pour fonctionnalités IA
+- `ADMIN_PASSWORD` : Mot de passe admin (défaut: @4dm1n)
+- `SECRET_KEY` : Clé secrète Flask pour sessions
+
 ## Date de Création
 21 octobre 2025
 
 ## Dernière Mise à Jour
-21 octobre 2025 - Design photo-forward + intégration WhatsApp
+21 octobre 2025 - Design photo-forward + intégration WhatsApp + Documentation déploiement
 
 ## Plateforme
 Villas à Vendre Marrakech - Immobilier de luxe
