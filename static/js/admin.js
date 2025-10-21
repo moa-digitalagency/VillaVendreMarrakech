@@ -1,9 +1,28 @@
+function switchMode(mode) {
+    const pdfOption = document.getElementById('mode-pdf');
+    const manualOption = document.getElementById('mode-manual');
+    const pdfContent = document.getElementById('content-pdf');
+    const manualContent = document.getElementById('content-manual');
+    
+    if (mode === 'pdf') {
+        pdfOption.classList.add('active');
+        manualOption.classList.remove('active');
+        pdfContent.classList.add('active');
+        manualContent.classList.remove('active');
+    } else {
+        manualOption.classList.add('active');
+        pdfOption.classList.remove('active');
+        manualContent.classList.add('active');
+        pdfContent.classList.remove('active');
+    }
+}
+
 async function uploadPDF(input) {
     const file = input.files[0];
     if (!file) return;
 
     const statusDiv = document.getElementById('pdfStatus');
-    statusDiv.innerHTML = '<div class="pdf-loading">⏳ Analyse du PDF en cours... Cela peut prendre 30-60 secondes.</div>';
+    statusDiv.innerHTML = '<div class="pdf-loading">⏳ Analyse du PDF en cours... Cela peut prendre 60-90 secondes (Claude 3.5 Sonnet).</div>';
 
     const formData = new FormData();
     formData.append('pdf', file);
@@ -17,29 +36,27 @@ async function uploadPDF(input) {
         const result = await response.json();
 
         if (result.success && result.data) {
-            statusDiv.innerHTML = '<div class="pdf-success">✅ PDF analysé avec succès ! Les données ont été extraites.</div>';
+            statusDiv.innerHTML = '<div class="pdf-success">✅ PDF analysé avec succès ! Les données ont été extraites. Ajoutez maintenant les photos puis cliquez sur Enregistrer.</div>';
             
             const data = result.data;
-            document.querySelector('input[name="reference"]').value = data.reference || '';
-            document.querySelector('input[name="title"]').value = data.title || '';
-            document.querySelector('input[name="price"]').value = data.price || '';
-            document.querySelector('input[name="location"]').value = data.location || '';
-            document.querySelector('input[name="distance_city"]').value = data.distance_city || '';
-            document.querySelector('textarea[name="description"]').value = data.description || '';
-            document.querySelector('input[name="terrain_area"]').value = data.terrain_area || '';
-            document.querySelector('input[name="built_area"]').value = data.built_area || '';
-            document.querySelector('input[name="bedrooms"]').value = data.bedrooms || '';
-            document.querySelector('input[name="pool_size"]').value = data.pool_size || '';
-            document.querySelector('textarea[name="features"]').value = data.features || '';
-            document.querySelector('textarea[name="equipment"]').value = data.equipment || '';
-            document.querySelector('textarea[name="business_info"]').value = data.business_info || '';
-            document.querySelector('textarea[name="investment_benefits"]').value = data.investment_benefits || '';
-            document.querySelector('textarea[name="documents"]').value = data.documents || '';
-            document.querySelector('input[name="contact_phone"]').value = data.contact_phone || '';
-            document.querySelector('input[name="contact_email"]').value = data.contact_email || '';
-            document.querySelector('input[name="contact_website"]').value = data.contact_website || '';
-
-            document.getElementById('villaForm').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('pdf-reference').value = data.reference || '';
+            document.getElementById('pdf-title').value = data.title || '';
+            document.getElementById('pdf-price').value = data.price || '';
+            document.getElementById('pdf-location').value = data.location || '';
+            document.getElementById('pdf-distance_city').value = data.distance_city || '';
+            document.getElementById('pdf-description').value = data.description || '';
+            document.getElementById('pdf-terrain_area').value = data.terrain_area || '';
+            document.getElementById('pdf-built_area').value = data.built_area || '';
+            document.getElementById('pdf-bedrooms').value = data.bedrooms || '';
+            document.getElementById('pdf-pool_size').value = data.pool_size || '';
+            document.getElementById('pdf-features').value = data.features || '';
+            document.getElementById('pdf-equipment').value = data.equipment || '';
+            document.getElementById('pdf-business_info').value = data.business_info || '';
+            document.getElementById('pdf-investment_benefits').value = data.investment_benefits || '';
+            document.getElementById('pdf-documents').value = data.documents || '';
+            document.getElementById('pdf-contact_phone').value = data.contact_phone || '';
+            document.getElementById('pdf-contact_email').value = data.contact_email || '';
+            document.getElementById('pdf-contact_website').value = data.contact_website || '';
         } else {
             statusDiv.innerHTML = `<div class="pdf-error">❌ Erreur: ${result.error || 'Impossible d\'extraire les données'}</div>`;
         }
@@ -54,7 +71,8 @@ async function uploadImages(input) {
     const files = input.files;
     if (!files.length) return;
 
-    const gallery = document.getElementById('imageGallery');
+    const isPDFMode = document.getElementById('content-pdf').classList.contains('active');
+    const gallery = isPDFMode ? document.getElementById('imageGalleryPDF') : document.getElementById('imageGalleryManual');
     
     for (let file of files) {
         const formData = new FormData();
@@ -73,7 +91,7 @@ async function uploadImages(input) {
                 div.className = 'image-item';
                 div.dataset.filename = result.filename;
                 div.innerHTML = `
-                    <img src="/static/uploads/${result.filename}" alt="Villa">
+                    <img src="/static/uploads/${result.filename}" alt="Villa Marrakech">
                     <button type="button" class="btn-delete" onclick="deleteImage('${result.filename}')">×</button>
                 `;
                 gallery.appendChild(div);

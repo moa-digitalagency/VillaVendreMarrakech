@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion Admin - Villa de Prestige</title>
+    <title>Connexion Admin - Villas Marrakech</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #fef3c7 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -27,7 +27,7 @@
             position: absolute;
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, rgba(218,165,32,0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
             border-radius: 50%;
             top: -200px;
             right: -200px;
@@ -39,7 +39,7 @@
             position: absolute;
             width: 500px;
             height: 500px;
-            background: radial-gradient(circle, rgba(32,178,170,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.12) 0%, transparent 70%);
             border-radius: 50%;
             bottom: -250px;
             left: -250px;
@@ -52,15 +52,13 @@
         }
 
         .login-container {
-            background: rgba(26, 26, 46, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(218, 165, 32, 0.2);
+            background: white;
+            border: 2px solid rgba(212, 175, 55, 0.3);
             border-radius: 20px;
             padding: 50px 40px;
             width: 100%;
             max-width: 450px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
-                        0 0 40px rgba(218, 165, 32, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             position: relative;
             z-index: 1;
             animation: slideIn 0.6s ease-out;
@@ -95,16 +93,18 @@
         }
 
         h1 {
-            color: #daa520;
+            background: linear-gradient(135deg, #d4af37, #14b8a6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-size: 2rem;
             font-weight: 600;
             text-align: center;
             margin-bottom: 10px;
-            text-shadow: 0 2px 10px rgba(218, 165, 32, 0.3);
         }
 
         .subtitle {
-            color: #8892b0;
+            color: #64748b;
             text-align: center;
             margin-bottom: 40px;
             font-size: 0.95rem;
@@ -116,7 +116,7 @@
 
         label {
             display: block;
-            color: #20c997;
+            color: #14b8a6;
             font-weight: 500;
             margin-bottom: 10px;
             font-size: 0.9rem;
@@ -127,10 +127,10 @@
         input[type="password"] {
             width: 100%;
             padding: 15px 20px;
-            background: rgba(15, 52, 96, 0.4);
-            border: 2px solid rgba(32, 201, 151, 0.3);
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
             border-radius: 12px;
-            color: #ffffff;
+            color: #1e293b;
             font-size: 1.1rem;
             transition: all 0.3s ease;
             letter-spacing: 2px;
@@ -138,20 +138,20 @@
 
         input[type="password"]:focus {
             outline: none;
-            border-color: #20c997;
-            background: rgba(15, 52, 96, 0.6);
-            box-shadow: 0 0 20px rgba(32, 201, 151, 0.2);
+            border-color: #14b8a6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
         }
 
         input[type="password"]::placeholder {
-            color: #556678;
+            color: #94a3b8;
             letter-spacing: normal;
         }
 
         .btn-login {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #daa520, #b8860b);
+            background: linear-gradient(135deg, #d4af37, #b8941f);
             color: white;
             border: none;
             border-radius: 12px;
@@ -161,13 +161,13 @@
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(218, 165, 32, 0.3);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
         }
 
         .btn-login:hover {
-            background: linear-gradient(135deg, #b8860b, #daa520);
+            background: linear-gradient(135deg, #b8941f, #d4af37);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(218, 165, 32, 0.4);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
         }
 
         .btn-login:active {
@@ -175,9 +175,9 @@
         }
 
         .error-message {
-            background: rgba(220, 53, 69, 0.2);
-            border: 1px solid rgba(220, 53, 69, 0.5);
-            color: #ff6b6b;
+            background: #fee2e2;
+            border: 2px solid #ef4444;
+            color: #991b1b;
             padding: 15px;
             border-radius: 10px;
             margin-bottom: 25px;
@@ -193,19 +193,11 @@
 
         .security-note {
             text-align: center;
-            color: #556678;
+            color: #64748b;
             font-size: 0.85rem;
             margin-top: 25px;
             padding-top: 20px;
-            border-top: 1px solid rgba(85, 102, 120, 0.2);
-        }
-
-        .security-note svg {
-            width: 14px;
-            height: 14px;
-            margin-right: 5px;
-            vertical-align: middle;
-            fill: currentColor;
+            border-top: 1px solid #e2e8f0;
         }
     </style>
 </head>
@@ -214,7 +206,7 @@
         <div class="logo">
             <span class="logo-icon">🏡</span>
             <h1>Administration</h1>
-            <p class="subtitle">Villa de Prestige</p>
+            <p class="subtitle">Villas à Vendre Marrakech</p>
         </div>
 
         {% if error %}
