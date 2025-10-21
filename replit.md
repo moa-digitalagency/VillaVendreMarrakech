@@ -227,9 +227,10 @@ python fix_database.py
 **Note** : Ce script résout l'erreur `column villa.reference does not exist` lors du déploiement VPS
 
 ### Schéma de Base de Données
-- Table `villa` avec 18 colonnes (titre, prix, localisation, surface, etc.)
+- Table `villa` avec **23 colonnes** (référence, titre, prix, localisation, surfaces, etc.)
 - Triggers automatiques pour `updated_at`
-- Index optimisés pour performance (created_at, price, location)
+- **5 index optimisés** pour performance (created_at, price, location, is_active, reference)
+- Support complet des nouvelles colonnes: `reference`, `business_info`, `documents`, `pool_size`, `is_active`
 - Support PostgreSQL 12+
 
 ### Variables d'Environnement Requises

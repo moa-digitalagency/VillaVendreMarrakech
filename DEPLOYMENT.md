@@ -10,100 +10,100 @@ This is a Flask-based luxury villa sales platform for Marrakech with AI-powered 
 - PostgreSQL 12+
 - OpenRouter API key (for AI features)
 
-### Database Schema
+### Database Schema (✅ Updated - 23 columns)
 
 #### Table: `villa`
 ```sql
 CREATE TABLE villa (
+    -- Identifiant et référence
     id SERIAL PRIMARY KEY,
+    reference VARCHAR(50) UNIQUE NOT NULL,
+    
+    -- Informations principales
     title VARCHAR(200) NOT NULL,
-    price DECIMAL(15, 2),
-    location VARCHAR(200),
-    area DECIMAL(10, 2),
-    land_area DECIMAL(10, 2),
+    price INTEGER NOT NULL,
+    location VARCHAR(200) NOT NULL,
+    distance_city VARCHAR(100),
+    description TEXT NOT NULL,
+    
+    -- Caractéristiques techniques
+    terrain_area INTEGER,
+    built_area INTEGER,
     bedrooms INTEGER,
-    bathrooms INTEGER,
-    description TEXT,
+    pool_size VARCHAR(50),
+    
+    -- Détails et équipements
     features TEXT,
     equipment TEXT,
+    business_info TEXT,
     investment_benefits TEXT,
+    documents TEXT,
+    
+    -- Médias
+    images TEXT,
+    
+    -- Contact
     contact_phone VARCHAR(50),
     contact_email VARCHAR(100),
     contact_website VARCHAR(200),
-    images TEXT,
+    
+    -- Statut et dates
+    is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create update trigger for updated_at
+-- Trigger pour updated_at automatique
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
     NEW.updated_at = CURRENT_TIMESTAMP;
     RETURN NEW;
 END;
-$$ language 'plpgsql';
-
-CREATE TRIGGER update_villa_updated_at 
-    BEFORE UPDATE ON villa 
-    FOR EACH ROW 
-    EXECUTE FUNCTION update_updated_at_column();
-```
-
-### Database Initialization Script
-
-```sql
--- init_database.sql
--- Create database (if not exists)
--- Note: Run this as postgres superuser
-
-CREATE DATABASE villa_sales;
-
-\c villa_sales
-
--- Create villa table
-CREATE TABLE IF NOT EXISTS villa (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(200) NOT NULL,
-    price DECIMAL(15, 2),
-    location VARCHAR(200),
-    area DECIMAL(10, 2),
-    land_area DECIMAL(10, 2),
-    bedrooms INTEGER,
-    bathrooms INTEGER,
-    description TEXT,
-    features TEXT,
-    equipment TEXT,
-    investment_benefits TEXT,
-    contact_phone VARCHAR(50),
-    contact_email VARCHAR(100),
-    contact_website VARCHAR(200),
-    images TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Create update trigger
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
-    RETURN NEW;
-END;
-$$ language 'plpgsql';
+$$ LANGUAGE plpgsql;
 
 CREATE TRIGGER update_villa_updated_at 
     BEFORE UPDATE ON villa 
     FOR EACH ROW 
     EXECUTE FUNCTION update_updated_at_column();
 
--- Create uploads directory (handled by application)
--- Ensure static/uploads/ directory exists with write permissions
-
--- Default admin credentials
--- Username: admin
--- Default Password: @4dm1n (change this in production!)
+-- Index de performance
+CREATE INDEX idx_villa_created_at ON villa(created_at);
+CREATE INDEX idx_villa_price ON villa(price);
+CREATE INDEX idx_villa_location ON villa(location);
+CREATE INDEX idx_villa_is_active ON villa(is_active);
+CREATE INDEX idx_villa_reference ON villa(reference);
 ```
+
+### Database Initialization - TWO OPTIONS
+
+#### Option 1: Automatic Script (RECOMMENDED for VPS) ⭐
+
+Use the Python script that automatically creates/fixes all columns:
+
+```bash
+source venv/bin/activate
+python fix_database.py
+```
+
+This script:
+- ✅ Creates the `villa` table if it doesn't exist
+- ✅ Adds all 23 missing columns automatically
+- ✅ Creates triggers for `updated_at`
+- ✅ Creates performance indexes
+- ✅ Shows complete database summary
+
+**This resolves the `column villa.reference does not exist` error.**
+
+#### Option 2: Manual SQL Script (for reference only)
+
+The `init_database.sql` file is available for manual initialization:
+
+```bash
+sudo -u postgres psql villa_sales < init_database.sql
+```
+
+**⚠️ Note**: The Python script (Option 1) is preferred as it handles missing columns automatically.
 
 ### Environment Variables
 
