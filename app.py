@@ -275,12 +275,13 @@ def upload_pdf():
         return jsonify({'error': 'No PDF file'}), 400
     
     file = request.files['pdf']
-    if file.filename == '':
+    if not file.filename or file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
     
     if not file.filename.lower().endswith('.pdf'):
         return jsonify({'error': 'File must be a PDF'}), 400
     
+    temp_filepath = None
     try:
         temp_filename = f"temp_{uuid.uuid4()}.pdf"
         temp_filepath = os.path.join(app.config['UPLOAD_FOLDER'], temp_filename)
@@ -301,7 +302,7 @@ def upload_pdf():
         return jsonify({'success': True, 'data': villa_data})
     
     except Exception as e:
-        if os.path.exists(temp_filepath):
+        if temp_filepath and os.path.exists(temp_filepath):
             os.remove(temp_filepath)
         return jsonify({'error': f'Error processing PDF: {str(e)}'}), 500
 

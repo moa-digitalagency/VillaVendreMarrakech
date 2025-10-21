@@ -13,6 +13,23 @@
             <a href="/" class="btn-preview">Voir le site</a>
         </header>
 
+        <div class="section pdf-upload-section">
+            <h2>🚀 Remplissage Automatique par IA</h2>
+            <p class="section-description">Uploadez un PDF de la villa et l'IA extraira automatiquement toutes les informations pour remplir le formulaire.</p>
+            
+            <div class="pdf-upload-area">
+                <input type="file" id="pdfUpload" accept="application/pdf" onchange="uploadPDF(this)">
+                <label for="pdfUpload" class="pdf-upload-label">
+                    📄 Cliquez pour uploader un PDF
+                </label>
+            </div>
+            <div id="pdfStatus" class="pdf-status"></div>
+        </div>
+
+        <div class="divider">
+            <span>OU</span>
+        </div>
+
         <form id="villaForm" method="POST" action="/admin/save">
             <div class="section">
                 <h2>Informations Principales</h2>

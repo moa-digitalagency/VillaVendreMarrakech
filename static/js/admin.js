@@ -1,3 +1,55 @@
+async function uploadPDF(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const statusDiv = document.getElementById('pdfStatus');
+    statusDiv.innerHTML = '<div class="pdf-loading">⏳ Analyse du PDF en cours... Cela peut prendre 30-60 secondes.</div>';
+
+    const formData = new FormData();
+    formData.append('pdf', file);
+
+    try {
+        const response = await fetch('/admin/upload-pdf', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success && result.data) {
+            statusDiv.innerHTML = '<div class="pdf-success">✅ PDF analysé avec succès ! Les données ont été extraites.</div>';
+            
+            const data = result.data;
+            document.querySelector('input[name="reference"]').value = data.reference || '';
+            document.querySelector('input[name="title"]').value = data.title || '';
+            document.querySelector('input[name="price"]').value = data.price || '';
+            document.querySelector('input[name="location"]').value = data.location || '';
+            document.querySelector('input[name="distance_city"]').value = data.distance_city || '';
+            document.querySelector('textarea[name="description"]').value = data.description || '';
+            document.querySelector('input[name="terrain_area"]').value = data.terrain_area || '';
+            document.querySelector('input[name="built_area"]').value = data.built_area || '';
+            document.querySelector('input[name="bedrooms"]').value = data.bedrooms || '';
+            document.querySelector('input[name="pool_size"]').value = data.pool_size || '';
+            document.querySelector('textarea[name="features"]').value = data.features || '';
+            document.querySelector('textarea[name="equipment"]').value = data.equipment || '';
+            document.querySelector('textarea[name="business_info"]').value = data.business_info || '';
+            document.querySelector('textarea[name="investment_benefits"]').value = data.investment_benefits || '';
+            document.querySelector('textarea[name="documents"]').value = data.documents || '';
+            document.querySelector('input[name="contact_phone"]').value = data.contact_phone || '';
+            document.querySelector('input[name="contact_email"]').value = data.contact_email || '';
+            document.querySelector('input[name="contact_website"]').value = data.contact_website || '';
+
+            document.getElementById('villaForm').scrollIntoView({ behavior: 'smooth' });
+        } else {
+            statusDiv.innerHTML = `<div class="pdf-error">❌ Erreur: ${result.error || 'Impossible d\'extraire les données'}</div>`;
+        }
+    } catch (error) {
+        statusDiv.innerHTML = `<div class="pdf-error">❌ Erreur réseau: ${error.message}</div>`;
+    } finally {
+        input.value = '';
+    }
+}
+
 async function uploadImages(input) {
     const files = input.files;
     if (!files.length) return;
