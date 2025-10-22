@@ -1,3 +1,29 @@
+<!--
+Panneau d'Administration - Villa à Vendre Marrakech
+
+Interface d'administration complète pour gérer les villas de luxe.
+Propose deux modes de saisie:
+1. Mode PDF + Photos: Upload PDF → IA extrait les données → Ajout photos
+2. Mode Formulaire + Photos: Saisie manuelle → IA améliore les textes → Ajout photos
+
+Fonctionnalités principales:
+- Extraction automatique de données depuis PDF via IA (Claude 3.5 Sonnet)
+- Amélioration de texte via IA (Mistral Large) pour chaque champ
+- Upload et optimisation automatique d'images
+- Galerie photos avec drag-and-drop et suppression
+- Réinitialisation complète de la base de données
+- Design responsive avec thème clair moderne
+
+Technologies:
+- Frontend: HTML, CSS vanilla, JavaScript vanilla
+- Backend: Flask API endpoints (/admin/upload-pdf, /admin/save, /api/enhance)
+- AI: OpenRouter API (Claude 3.5 Sonnet + Mistral Large)
+
+Développé par: MOA Digital Agency LLC
+Développeur: Aisance KALONJI
+Email: moa@myoneart.com
+Web: www.myoneart.com
+-->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -8,6 +34,7 @@
 </head>
 <body>
     <div class="admin-container">
+        <!-- ========== EN-TÊTE AVEC NAVIGATION ========== -->
         <header>
             <h1>🏡 Administration - Villas à Vendre Marrakech</h1>
             <div class="header-actions">
@@ -16,7 +43,8 @@
             </div>
         </header>
 
-        <!-- Sélecteur de mode -->
+        <!-- ========== SÉLECTEUR DE MODE DE SAISIE ========== -->
+        <!-- Permet de choisir entre le mode PDF+IA ou le mode formulaire manuel -->
         <div class="mode-selector">
             <h2>Choisissez votre mode de saisie</h2>
             <p>Sélectionnez la méthode qui vous convient le mieux pour ajouter une villa</p>
@@ -34,8 +62,10 @@
             </div>
         </div>
 
-        <!-- MODE 1: PDF + Photos -->
+        <!-- ========== MODE 1: PDF + PHOTOS (AVEC IA) ========== -->
+        <!-- Workflow: Upload PDF → IA extrait les données → Upload photos → Enregistrer -->
         <div id="content-pdf" class="mode-content active">
+            <!-- Section 1: Upload et extraction du PDF -->
             <div class="pdf-upload-section">
                 <h2>🚀 1. Upload PDF de la Villa</h2>
                 <p class="section-description">Uploadez le PDF et l'IA (Claude 3.5 Sonnet) extraira automatiquement toutes les informations.</p>
@@ -49,6 +79,7 @@
                 <div id="pdfStatus" class="pdf-status"></div>
             </div>
 
+            <!-- Section 2: Upload des photos (après extraction PDF) -->
             <div class="photo-upload-section">
                 <h2>📸 2. Photos de la Villa</h2>
                 <p class="section-description">Ajoutez les photos (optimisation automatique en JPEG).</p>
@@ -77,9 +108,12 @@
             </div>
         </div>
 
-        <!-- MODE 2: Formulaire + Photos -->
+        <!-- ========== MODE 2: FORMULAIRE + PHOTOS (MANUEL + IA) ========== -->
+        <!-- Workflow: Saisie manuelle → IA améliore les textes → Upload photos → Enregistrer -->
         <div id="content-manual" class="mode-content">
+            <!-- Formulaire de saisie manuelle avec boutons d'amélioration IA -->
             <form id="villaForm" method="POST" action="/admin/save">
+                <!-- Section: Informations principales (référence, titre, prix, localisation) -->
                 <div class="section">
                     <h2>Informations Principales</h2>
                     
@@ -240,6 +274,8 @@
         </div>
     </div>
 
+    <!-- ========== LOGIQUE JAVASCRIPT ========== -->
+    <!-- Gère le changement de mode, upload PDF, extraction IA, amélioration texte, upload images -->
     <script src="/static/js/admin.js"></script>
 </body>
 </html>

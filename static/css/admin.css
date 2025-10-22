@@ -1,3 +1,43 @@
+/*
+Feuille de Style Admin - Villa à Vendre Marrakech
+
+Styles CSS pour le panneau d'administration.
+Design moderne thème clair avec organisation en sections et formulaires interactifs.
+
+Structure:
+- Variables CSS (thème clair avec accents or et turquoise)
+- Reset et styles de base
+- En-tête avec navigation
+- Sélecteur de mode (PDF vs Formulaire)
+- Mode PDF: Zone upload PDF + galerie photos
+- Mode Formulaire: Formulaire complet avec boutons d'amélioration IA
+- Galerie d'images avec drag-and-drop
+- Boutons et interactions
+- Modales (réinitialisation)
+- Messages de statut et notifications
+- Responsive design
+
+Fonctionnalités UI:
+- Switch entre 2 modes de saisie
+- Upload drag-and-drop pour images
+- Boutons "Améliorer avec IA" sur chaque champ texte
+- Loading states et spinners
+- Confirmations modales
+- Design cohérent avec la page publique
+
+Palette de couleurs:
+- Or: #d4af37 (actions principales)
+- Turquoise: #14b8a6 (accents)
+- Fond clair: #f8fafc (arrière-plan)
+- Cartes blanches: #ffffff (conteneurs)
+
+Développé par: MOA Digital Agency LLC
+Développeur: Aisance KALONJI
+Email: moa@myoneart.com
+Web: www.myoneart.com
+*/
+
+/* ========== VARIABLES CSS (THÈME CLAIR ADMIN) ========== */
 :root {
     --light-bg: #f8fafc;
     --lighter-bg: #ffffff;
@@ -16,6 +56,7 @@
     --success: #10b981;
 }
 
+/* ========== RESET CSS ========== */
 * {
     margin: 0;
     padding: 0;

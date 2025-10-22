@@ -1,4 +1,36 @@
-// Mode switching
+/*
+Logique JavaScript Admin - Villa à Vendre Marrakech
+
+Script pour gérer toutes les interactions du panneau d'administration.
+Gère le changement de mode, upload PDF/images, extraction IA, amélioration de texte.
+
+Fonctionnalités principales:
+1. Changement de mode (PDF vs Formulaire)
+2. Upload et extraction PDF via IA (Claude 3.5 Sonnet)
+3. Upload et optimisation d'images (JPEG)
+4. Amélioration de texte via IA (Mistral Large) pour chaque champ
+5. Enregistrement des données de villa
+6. Gestion de la galerie d'images (ajout, suppression)
+7. Réinitialisation complète de la base de données
+
+API Endpoints utilisés:
+- POST /admin/upload-pdf : Upload PDF et extraction IA (60-90s)
+- POST /admin/upload : Upload et optimisation d'image
+- POST /admin/save : Enregistrement de la villa (mode PDF ou formulaire)
+- POST /api/enhance : Amélioration de texte via IA
+- POST /admin/delete-image/<filename> : Suppression d'image
+- POST /admin/reset : Réinitialisation complète
+
+Variables globales:
+- window.pdfExtractedData : Données extraites du PDF par l'IA
+
+Développé par: MOA Digital Agency LLC
+Développeur: Aisance KALONJI
+Email: moa@myoneart.com
+Web: www.myoneart.com
+*/
+
+// ========== CHANGEMENT DE MODE (PDF vs FORMULAIRE) ==========
 document.getElementById('mode-pdf')?.addEventListener('click', () => switchMode('pdf'));
 document.getElementById('mode-manual')?.addEventListener('click', () => switchMode('manual'));
 

@@ -1,10 +1,39 @@
+<!--
+Page Publique - Villa à Vendre Marrakech
+
+Page de présentation complète d'une villa de luxe à Marrakech.
+Optimisée pour le SEO avec méta-tags complets, Open Graph, Twitter Cards,
+et Schema.org JSON-LD pour un référencement optimal sur Google.
+
+Fonctionnalités:
+- Design responsive luxueux avec gradient or-turquoise
+- Galerie photos en plein écran avec navigation
+- Sections organisées: images, caractéristiques, équipements, investissement, contact
+- Méta-tags SEO complets pour Google, Facebook, Twitter
+- Schema.org RealEstateListing pour rich snippets Google
+- Boutons d'appel (WhatsApp, email, téléphone)
+- Design thème clair moderne avec effets de lumière
+
+SEO:
+- Title et description dynamiques basés sur les données de la villa
+- Meta keywords ciblés (villa marrakech, immobilier luxe, etc.)
+- Open Graph pour partage Facebook/LinkedIn optimal
+- Twitter Cards pour aperçus riches
+- Schema.org JSON-LD pour rich results Google
+- Balises canoniques et robots
+
+Développé par: MOA Digital Agency LLC
+Développeur: Aisance KALONJI
+Email: moa@myoneart.com
+Web: www.myoneart.com
+-->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- SEO Meta Tags -->
+    <!-- ========== SEO META TAGS ========== -->
     <title>{% if villa %}{{ villa.title }} - Villa à Vendre Marrakech | villaavendremarrakech.com{% else %}Villa à Vendre Marrakech - Immobilier de Luxe | villaavendremarrakech.com{% endif %}</title>
     <meta name="description" content="{% if villa %}{{ villa.description[:155] }}... Villa de prestige à vendre à {{ villa.location }}, {{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €. {% endif %}Découvrez nos villas de luxe à Marrakech. Immobilier haut de gamme avec piscine, jardin et finitions premium.">
     <meta name="keywords" content="villa à vendre marrakech, villa de luxe marrakech, immobilier marrakech, achat villa marrakech, propriété de prestige marrakech, maison à vendre marrakech, villa avec piscine marrakech, immobilier de luxe maroc, investissement immobilier marrakech, villa moderne marrakech, villa traditionnelle marrakech, riad à vendre marrakech, {% if villa %}{{ villa.location }}, {{ villa.bedrooms }} chambres{% endif %}">
@@ -15,7 +44,7 @@
     <meta name="geo.placename" content="Marrakech">
     <link rel="canonical" href="https://villaavendremarrakech.com/">
     
-    <!-- Open Graph / Facebook -->
+    <!-- ========== OPEN GRAPH / FACEBOOK ========== -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://villaavendremarrakech.com/">
     <meta property="og:title" content="{% if villa %}{{ villa.title }} - Villa à Vendre Marrakech{% else %}Villa à Vendre Marrakech - Immobilier de Luxe{% endif %}">
@@ -26,7 +55,7 @@
     <meta property="og:locale" content="fr_FR">
     <meta property="og:site_name" content="Villa à Vendre Marrakech">
     
-    <!-- Twitter Card -->
+    <!-- ========== TWITTER CARD ========== -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://villaavendremarrakech.com/">
     <meta name="twitter:title" content="{% if villa %}{{ villa.title }} - Villa à Vendre Marrakech{% else %}Villa à Vendre Marrakech - Immobilier de Luxe{% endif %}">
@@ -34,7 +63,7 @@
     <meta name="twitter:image" content="{% if villa and villa.get_images_list() %}https://villaavendremarrakech.com/static/uploads/{{ villa.get_images_list()[0] }}{% else %}https://villaavendremarrakech.com/static/og-default.jpg{% endif %}">
     
     {% if villa %}
-    <!-- Schema.org JSON-LD pour SEO structuré -->
+    <!-- ========== SCHEMA.ORG JSON-LD POUR RICH SNIPPETS GOOGLE ========== -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -130,9 +159,11 @@
     </script>
     {% endif %}
     
+    <!-- ========== FEUILLE DE STYLE ========== -->
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
+    <!-- ========== PAGE PUBLIQUE VILLA DE LUXE ========== -->
     {% if villa %}
     
     <!-- Hero Slider avec 3 Photos -->

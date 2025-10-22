@@ -1,3 +1,31 @@
+/*
+Feuille de Style Principale - Villa à Vendre Marrakech
+
+Styles CSS pour la page publique de présentation de villa de luxe.
+Design moderne avec thème clair, gradient or-turquoise, et animations subtiles.
+
+Structure:
+- Variables CSS (couleurs du thème luxe)
+- Reset et styles de base
+- Hero slider plein écran avec 3 photos
+- Sections de contenu (caractéristiques, équipements, investissement)
+- Galerie photos responsive
+- Section de contact avec boutons d'appel
+- Responsive design (mobile, tablette, desktop)
+- Animations et transitions CSS
+
+Palette de couleurs:
+- Or: #d4af37 (luxe, prestige)
+- Turquoise: #14b8a6 (modernité, confiance)
+- Blanc/Gris clair: Fond épuré et élégant
+
+Développé par: MOA Digital Agency LLC
+Développeur: Aisance KALONJI
+Email: moa@myoneart.com
+Web: www.myoneart.com
+*/
+
+/* ========== VARIABLES CSS (THÈME LUXE) ========== */
 :root {
     --gold: #d4af37;
     --gold-dark: #b8941f;
@@ -8,6 +36,7 @@
     --white: #ffffff;
 }
 
+/* ========== RESET CSS ========== */
 * {
     margin: 0;
     padding: 0;
