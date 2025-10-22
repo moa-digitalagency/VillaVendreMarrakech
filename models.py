@@ -1,55 +1,124 @@
+"""
+Modèles de Base de Données - Application Villa à Vendre Marrakech
+
+Ce fichier définit les modèles SQLAlchemy pour la base de données PostgreSQL.
+Actuellement, il contient le modèle Villa qui représente une villa de luxe à vendre.
+
+Développé par: MOA Digital Agency LLC
+Développeur: Aisance KALONJI
+Email: moa@myoneart.com
+Web: www.myoneart.com
+"""
+
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
 
+# Initialisation de l'extension SQLAlchemy
 db = SQLAlchemy()
 
+
 class Villa(db.Model):
+    """
+    Modèle de données pour une Villa de luxe à Marrakech
+    
+    Ce modèle stocke toutes les informations nécessaires pour présenter
+    une villa de prestige sur le site, incluant:
+    - Informations générales (référence, titre, prix, localisation)
+    - Caractéristiques techniques (surfaces, chambres, piscine)
+    - Détails marketing (équipements, avantages investisseurs)
+    - Médias (images)
+    - Coordonnées de contact
+    """
+    
     __tablename__ = 'villa'
     
+    # ========== IDENTIFIANT UNIQUE ==========
     id = db.Column(db.Integer, primary_key=True)
-    reference = db.Column(db.String(50), unique=True, nullable=False)
-    title = db.Column(db.String(200), nullable=False)
-    price = db.Column(db.Integer, nullable=False)
-    location = db.Column(db.String(200), nullable=False)
-    distance_city = db.Column(db.String(100))
-    description = db.Column(db.Text, nullable=False)
     
-    terrain_area = db.Column(db.Integer)
-    built_area = db.Column(db.Integer)
-    bedrooms = db.Column(db.Integer)
-    pool_size = db.Column(db.String(50))
+    # ========== INFORMATIONS PRINCIPALES ==========
+    reference = db.Column(db.String(50), unique=True, nullable=False)  # Référence unique de la villa (ex: "VL-001")
+    title = db.Column(db.String(200), nullable=False)  # Titre attractif de l'annonce
+    price = db.Column(db.Integer, nullable=False)  # Prix en euros
+    location = db.Column(db.String(200), nullable=False)  # Localisation (quartier, zone)
+    distance_city = db.Column(db.String(100))  # Distance depuis le centre-ville
+    description = db.Column(db.Text, nullable=False)  # Description complète et détaillée
     
-    features = db.Column(db.Text)
-    equipment = db.Column(db.Text)
-    business_info = db.Column(db.Text)
-    investment_benefits = db.Column(db.Text)
-    documents = db.Column(db.Text)
+    # ========== CARACTÉRISTIQUES TECHNIQUES ==========
+    terrain_area = db.Column(db.Integer)  # Surface du terrain en m²
+    built_area = db.Column(db.Integer)  # Surface construite en m²
+    bedrooms = db.Column(db.Integer)  # Nombre de chambres/suites
+    pool_size = db.Column(db.String(50))  # Dimensions de la piscine (ex: "12m x 6m")
     
-    images = db.Column(db.Text)
+    # ========== DÉTAILS MARKETING ==========
+    features = db.Column(db.Text)  # Équipements principaux (un par ligne)
+    equipment = db.Column(db.Text)  # Équipement et confort (un par ligne)
+    business_info = db.Column(db.Text)  # Informations sur l'exploitation commerciale
+    investment_benefits = db.Column(db.Text)  # Atouts pour investisseurs
+    documents = db.Column(db.Text)  # Documents disponibles (titre de propriété, etc.)
     
-    contact_phone = db.Column(db.String(50))
-    contact_email = db.Column(db.String(100))
-    contact_website = db.Column(db.String(200))
+    # ========== MÉDIAS ==========
+    images = db.Column(db.Text)  # Liste des noms de fichiers d'images (format JSON)
     
-    is_active = db.Column(db.Boolean, default=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    # ========== CONTACT ==========
+    contact_phone = db.Column(db.String(50))  # Numéro de téléphone
+    contact_email = db.Column(db.String(100))  # Email de contact
+    contact_website = db.Column(db.String(200))  # Site web de l'agence
+    
+    # ========== MÉTADONNÉES ==========
+    is_active = db.Column(db.Boolean, default=True)  # Villa active/visible sur le site
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Date de création
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)  # Date de dernière mise à jour
+    
+    # ========== MÉTHODES UTILITAIRES ==========
     
     def get_images_list(self):
+        """
+        Retourne la liste des images sous forme de liste Python
+        
+        Les images sont stockées en JSON dans la base de données.
+        Cette méthode décode le JSON et retourne une liste utilisable.
+        
+        Returns:
+            list: Liste des noms de fichiers d'images
+        """
         if self.images:
             return json.loads(self.images)
         return []
     
     def set_images_list(self, images_list):
+        """
+        Enregistre une liste d'images en JSON dans la base de données
+        
+        Args:
+            images_list (list): Liste des noms de fichiers d'images
+        """
         self.images = json.dumps(images_list)
     
     def get_features_list(self):
+        """
+        Retourne les équipements sous forme de liste
+        
+        Les équipements sont stockés avec un élément par ligne.
+        Cette méthode sépare les lignes et retourne une liste.
+        
+        Returns:
+            list: Liste des équipements
+        """
         if self.features:
             return self.features.split('\n')
         return []
     
     def to_dict(self):
+        """
+        Convertit l'objet Villa en dictionnaire pour l'API JSON
+        
+        Utile pour les endpoints API qui doivent retourner les données
+        de la villa en format JSON.
+        
+        Returns:
+            dict: Dictionnaire contenant toutes les données de la villa
+        """
         return {
             'id': self.id,
             'reference': self.reference,
@@ -67,7 +136,7 @@ class Villa(db.Model):
             'business_info': self.business_info,
             'investment_benefits': self.investment_benefits,
             'documents': self.documents,
-            'images': self.get_images_list(),
+            'images': self.get_images_list(),  # Convertit le JSON en liste
             'contact_phone': self.contact_phone,
             'contact_email': self.contact_email,
             'contact_website': self.contact_website,

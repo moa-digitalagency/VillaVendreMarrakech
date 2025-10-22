@@ -1,6 +1,11 @@
-# 🏡 Plateforme de Villas à Vendre Marrakech
+# 🏡 Villa à Vendre Marrakech
 
 Application web complète pour la vente en ligne de villas de luxe à Marrakech avec interface d'administration sécurisée et intelligence artificielle.
+
+**Développé par :** MOA Digital Agency LLC  
+**Développeur :** Aisance KALONJI  
+**Email :** moa@myoneart.com  
+**Site Web :** [www.myoneart.com](https://www.myoneart.com)
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
 ![Flask](https://img.shields.io/badge/Flask-Latest-green)
@@ -236,12 +241,17 @@ L'application sera accessible sur `http://localhost:5000`
 
 ## 📝 License
 
-Propriétaire - Tous droits réservés
+Propriétaire - Tous droits réservés © MOA Digital Agency LLC
 
-## 👤 Contact
+## 👤 Contact & Développement
 
-Pour toute question ou demande, veuillez contacter l'administrateur.
+**MOA Digital Agency LLC**  
+Développeur : Aisance KALONJI  
+Email : [moa@myoneart.com](mailto:moa@myoneart.com)  
+Site Web : [www.myoneart.com](https://www.myoneart.com)
+
+Pour toute question technique, personnalisation ou support, n'hésitez pas à nous contacter.
 
 ---
 
-**Développé avec ❤️ pour les Villas de Marrakech**
+**Développé avec ❤️ par MOA Digital Agency LLC - Spécialiste du développement web sur mesure**
