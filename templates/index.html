@@ -508,5 +508,71 @@ Web: www.myoneart.com
         <a href="/login" class="btn-admin">{{ g.t.access_admin }}</a>
     </div>
     {% endif %}
+    
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>Bellari Concept Immobilier</h3>
+                <p>{% if g.lang == 'en' %}Your luxury real estate partner in Marrakech{% else %}Votre partenaire immobilier de luxe à Marrakech{% endif %}</p>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2025 Bellari Concept Immobilier. {% if g.lang == 'en' %}All rights reserved.{% else %}Tous droits réservés.{% endif %}</p>
+            </div>
+        </div>
+    </footer>
+    
+    <style>
+        .site-footer {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #fff;
+            padding: 40px 20px 20px;
+            margin-top: 80px;
+            border-top: 3px solid #D4AF37;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .footer-brand h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #D4AF37;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .footer-brand p {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .footer-copyright {
+            padding-top: 20px;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            margin-top: 20px;
+        }
+        
+        .footer-copyright p {
+            font-size: 13px;
+            color: #999;
+            margin: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .site-footer {
+                padding: 30px 15px 15px;
+                margin-top: 60px;
+            }
+            
+            .footer-brand h3 {
+                font-size: 20px;
+            }
+        }
+    </style>
 </body>
 </html>
