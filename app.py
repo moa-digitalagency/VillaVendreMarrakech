@@ -72,7 +72,7 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
 }
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
+app.secret_key = os.environ.get("SESSION_SECRET")
 
 # Extensions de fichiers autorisées pour les uploads d'images
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
