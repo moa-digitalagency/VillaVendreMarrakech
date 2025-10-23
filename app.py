@@ -453,6 +453,12 @@ def translate_villa_data_to_english(french_data):
     Utilise Claude 3.5 Sonnet via OpenRouter pour des traductions de haute qualité
     adaptées au contexte de l'immobilier de luxe à Marrakech.
     
+    Cette fonction traduit TOUS les champs nécessaires pour une expérience bilingue complète :
+    - Contenu principal : title, description, features, equipment, etc.
+    - Textes du site web : hero subtitle, contact button, WhatsApp button
+    - Section "Why Choose" : titres et descriptions des 4 cartes
+    - Section Contact : titre et sous-titre
+    
     Args:
         french_data: Dictionnaire contenant les données en français
     
@@ -464,6 +470,7 @@ def translate_villa_data_to_english(french_data):
         return {}
     
     try:
+        # Collecte de TOUS les champs à traduire (contenus principaux)
         fields_to_translate = {
             'title': french_data.get('title', ''),
             'description': french_data.get('description', ''),
@@ -471,7 +478,25 @@ def translate_villa_data_to_english(french_data):
             'equipment': french_data.get('equipment', ''),
             'business_info': french_data.get('business_info', ''),
             'investment_benefits': french_data.get('investment_benefits', ''),
-            'documents': french_data.get('documents', '')
+            'documents': french_data.get('documents', ''),
+            # Textes personnalisables du site web
+            'hero_subtitle': french_data.get('hero_subtitle_fr', ''),
+            'contact_button': french_data.get('contact_button_fr', ''),
+            'description_title': french_data.get('description_title_fr', ''),
+            'whatsapp_button': french_data.get('whatsapp_button_fr', ''),
+            # Section "Why Choose This Villa"
+            'why_choose_title': french_data.get('why_choose_title_fr', ''),
+            'why_card1_title': french_data.get('why_card1_title_fr', ''),
+            'why_card1_desc': french_data.get('why_card1_desc_fr', ''),
+            'why_card2_title': french_data.get('why_card2_title_fr', ''),
+            'why_card2_desc': french_data.get('why_card2_desc_fr', ''),
+            'why_card3_title': french_data.get('why_card3_title_fr', ''),
+            'why_card3_desc': french_data.get('why_card3_desc_fr', ''),
+            'why_card4_title': french_data.get('why_card4_title_fr', ''),
+            'why_card4_desc': french_data.get('why_card4_desc_fr', ''),
+            # Section Contact
+            'contact_title': french_data.get('contact_title_fr', ''),
+            'contact_subtitle': french_data.get('contact_subtitle_fr', '')
         }
         
         non_empty_fields = {k: v for k, v in fields_to_translate.items() if v and v.strip()}
@@ -486,18 +511,13 @@ Preserve all line breaks and formatting exactly as shown.
 French content to translate:
 {json.dumps(non_empty_fields, ensure_ascii=False, indent=2)}
 
-Respond ONLY with a valid JSON object containing the translations, using the same keys with "_en" suffix:
-{{
-    "title_en": "English translation of title",
-    "description_en": "English translation of description",
-    "features_en": "English translation of features (preserve line breaks)",
-    "equipment_en": "English translation of equipment (preserve line breaks)",
-    "business_info_en": "English translation of business_info",
-    "investment_benefits_en": "English translation of investment_benefits (preserve line breaks)",
-    "documents_en": "English translation of documents"
-}}
+Respond ONLY with a valid JSON object containing ALL translations, using the same keys with "_en" suffix.
+For example:
+- "title" becomes "title_en"
+- "hero_subtitle" becomes "hero_subtitle_en"
+- "why_card1_title" becomes "why_card1_title_en"
 
-Only include fields that were provided in the French content."""
+Include ALL fields that were provided in the French content, with proper "_en" suffix."""
 
         response = requests.post(
             "https://openrouter.ai/api/v1/chat/completions",
@@ -516,9 +536,9 @@ Only include fields that were provided in the French content."""
                     }
                 ],
                 "temperature": 0.3,
-                "max_tokens": 4000
+                "max_tokens": 6000
             },
-            timeout=90
+            timeout=120
         )
         
         if response.status_code == 200:

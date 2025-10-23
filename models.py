@@ -170,6 +170,10 @@ class Villa(db.Model):
         Utile pour les endpoints API qui doivent retourner les données
         de la villa en format JSON.
         
+        IMPORTANT: Pour la langue anglaise, les champs retournent None si la traduction
+        n'existe pas (pas de fallback vers le français) pour garantir une expérience
+        bilingue pure sans mélange de langues.
+        
         Args:
             lang (str): Langue souhaitée ('fr' ou 'en')
         
@@ -180,20 +184,20 @@ class Villa(db.Model):
             return {
                 'id': self.id,
                 'reference': self.reference,
-                'title': self.title_en or self.title,
+                'title': self.title_en,
                 'price': self.price,
                 'location': self.location,
                 'distance_city': self.distance_city,
-                'description': self.description_en or self.description,
+                'description': self.description_en,
                 'terrain_area': self.terrain_area,
                 'built_area': self.built_area,
                 'bedrooms': self.bedrooms,
                 'pool_size': self.pool_size,
-                'features': self.features_en or self.features,
-                'equipment': self.equipment_en or self.equipment,
-                'business_info': self.business_info_en or self.business_info,
-                'investment_benefits': self.investment_benefits_en or self.investment_benefits,
-                'documents': self.documents_en or self.documents,
+                'features': self.features_en,
+                'equipment': self.equipment_en,
+                'business_info': self.business_info_en,
+                'investment_benefits': self.investment_benefits_en,
+                'documents': self.documents_en,
                 'images': self.get_images_list(),
                 'contact_phone': self.contact_phone,
                 'contact_email': self.contact_email,

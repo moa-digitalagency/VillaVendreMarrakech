@@ -29,14 +29,34 @@ def translate_villa():
         print("🏡 Villa trouvée:", villa.title or "Sans titre")
         print()
         
+        # Collecte de TOUS les champs français disponibles
         french_data = {
+            # Contenu principal
             'title': villa.title or '',
             'description': villa.description or '',
             'features': villa.features or '',
             'equipment': villa.equipment or '',
             'business_info': villa.business_info or '',
             'investment_benefits': villa.investment_benefits or '',
-            'documents': villa.documents or ''
+            'documents': villa.documents or '',
+            # Textes personnalisables du site web
+            'hero_subtitle_fr': villa.hero_subtitle_fr or '',
+            'contact_button_fr': villa.contact_button_fr or '',
+            'description_title_fr': villa.description_title_fr or '',
+            'whatsapp_button_fr': villa.whatsapp_button_fr or '',
+            # Section "Why Choose This Villa"
+            'why_choose_title_fr': villa.why_choose_title_fr or '',
+            'why_card1_title_fr': villa.why_card1_title_fr or '',
+            'why_card1_desc_fr': villa.why_card1_desc_fr or '',
+            'why_card2_title_fr': villa.why_card2_title_fr or '',
+            'why_card2_desc_fr': villa.why_card2_desc_fr or '',
+            'why_card3_title_fr': villa.why_card3_title_fr or '',
+            'why_card3_desc_fr': villa.why_card3_desc_fr or '',
+            'why_card4_title_fr': villa.why_card4_title_fr or '',
+            'why_card4_desc_fr': villa.why_card4_desc_fr or '',
+            # Section Contact
+            'contact_title_fr': villa.contact_title_fr or '',
+            'contact_subtitle_fr': villa.contact_subtitle_fr or ''
         }
         
         non_empty = {k: v for k, v in french_data.items() if v and v.strip()}
@@ -45,10 +65,10 @@ def translate_villa():
             print("⚠️  Aucune donnée française à traduire")
             return False
         
-        print(f"📝 Champs français trouvés: {', '.join(non_empty.keys())}")
+        print(f"📝 {len(non_empty)} champs français trouvés")
         print()
         print("🌍 Traduction en cours vers l'anglais...")
-        print("⏳ Cela peut prendre 60-90 secondes...")
+        print("⏳ Cela peut prendre 90-120 secondes...")
         print()
         
         english_translations = translate_villa_data_to_english(french_data)
@@ -60,41 +80,58 @@ def translate_villa():
         print(f"✅ Traduction réussie de {len(english_translations)} champs")
         print()
         
-        if 'title_en' in english_translations:
-            villa.title_en = english_translations['title_en']
-            print(f"  ✓ Titre: {english_translations['title_en'][:60]}...")
+        # Appliquer toutes les traductions
+        field_mapping = {
+            'title_en': 'title_en',
+            'description_en': 'description_en',
+            'features_en': 'features_en',
+            'equipment_en': 'equipment_en',
+            'business_info_en': 'business_info_en',
+            'investment_benefits_en': 'investment_benefits_en',
+            'documents_en': 'documents_en',
+            'hero_subtitle_en': 'hero_subtitle_en',
+            'contact_button_en': 'contact_button_en',
+            'description_title_en': 'description_title_en',
+            'whatsapp_button_en': 'whatsapp_button_en',
+            'why_choose_title_en': 'why_choose_title_en',
+            'why_card1_title_en': 'why_card1_title_en',
+            'why_card1_desc_en': 'why_card1_desc_en',
+            'why_card2_title_en': 'why_card2_title_en',
+            'why_card2_desc_en': 'why_card2_desc_en',
+            'why_card3_title_en': 'why_card3_title_en',
+            'why_card3_desc_en': 'why_card3_desc_en',
+            'why_card4_title_en': 'why_card4_title_en',
+            'why_card4_desc_en': 'why_card4_desc_en',
+            'contact_title_en': 'contact_title_en',
+            'contact_subtitle_en': 'contact_subtitle_en'
+        }
         
-        if 'description_en' in english_translations:
-            villa.description_en = english_translations['description_en']
-            print(f"  ✓ Description: {len(english_translations['description_en'])} caractères")
-        
-        if 'features_en' in english_translations:
-            villa.features_en = english_translations['features_en']
-            features_count = len([f for f in english_translations['features_en'].split('\n') if f.strip()])
-            print(f"  ✓ Caractéristiques: {features_count} items")
-        
-        if 'equipment_en' in english_translations:
-            villa.equipment_en = english_translations['equipment_en']
-            equipment_count = len([e for e in english_translations['equipment_en'].split('\n') if e.strip()])
-            print(f"  ✓ Équipements: {equipment_count} items")
-        
-        if 'business_info_en' in english_translations:
-            villa.business_info_en = english_translations['business_info_en']
-            print(f"  ✓ Informations commerciales: {len(english_translations['business_info_en'])} caractères")
-        
-        if 'investment_benefits_en' in english_translations:
-            villa.investment_benefits_en = english_translations['investment_benefits_en']
-            benefits_count = len([b for b in english_translations['investment_benefits_en'].split('\n') if b.strip()])
-            print(f"  ✓ Atouts investissement: {benefits_count} items")
-        
-        if 'documents_en' in english_translations:
-            villa.documents_en = english_translations['documents_en']
-            print(f"  ✓ Documents: traduit")
+        translated_count = 0
+        for trans_key, villa_attr in field_mapping.items():
+            if trans_key in english_translations:
+                setattr(villa, villa_attr, english_translations[trans_key])
+                translated_count += 1
+                
+                # Affichage selon le type de champ
+                if trans_key == 'title_en':
+                    print(f"  ✓ Titre: {english_translations[trans_key][:60]}...")
+                elif trans_key == 'description_en':
+                    print(f"  ✓ Description: {len(english_translations[trans_key])} caractères")
+                elif trans_key in ['features_en', 'equipment_en', 'investment_benefits_en']:
+                    items_count = len([item for item in english_translations[trans_key].split('\n') if item.strip()])
+                    field_name = trans_key.replace('_en', '').replace('_', ' ').title()
+                    print(f"  ✓ {field_name}: {items_count} items")
+                elif trans_key.endswith('_en') and len(english_translations[trans_key]) > 50:
+                    field_name = trans_key.replace('_en', '').replace('_', ' ').title()
+                    print(f"  ✓ {field_name}: {english_translations[trans_key][:50]}...")
+                elif trans_key.endswith('_en'):
+                    field_name = trans_key.replace('_en', '').replace('_', ' ').title()
+                    print(f"  ✓ {field_name}: {english_translations[trans_key]}")
         
         try:
             db.session.commit()
             print()
-            print("💾 Traductions sauvegardées dans la base de données")
+            print(f"💾 {translated_count} traductions sauvegardées dans la base de données")
             print()
             print("✅ Traduction terminée avec succès!")
             print()

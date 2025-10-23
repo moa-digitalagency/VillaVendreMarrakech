@@ -21,8 +21,8 @@ Web: www.myoneart.com
     
     <!-- ========== SEO META TAGS ========== -->
     {% if g.lang == 'en' %}
-    <title>{% if villa %}{{ villa.title_en or villa.title }} - Luxury Villa for Sale in Marrakech | villaavendremarrakech.com{% else %}Luxury Villa for Sale in Marrakech | villaavendremarrakech.com{% endif %}</title>
-    <meta name="description" content="{% if villa %}{{ (villa.description_en or villa.description)[:155] }}... Luxury villa for sale in {{ villa.location }}, {{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €. {% endif %}Discover our luxury villas in Marrakech.">
+    <title>{% if villa %}{% if g.lang == 'en' %}{{ villa.title_en if villa.title_en else 'Luxury Villa for Sale in Marrakech' }}{% else %}{{ villa.title if villa.title else 'Villa de Luxe à Vendre à Marrakech' }}{% endif %} - Luxury Villa for Sale in Marrakech | villaavendremarrakech.com{% else %}Luxury Villa for Sale in Marrakech | villaavendremarrakech.com{% endif %}</title>
+    <meta name="description" content="{% if villa %}{% if g.lang == 'en' %}{{ villa.description_en[:155] if villa.description_en else 'Luxury villa for sale in Marrakech with premium features and exceptional location.' }}...{% else %}{{ villa.description[:155] if villa.description else 'Villa de luxe à vendre à Marrakech avec équipements haut de gamme.' }}...{% endif %} Luxury villa for sale in {{ villa.location }}, {{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €. {% endif %}Discover our luxury villas in Marrakech.">
     {% else %}
     <title>{% if villa %}{{ villa.title }} - Villa à Vendre Marrakech | villaavendremarrakech.com{% else %}Villa à Vendre Marrakech - Immobilier de Luxe | villaavendremarrakech.com{% endif %}</title>
     <meta name="description" content="{% if villa %}{{ villa.description[:155] }}... Villa de prestige à vendre à {{ villa.location }}, {{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €. {% endif %}Découvrez nos villas de luxe à Marrakech.">
