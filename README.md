@@ -1,6 +1,6 @@
 # 🏡 Villa à Vendre Marrakech
 
-Application web complète pour la vente en ligne de villas de luxe à Marrakech avec interface d'administration sécurisée et intelligence artificielle.
+Application web complète pour la vente en ligne de villas de luxe à Marrakech avec support bilingue complet et intelligence artificielle.
 
 **Développé par :** MOA Digital Agency LLC  
 **Développeur :** Aisance KALONJI  
@@ -10,248 +10,205 @@ Application web complète pour la vente en ligne de villas de luxe à Marrakech 
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
 ![Flask](https://img.shields.io/badge/Flask-Latest-green)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-orange)
-![OpenRouter](https://img.shields.io/badge/AI-Claude%20%26%20Mistral-purple)
+![Version](https://img.shields.io/badge/Version-2.0.0-purple)
 
-## ✨ Fonctionnalités Principales
+## ✨ Nouveautés Version 2.0.0
 
-### 🔐 Sécurité
-- Authentification admin avec mot de passe sécurisé
-- Protection par session Flask de toutes les routes admin
-- Bouton de déconnexion intégré
-- Mot de passe configurable via variable d'environnement (défaut: `@4dm1n`)
+### 🌍 Support Bilingue Complet
+- **Tous les textes modifiables** depuis le panneau d'administration
+- **Interface d'édition dédiée** pour personnaliser chaque section du site
+- **24 nouveaux champs bilingues** (FR/EN) pour une personnalisation totale
+- **Détection automatique** de la langue du navigateur
 
-### 🎨 Interface Admin Moderne
-- **Design professionnel thème clair** avec palette cohérente (gold, teal)
-- **Deux modes de saisie distincts** :
-  - **Mode PDF + Photos** : Extraction automatique par IA depuis PDF
-  - **Mode Formulaire + Photos** : Saisie manuelle avec amélioration IA
-- Interface responsive adaptée à tous les écrans
-- Transitions fluides et effets de survol
+### ✏️ Édition Facile
+- Section Héro (sous-titre, bouton contact)
+- Section Description (titre, bouton WhatsApp)
+- Section "Pourquoi Choisir" (titre + 4 cartes personnalisables)
+- Section Contact (titre, sous-titre)
 
-### 🚀 Intelligence Artificielle (OpenRouter)
-- **Claude 3.5 Sonnet** (Anthropic) - Extraction structurée depuis PDF
-- **Mistral Large** - Amélioration de texte en français
-- Boutons ✨ AI sur tous les champs de texte
-- Extraction automatique en 60-90 secondes
+📘 **Guide complet** : Consultez `GUIDE_TEXTES_PERSONNALISABLES.md`
 
-### 📸 Gestion des Médias
-- Upload de photos avec optimisation automatique (JPEG, compression)
-- Galerie interactive avec suppression d'images
-- Preview en temps réel des images uploadées
-- Support multi-images
+## 🚀 Déploiement & Mise à Jour
 
-### 🗑️ Réinitialisation Sécurisée
-- Bouton de reset pour supprimer toutes les données
-- Double confirmation avec modale (saisie de "SUPPRIMER")
-- Suppression complète : données DB + fichiers photos
+### Sur Replit
+✅ Déjà configuré - Cliquez simplement sur "Run" !
 
-### 🌐 Frontend Public
-- Design luxueux adapté aux villas de prestige
-- Effets parallaxe et animations
-- Galerie photo avec lightbox
-- Responsive mobile/tablette/desktop
+### Sur VPS (En Production)
 
-## 🛠️ Technologies
-
-- **Backend** : Python (Flask), SQLAlchemy
-- **Base de données** : PostgreSQL (Neon)
-- **IA** : OpenRouter API
-  - Claude 3.5 Sonnet (extraction PDF)
-  - Mistral Large (amélioration texte)
-- **Frontend** : HTML5, CSS3, JavaScript
-- **Images** : Pillow (optimisation automatique)
-- **Sécurité** : Flask Sessions, authentification
-
-## 📦 Déploiement
-
-Pour des instructions complètes de déploiement, consultez **[DEPLOYMENT.md](DEPLOYMENT.md)** qui inclut :
-- 🗄️ Schémas de base de données complets
-- 🔧 Scripts d'initialisation SQL
-- ⚙️ Configuration des variables d'environnement
-- 🚀 Instructions de déploiement (Replit et serveurs)
-- 📚 Documentation bilingue (EN/FR)
-
-**Fichiers de déploiement** :
-- `DEPLOYMENT.md` - Guide complet de déploiement
-- `init_database.sql` - Script d'initialisation PostgreSQL
-- `requirements.txt` - Dépendances Python
-- `.env.example` - Template de configuration
-
-## 🔍 SEO & Référencement Naturel
-
-Le site est **100% optimisé pour le référencement naturel** sur Google pour "villa à vendre marrakech".
-
-Consultez **[SEO.md](SEO.md)** pour le guide complet incluant :
-- ✅ Meta tags optimisés (title, description, keywords)
-- ✅ Open Graph & Twitter Cards pour réseaux sociaux
-- ✅ Schema.org (RealEstateListing, Organization, Breadcrumb)
-- ✅ Alt tags descriptifs sur toutes les images
-- ✅ robots.txt & sitemap.xml
-- ✅ Géolocalisation Marrakech (MA-15)
-- ✅ 12+ mots-clés ciblés immobilier luxe Marrakech
-
-**Score SEO : 95/100** 🎉
-
-**URL configurée** : `villaavendremarrakech.com`
-
-**Mots-clés principaux** :
-- villa à vendre marrakech
-- villa de luxe marrakech
-- immobilier marrakech
-- achat villa marrakech
-- propriété de prestige marrakech
-
-## 📋 Structure du Projet
-
-```
-├── app.py                  # Application Flask principale
-├── models.py              # Modèles de base de données
-├── templates/
-│   ├── login.html         # Page de connexion admin
-│   ├── admin.html         # Interface d'administration
-│   └── index.html         # Page publique de présentation
-├── static/
-│   ├── css/
-│   │   ├── style.css      # Styles frontend
-│   │   └── admin.css      # Styles admin (thème clair)
-│   ├── js/
-│   │   └── admin.js       # Scripts admin (gestion modes)
-│   └── uploads/           # Photos uploadées
-├── README.md              # Ce fichier
-└── replit.md              # Documentation technique
-```
-
-## 🚀 Installation & Démarrage
-
-### Prérequis
-- Python 3.11+
-- PostgreSQL
-- Clé API OpenRouter (pour les fonctionnalités IA)
-
-### Configuration
-
-1. **Variables d'environnement** :
+#### Mise à jour de l'application
 ```bash
-DATABASE_URL=postgresql://...          # URL PostgreSQL
-OPENROUTER_API_KEY=sk-or-...          # Clé API OpenRouter
-ADMIN_PASSWORD=@4dm1n                  # Mot de passe admin (modifiable)
-SECRET_KEY=votre-cle-secrete           # Clé secrète Flask
+# Mise à jour complète (recommandé)
+sudo ./update_vps.sh
+
+# Mise à jour rapide (sans backup DB)
+sudo ./update_vps.sh --quick
+
+# Redémarrage uniquement
+sudo ./update_vps.sh --restart
+
+# Afficher le statut
+sudo ./update_vps.sh --status
+
+# Voir les logs
+sudo ./update_vps.sh --logs
 ```
 
-2. **Installer les dépendances** :
-```bash
-pip install flask flask-cors flask-sqlalchemy pillow psycopg2-binary pypdf2 python-dotenv requests werkzeug
-```
+Le script `update_vps.sh` gère automatiquement :
+- ✅ Sauvegarde automatique de la base de données
+- ✅ Mise à jour du code depuis Git
+- ✅ Installation des dépendances Python
+- ✅ Vérification et correction des permissions
+- ✅ Redémarrage des services
 
-3. **Lancer l'application** :
-```bash
-python app.py
-```
+## 🎨 Fonctionnalités Principales
 
-L'application sera accessible sur `http://localhost:5000`
+### 🔐 Interface Admin Sécurisée
+- Connexion par mot de passe
+- **Deux modes de saisie** :
+  - **PDF + Photos** : Extraction IA automatique (Claude 3.5 Sonnet)
+  - **Formulaire Bilingue** : Saisie manuelle avec amélioration IA (Mistral Large)
+- **Édition des textes du site** : Personnalisez tous les textes en FR/EN
+- Gestion complète des photos avec optimisation automatique
+
+### 🌐 Site Public Ultra-Moderne
+- Design luxueux responsive
+- Slider automatique en page d'accueil
+- Galerie photos avec lightbox
+- Support bilingue FR/EN automatique
+- Intégration WhatsApp directe
+- SEO optimisé (Score 95/100)
+
+### 🤖 Intelligence Artificielle
+- **Claude 3.5 Sonnet** : Extraction structurée de données PDF
+- **Mistral Large** : Amélioration de texte en français
+- Traitement en 60-90 secondes
 
 ## 📖 Utilisation
 
 ### 1. Connexion Admin
 1. Accédez à `/login`
-2. Entrez le mot de passe : `@4dm1n` (ou votre mot de passe personnalisé)
-3. Vous êtes redirigé vers l'interface d'administration
+2. Entrez votre mot de passe administrateur
+3. Vous êtes redirigé vers le panneau d'administration
 
-### 2. Mode 1 : PDF + Photos (Recommandé)
-1. Sélectionnez "Mode PDF + Photos" dans le sélecteur
-2. Uploadez un PDF de la villa
-3. **Claude 3.5 Sonnet** extrait automatiquement toutes les données (60-90s)
-4. Ajoutez les photos de la villa
-5. Cliquez sur "💾 Enregistrer la Villa"
-6. Consultez le résultat sur `/`
+### 2. Ajouter une Villa
 
-### 3. Mode 2 : Formulaire + Photos
-1. Sélectionnez "Mode Formulaire + Photos" dans le sélecteur
-2. Remplissez manuellement les informations
-3. Utilisez les boutons ✨ AI pour améliorer vos textes avec **Mistral Large**
-4. Ajoutez les photos de la villa
-5. Cliquez sur "💾 Enregistrer la Villa"
-6. Consultez le résultat sur `/`
+#### Option A : Mode PDF + Photos (Recommandé)
+1. Uploadez le PDF de la villa
+2. L'IA extrait automatiquement toutes les informations
+3. Ajoutez les photos
+4. Enregistrez
 
-### 4. Réinitialisation
-1. Dans l'admin, cliquez sur "🗑️ Réinitialiser"
-2. Une modale s'ouvre avec un avertissement
-3. Tapez exactement "SUPPRIMER" pour confirmer
-4. Toutes les données et photos sont supprimées
+#### Option B : Mode Formulaire Bilingue
+1. Remplissez les informations en français et anglais
+2. Utilisez les boutons ✨ AI pour améliorer les textes
+3. Ajoutez les photos
+4. Enregistrez
 
-### 5. Déconnexion
-- Cliquez sur "Déconnexion" dans le header
+### 3. Personnaliser le Site
+1. Cliquez sur "**Éditer le site**" dans le menu admin
+2. Modifiez tous les textes en français et anglais :
+   - Sous-titres et boutons
+   - Titres de sections
+   - Descriptions des 4 cartes "Pourquoi Choisir"
+   - Textes de contact
+3. Enregistrez vos modifications
+4. Les changements sont immédiatement visibles sur le site public
 
-## 🔗 Routes de l'Application
+## 🔧 Configuration
 
-### Routes Publiques
-- `/` - Page publique de la villa
-- `/api/villa` - API JSON des données de la villa
+### Variables d'Environnement
 
-### Routes d'Authentification
-- `/login` (GET, POST) - Page de connexion admin
-- `/logout` (GET) - Déconnexion admin
+Créez un fichier `.env` avec :
 
-### Routes Admin (Protégées)
-- `/admin` (GET) - Interface d'administration
-- `/admin/save` (POST) - Sauvegarde des données
-- `/admin/upload` (POST) - Upload de photos
-- `/admin/upload-pdf` (POST) - Upload et extraction PDF
-- `/admin/delete-image/<filename>` (POST) - Suppression photo
-- `/admin/reset` (POST) - Réinitialisation complète
-- `/api/enhance` (POST) - Amélioration de texte par IA
+```bash
+# Base de données PostgreSQL
+DATABASE_URL=postgresql://user:password@localhost:5432/villaeden
 
-## 🎯 Fonctionnalités IA
+# Clé secrète pour les sessions Flask
+SESSION_SECRET=votre-cle-secrete-aleatoire-forte
 
-### Extraction PDF (Claude 3.5 Sonnet)
-- Analyse complète du PDF
-- Extraction de toutes les informations :
-  - Référence, titre, prix
-  - Localisation, distance
-  - Description complète
-  - Surfaces, chambres, piscine
-  - Équipements et caractéristiques
-  - Informations commerciales
-  - Coordonnées de contact
-- Format JSON structuré
-- Temps : 60-90 secondes
+# Mot de passe administrateur
+ADMIN_PASSWORD=votre-mot-de-passe-admin
 
-### Amélioration de Texte (Mistral Large)
-- Amélioration instantanée de vos descriptions
-- Optimisé pour l'immobilier de luxe
-- Français professionnel
-- Boutons ✨ AI sur tous les champs de texte
+# Clé API OpenRouter pour IA (optionnel)
+OPENROUTER_API_KEY=sk-or-v1-xxxxxxxxxxxxx
+```
+
+## 📂 Structure du Projet
+
+```
+.
+├── app.py                              # Application Flask principale
+├── main.py                             # Point d'entrée
+├── models.py                           # Modèles de base de données
+├── requirements.txt                    # Dépendances Python
+├── update_vps.sh                       # Script de mise à jour VPS
+├── static/
+│   ├── css/
+│   │   ├── admin.css                   # Styles admin
+│   │   └── style.css                   # Styles frontend
+│   ├── js/
+│   │   └── admin.js                    # Scripts admin
+│   └── uploads/                        # Photos uploadées
+├── templates/
+│   ├── admin.html                      # Interface admin principale
+│   ├── edit_website.html               # Édition textes du site
+│   ├── index.html                      # Page publique
+│   └── login.html                      # Page de connexion
+├── CHANGELOG.md                        # Historique des versions
+├── GUIDE_TEXTES_PERSONNALISABLES.md   # Guide utilisateur
+└── SEO.md                              # Guide SEO complet
+```
 
 ## 🔒 Sécurité
 
-- **Authentification** : Protection par mot de passe sur toutes les routes admin
-- **Sessions** : Gestion sécurisée des sessions Flask
-- **Base de données** : Connexions SSL avec pool de connexions
-- **Upload** : Validation des types de fichiers et optimisation automatique
-- **Confirmation** : Double sécurité pour les actions destructives
+- ✅ Authentification admin par mot de passe
+- ✅ Protection par sessions Flask
+- ✅ Variables d'environnement pour les secrets
+- ✅ Validation stricte des uploads
+- ✅ Optimisation automatique des images
+- ✅ Double confirmation pour actions destructives
 
-## 🌟 Avantages
+## 🌟 Technologies
 
-✅ **Gain de temps** : Extraction automatique depuis PDF  
-✅ **Qualité** : Amélioration IA des textes  
-✅ **Flexibilité** : Deux modes de saisie au choix  
-✅ **Optimisation** : Images automatiquement compressées  
-✅ **Sécurité** : Authentification et confirmations  
-✅ **Moderne** : Interface professionnelle thème clair  
+- **Backend** : Flask, SQLAlchemy, PostgreSQL
+- **Frontend** : HTML5, CSS3, JavaScript
+- **IA** : OpenRouter (Claude 3.5, Mistral Large)
+- **Déploiement** : Gunicorn, Nginx
+- **Images** : Pillow (optimisation automatique)
 
-## 📝 License
+## 🔄 Historique des Versions
 
-Propriétaire - Tous droits réservés © MOA Digital Agency LLC
+### Version 2.0.0 (Actuelle)
+- ✨ Tous les textes du site sont modifiables
+- 🌍 Support bilingue complet (24 nouveaux champs)
+- 📝 Interface d'édition dédiée
+- 🔧 Script de mise à jour VPS simplifié
+- 🐛 Corrections de bugs de langue
 
-## 👤 Contact & Développement
+### Version 1.0.0
+- Release initiale avec extraction PDF et amélioration IA
+
+Voir `CHANGELOG.md` pour l'historique complet.
+
+## 📚 Documentation
+
+- **GUIDE_TEXTES_PERSONNALISABLES.md** : Guide complet pour personnaliser tous les textes
+- **SEO.md** : Guide d'optimisation SEO (Score 95/100)
+- **CHANGELOG.md** : Historique détaillé des versions
+- **replit.md** : Documentation technique du projet
+
+## 📞 Support
 
 **MOA Digital Agency LLC**  
 Développeur : Aisance KALONJI  
 Email : [moa@myoneart.com](mailto:moa@myoneart.com)  
 Site Web : [www.myoneart.com](https://www.myoneart.com)
 
-Pour toute question technique, personnalisation ou support, n'hésitez pas à nous contacter.
+## 📄 Licence
+
+Propriétaire - Tous droits réservés © 2025 MOA Digital Agency LLC
 
 ---
 
-**Développé avec ❤️ par MOA Digital Agency LLC - Spécialiste du développement web sur mesure**
+**Développé avec ❤️ pour l'immobilier de luxe à Marrakech**
