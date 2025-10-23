@@ -117,6 +117,10 @@
                 <div class="text-section">
                     <h3>🏡 Section Héro</h3>
                     <div class="form-group">
+                        <label>Titre Principal de la Villa</label>
+                        <input type="text" name="title" value="{{ villa.title if villa and villa.title else '' }}">
+                    </div>
+                    <div class="form-group">
                         <label>Sous-titre principal</label>
                         <input type="text" name="hero_subtitle_fr" value="{{ villa.hero_subtitle_fr if villa and villa.hero_subtitle_fr else 'Découvrez cette villa d\'exception à Marrakech' }}">
                     </div>
@@ -133,8 +137,40 @@
                         <input type="text" name="description_title_fr" value="{{ villa.description_title_fr if villa and villa.description_title_fr else 'Une Villa d\'Exception' }}">
                     </div>
                     <div class="form-group">
+                        <label>Description Complète de la Villa</label>
+                        <textarea name="description" rows="6">{{ villa.description if villa and villa.description else '' }}</textarea>
+                    </div>
+                    <div class="form-group">
                         <label>Texte du bouton WhatsApp</label>
                         <input type="text" name="whatsapp_button_fr" value="{{ villa.whatsapp_button_fr if villa and villa.whatsapp_button_fr else '📱 Prendre Rendez-vous sur WhatsApp' }}">
+                    </div>
+                </div>
+
+                <div class="text-section">
+                    <h3>✨ Équipements et Caractéristiques</h3>
+                    <div class="form-group">
+                        <label>Caractéristiques Principales (une par ligne)</label>
+                        <textarea name="features" rows="6">{{ villa.features if villa and villa.features else '' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Équipements et Confort (une par ligne)</label>
+                        <textarea name="equipment" rows="6">{{ villa.equipment if villa and villa.equipment else '' }}</textarea>
+                    </div>
+                </div>
+
+                <div class="text-section">
+                    <h3>💼 Informations Commerciales et Investissement</h3>
+                    <div class="form-group">
+                        <label>Informations sur l'exploitation commerciale</label>
+                        <textarea name="business_info" rows="4">{{ villa.business_info if villa and villa.business_info else '' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Atouts pour Investisseurs</label>
+                        <textarea name="investment_benefits" rows="4">{{ villa.investment_benefits if villa and villa.investment_benefits else '' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Documents Disponibles</label>
+                        <textarea name="documents" rows="3">{{ villa.documents if villa and villa.documents else '' }}</textarea>
                     </div>
                 </div>
 
@@ -204,6 +240,10 @@
                 <div class="text-section">
                     <h3>🏡 Hero Section</h3>
                     <div class="form-group">
+                        <label>Main Villa Title</label>
+                        <input type="text" name="title_en" value="{{ villa.title_en if villa and villa.title_en else '' }}">
+                    </div>
+                    <div class="form-group">
                         <label>Main Subtitle</label>
                         <input type="text" name="hero_subtitle_en" value="{{ villa.hero_subtitle_en if villa and villa.hero_subtitle_en else 'Discover this exceptional villa in Marrakech' }}">
                     </div>
@@ -220,8 +260,40 @@
                         <input type="text" name="description_title_en" value="{{ villa.description_title_en if villa and villa.description_title_en else 'An Exceptional Villa' }}">
                     </div>
                     <div class="form-group">
+                        <label>Complete Villa Description</label>
+                        <textarea name="description_en" rows="6">{{ villa.description_en if villa and villa.description_en else '' }}</textarea>
+                    </div>
+                    <div class="form-group">
                         <label>WhatsApp Button Text</label>
                         <input type="text" name="whatsapp_button_en" value="{{ villa.whatsapp_button_en if villa and villa.whatsapp_button_en else '📱 Schedule a Visit on WhatsApp' }}">
+                    </div>
+                </div>
+
+                <div class="text-section">
+                    <h3>✨ Features and Equipment</h3>
+                    <div class="form-group">
+                        <label>Main Features (one per line)</label>
+                        <textarea name="features_en" rows="6">{{ villa.features_en if villa and villa.features_en else '' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Equipment and Comfort (one per line)</label>
+                        <textarea name="equipment_en" rows="6">{{ villa.equipment_en if villa and villa.equipment_en else '' }}</textarea>
+                    </div>
+                </div>
+
+                <div class="text-section">
+                    <h3>💼 Business and Investment Information</h3>
+                    <div class="form-group">
+                        <label>Business Information</label>
+                        <textarea name="business_info_en" rows="4">{{ villa.business_info_en if villa and villa.business_info_en else '' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Investment Benefits</label>
+                        <textarea name="investment_benefits_en" rows="4">{{ villa.investment_benefits_en if villa and villa.investment_benefits_en else '' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Available Documents</label>
+                        <textarea name="documents_en" rows="3">{{ villa.documents_en if villa and villa.documents_en else '' }}</textarea>
                     </div>
                 </div>
 

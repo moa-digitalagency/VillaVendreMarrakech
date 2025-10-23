@@ -830,6 +830,24 @@ def save_website_text():
         if not villa:
             return jsonify({'success': False, 'error': 'Aucune villa trouvée. Créez d\'abord une villa.'}), 404
         
+        # Main content - French
+        villa.title = request.form.get('title', '')
+        villa.description = request.form.get('description', '')
+        villa.features = request.form.get('features', '')
+        villa.equipment = request.form.get('equipment', '')
+        villa.business_info = request.form.get('business_info', '')
+        villa.investment_benefits = request.form.get('investment_benefits', '')
+        villa.documents = request.form.get('documents', '')
+        
+        # Main content - English
+        villa.title_en = request.form.get('title_en', '')
+        villa.description_en = request.form.get('description_en', '')
+        villa.features_en = request.form.get('features_en', '')
+        villa.equipment_en = request.form.get('equipment_en', '')
+        villa.business_info_en = request.form.get('business_info_en', '')
+        villa.investment_benefits_en = request.form.get('investment_benefits_en', '')
+        villa.documents_en = request.form.get('documents_en', '')
+        
         # French texts
         villa.hero_subtitle_fr = request.form.get('hero_subtitle_fr', '')
         villa.contact_button_fr = request.form.get('contact_button_fr', '')
