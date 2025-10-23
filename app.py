@@ -34,6 +34,10 @@ import uuid
 from PyPDF2 import PdfReader
 from functools import wraps
 import shutil
+from dotenv import load_dotenv
+
+# Charger les variables d'environnement depuis le fichier .env (pour le VPS)
+load_dotenv()
 
 # ========== CONFIGURATION DE L'APPLICATION ==========
 app = Flask(__name__)
