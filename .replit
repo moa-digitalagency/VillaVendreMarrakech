@@ -1,4 +1,4 @@
-modules = ["python-3.11"]
+modules = ["python-3.11", "postgresql-16"]
 [agent]
 expertMode = true
 
@@ -36,7 +36,7 @@ localPort = 39273
 externalPort = 3001
 
 [[ports]]
-localPort = 41139
+localPort = 42213
 externalPort = 3002
 
 [[ports]]

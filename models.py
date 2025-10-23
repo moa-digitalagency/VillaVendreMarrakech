@@ -38,11 +38,13 @@ class Villa(db.Model):
     
     # ========== INFORMATIONS PRINCIPALES ==========
     reference = db.Column(db.String(50), unique=True, nullable=False)  # Référence unique de la villa (ex: "VL-001")
-    title = db.Column(db.String(200), nullable=False)  # Titre attractif de l'annonce
+    title = db.Column(db.String(200), nullable=False)  # Titre attractif de l'annonce (français)
+    title_en = db.Column(db.String(200))  # Titre en anglais
     price = db.Column(db.Integer, nullable=False)  # Prix en euros
     location = db.Column(db.String(200), nullable=False)  # Localisation (quartier, zone)
     distance_city = db.Column(db.String(100))  # Distance depuis le centre-ville
-    description = db.Column(db.Text, nullable=False)  # Description complète et détaillée
+    description = db.Column(db.Text, nullable=False)  # Description complète et détaillée (français)
+    description_en = db.Column(db.Text)  # Description en anglais
     
     # ========== CARACTÉRISTIQUES TECHNIQUES ==========
     terrain_area = db.Column(db.Integer)  # Surface du terrain en m²
@@ -51,11 +53,16 @@ class Villa(db.Model):
     pool_size = db.Column(db.String(50))  # Dimensions de la piscine (ex: "12m x 6m")
     
     # ========== DÉTAILS MARKETING ==========
-    features = db.Column(db.Text)  # Équipements principaux (un par ligne)
-    equipment = db.Column(db.Text)  # Équipement et confort (un par ligne)
-    business_info = db.Column(db.Text)  # Informations sur l'exploitation commerciale
-    investment_benefits = db.Column(db.Text)  # Atouts pour investisseurs
-    documents = db.Column(db.Text)  # Documents disponibles (titre de propriété, etc.)
+    features = db.Column(db.Text)  # Équipements principaux (un par ligne) - français
+    features_en = db.Column(db.Text)  # Équipements principaux - anglais
+    equipment = db.Column(db.Text)  # Équipement et confort (un par ligne) - français
+    equipment_en = db.Column(db.Text)  # Équipement et confort - anglais
+    business_info = db.Column(db.Text)  # Informations sur l'exploitation commerciale - français
+    business_info_en = db.Column(db.Text)  # Informations sur l'exploitation commerciale - anglais
+    investment_benefits = db.Column(db.Text)  # Atouts pour investisseurs - français
+    investment_benefits_en = db.Column(db.Text)  # Atouts pour investisseurs - anglais
+    documents = db.Column(db.Text)  # Documents disponibles (titre de propriété, etc.) - français
+    documents_en = db.Column(db.Text)  # Documents disponibles - anglais
     
     # ========== MÉDIAS ==========
     images = db.Column(db.Text)  # Liste des noms de fichiers d'images (format JSON)
@@ -109,36 +116,64 @@ class Villa(db.Model):
             return self.features.split('\n')
         return []
     
-    def to_dict(self):
+    def to_dict(self, lang='fr'):
         """
         Convertit l'objet Villa en dictionnaire pour l'API JSON
         
         Utile pour les endpoints API qui doivent retourner les données
         de la villa en format JSON.
         
+        Args:
+            lang (str): Langue souhaitée ('fr' ou 'en')
+        
         Returns:
             dict: Dictionnaire contenant toutes les données de la villa
         """
-        return {
-            'id': self.id,
-            'reference': self.reference,
-            'title': self.title,
-            'price': self.price,
-            'location': self.location,
-            'distance_city': self.distance_city,
-            'description': self.description,
-            'terrain_area': self.terrain_area,
-            'built_area': self.built_area,
-            'bedrooms': self.bedrooms,
-            'pool_size': self.pool_size,
-            'features': self.features,
-            'equipment': self.equipment,
-            'business_info': self.business_info,
-            'investment_benefits': self.investment_benefits,
-            'documents': self.documents,
-            'images': self.get_images_list(),  # Convertit le JSON en liste
-            'contact_phone': self.contact_phone,
-            'contact_email': self.contact_email,
-            'contact_website': self.contact_website,
-            'is_active': self.is_active
-        }
+        if lang == 'en':
+            return {
+                'id': self.id,
+                'reference': self.reference,
+                'title': self.title_en or self.title,
+                'price': self.price,
+                'location': self.location,
+                'distance_city': self.distance_city,
+                'description': self.description_en or self.description,
+                'terrain_area': self.terrain_area,
+                'built_area': self.built_area,
+                'bedrooms': self.bedrooms,
+                'pool_size': self.pool_size,
+                'features': self.features_en or self.features,
+                'equipment': self.equipment_en or self.equipment,
+                'business_info': self.business_info_en or self.business_info,
+                'investment_benefits': self.investment_benefits_en or self.investment_benefits,
+                'documents': self.documents_en or self.documents,
+                'images': self.get_images_list(),
+                'contact_phone': self.contact_phone,
+                'contact_email': self.contact_email,
+                'contact_website': self.contact_website,
+                'is_active': self.is_active
+            }
+        else:
+            return {
+                'id': self.id,
+                'reference': self.reference,
+                'title': self.title,
+                'price': self.price,
+                'location': self.location,
+                'distance_city': self.distance_city,
+                'description': self.description,
+                'terrain_area': self.terrain_area,
+                'built_area': self.built_area,
+                'bedrooms': self.bedrooms,
+                'pool_size': self.pool_size,
+                'features': self.features,
+                'equipment': self.equipment,
+                'business_info': self.business_info,
+                'investment_benefits': self.investment_benefits,
+                'documents': self.documents,
+                'images': self.get_images_list(),
+                'contact_phone': self.contact_phone,
+                'contact_email': self.contact_email,
+                'contact_website': self.contact_website,
+                'is_active': self.is_active
+            }

@@ -1,28 +1,10 @@
 <!--
-Panneau d'Administration - Villa à Vendre Marrakech
+Panneau d'Administration Bilingue - Villa à Vendre Marrakech
 
-Interface d'administration complète pour gérer les villas de luxe.
-Propose deux modes de saisie:
-1. Mode PDF + Photos: Upload PDF → IA extrait les données → Ajout photos
-2. Mode Formulaire + Photos: Saisie manuelle → IA améliore les textes → Ajout photos
-
-Fonctionnalités principales:
-- Extraction automatique de données depuis PDF via IA (Claude 3.5 Sonnet)
-- Amélioration de texte via IA (Mistral Large) pour chaque champ
-- Upload et optimisation automatique d'images
-- Galerie photos avec drag-and-drop et suppression
-- Réinitialisation complète de la base de données
-- Design responsive avec thème clair moderne
-
-Technologies:
-- Frontend: HTML, CSS vanilla, JavaScript vanilla
-- Backend: Flask API endpoints (/admin/upload-pdf, /admin/save, /api/enhance)
-- AI: OpenRouter API (Claude 3.5 Sonnet + Mistral Large)
+Interface d'administration avec support français/anglais.
+Permet de saisir les informations de la villa dans les deux langues.
 
 Développé par: MOA Digital Agency LLC
-Développeur: Aisance KALONJI
-Email: moa@myoneart.com
-Web: www.myoneart.com
 -->
 <!DOCTYPE html>
 <html lang="fr">
@@ -31,10 +13,61 @@ Web: www.myoneart.com
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Villas Marrakech</title>
     <link rel="stylesheet" href="/static/css/admin.css">
+    <style>
+        .language-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .lang-tab {
+            padding: 12px 24px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+        
+        .lang-tab.active {
+            background: linear-gradient(135deg, #d4af37, #14b8a6);
+            color: white;
+            transform: translateY(2px);
+        }
+        
+        .lang-tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+        
+        .lang-content {
+            display: none;
+        }
+        
+        .lang-content.active {
+            display: block;
+        }
+        
+        .bilingual-notice {
+            background: #e0f2fe;
+            border-left: 4px solid #14b8a6;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .bilingual-notice p {
+            margin: 0;
+            color: #0c4a6e;
+            font-size: 0.95rem;
+        }
+    </style>
 </head>
 <body>
     <div class="admin-container">
-        <!-- ========== EN-TÊTE AVEC NAVIGATION ========== -->
         <header>
             <h1>🏡 Administration - Villas à Vendre Marrakech</h1>
             <div class="header-actions">
@@ -43,8 +76,6 @@ Web: www.myoneart.com
             </div>
         </header>
 
-        <!-- ========== SÉLECTEUR DE MODE DE SAISIE ========== -->
-        <!-- Permet de choisir entre le mode PDF+IA ou le mode formulaire manuel -->
         <div class="mode-selector">
             <h2>Choisissez votre mode de saisie</h2>
             <p>Sélectionnez la méthode qui vous convient le mieux pour ajouter une villa</p>
@@ -56,16 +87,13 @@ Web: www.myoneart.com
                 </div>
                 
                 <div class="mode-option" id="mode-manual">
-                    <h3>✍️ Mode Formulaire + Photos</h3>
-                    <p>Remplissez manuellement les informations dans le formulaire. Vous pouvez utiliser l'IA pour améliorer vos textes. Ajoutez ensuite les photos.</p>
+                    <h3>✍️ Mode Formulaire Bilingue + Photos</h3>
+                    <p>Remplissez les informations en français et anglais. Utilisez l'IA pour améliorer vos textes. Ajoutez ensuite les photos.</p>
                 </div>
             </div>
         </div>
 
-        <!-- ========== MODE 1: PDF + PHOTOS (AVEC IA) ========== -->
-        <!-- Workflow: Upload PDF → IA extrait les données → Upload photos → Enregistrer -->
         <div id="content-pdf" class="mode-content active">
-            <!-- Section 1: Upload et extraction du PDF -->
             <div class="pdf-upload-section">
                 <h2>🚀 1. Upload PDF de la Villa</h2>
                 <p class="section-description">Uploadez le PDF et l'IA (Claude 3.5 Sonnet) extraira automatiquement toutes les informations.</p>
@@ -79,7 +107,6 @@ Web: www.myoneart.com
                 <div id="pdfStatus" class="pdf-status"></div>
             </div>
 
-            <!-- Section 2: Upload des photos (après extraction PDF) -->
             <div class="photo-upload-section">
                 <h2>📸 2. Photos de la Villa</h2>
                 <p class="section-description">Ajoutez les photos (optimisation automatique en JPEG).</p>
@@ -108,12 +135,12 @@ Web: www.myoneart.com
             </div>
         </div>
 
-        <!-- ========== MODE 2: FORMULAIRE + PHOTOS (MANUEL + IA) ========== -->
-        <!-- Workflow: Saisie manuelle → IA améliore les textes → Upload photos → Enregistrer -->
         <div id="content-manual" class="mode-content">
-            <!-- Formulaire de saisie manuelle avec boutons d'amélioration IA -->
+            <div class="bilingual-notice">
+                <p>🌍 <strong>Support bilingue activé</strong> - Saisissez les informations de la villa en français ET en anglais pour toucher une audience internationale.</p>
+            </div>
+
             <form id="villaForm" method="POST" action="/admin/save">
-                <!-- Section: Informations principales (référence, titre, prix, localisation) -->
                 <div class="section">
                     <h2>Informations Principales</h2>
                     
@@ -123,22 +150,13 @@ Web: www.myoneart.com
                     </div>
 
                     <div class="form-group">
-                        <label>Titre</label>
-                        <div class="input-with-ai">
-                            <input type="text" name="title" id="title" value="{{ villa.title if villa else '' }}" required>
-                            <button type="button" class="btn-ai" data-field="title">✨ AI</button>
-                        </div>
+                        <label>Prix (€)</label>
+                        <input type="number" name="price" id="price" value="{{ villa.price if villa else '' }}" required>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Prix (€)</label>
-                            <input type="number" name="price" id="price" value="{{ villa.price if villa else '' }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Localisation (Marrakech)</label>
-                            <input type="text" name="location" id="location" value="{{ villa.location if villa else '' }}" required>
-                        </div>
+                    <div class="form-group">
+                        <label>Localisation (Marrakech)</label>
+                        <input type="text" name="location" id="location" value="{{ villa.location if villa else '' }}" required>
                     </div>
 
                     <div class="form-group">
@@ -146,11 +164,44 @@ Web: www.myoneart.com
                         <input type="text" name="distance_city" id="distance_city" value="{{ villa.distance_city if villa else '' }}">
                     </div>
 
-                    <div class="form-group">
-                        <label>Description</label>
-                        <div class="input-with-ai">
-                            <textarea name="description" id="description" rows="6" required>{{ villa.description if villa else '' }}</textarea>
-                            <button type="button" class="btn-ai" data-field="description">✨ AI</button>
+                    <div class="language-tabs">
+                        <button type="button" class="lang-tab active" data-lang="fr">🇫🇷 Français</button>
+                        <button type="button" class="lang-tab" data-lang="en">🇬🇧 English</button>
+                    </div>
+
+                    <div class="lang-content active" data-lang-content="fr">
+                        <div class="form-group">
+                            <label>Titre (Français)</label>
+                            <div class="input-with-ai">
+                                <input type="text" name="title" id="title" value="{{ villa.title if villa else '' }}" required>
+                                <button type="button" class="btn-ai" data-field="title">✨ AI</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description (Français)</label>
+                            <div class="input-with-ai">
+                                <textarea name="description" id="description" rows="6" required>{{ villa.description if villa else '' }}</textarea>
+                                <button type="button" class="btn-ai" data-field="description">✨ AI</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lang-content" data-lang-content="en">
+                        <div class="form-group">
+                            <label>Title (English)</label>
+                            <div class="input-with-ai">
+                                <input type="text" name="title_en" id="title_en" value="{{ villa.title_en if villa else '' }}">
+                                <button type="button" class="btn-ai" data-field="title_en">✨ AI</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description (English)</label>
+                            <div class="input-with-ai">
+                                <textarea name="description_en" id="description_en" rows="6">{{ villa.description_en if villa else '' }}</textarea>
+                                <button type="button" class="btn-ai" data-field="description_en">✨ AI</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -180,33 +231,76 @@ Web: www.myoneart.com
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Équipements (un par ligne)</label>
-                        <textarea name="features" id="features" rows="6">{{ villa.features if villa else '' }}</textarea>
+                    <div class="language-tabs">
+                        <button type="button" class="lang-tab active" data-lang="fr">🇫🇷 Français</button>
+                        <button type="button" class="lang-tab" data-lang="en">🇬🇧 English</button>
+                    </div>
+
+                    <div class="lang-content active" data-lang-content="fr">
+                        <div class="form-group">
+                            <label>Équipements (un par ligne) - Français</label>
+                            <textarea name="features" id="features" rows="6">{{ villa.features if villa else '' }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="lang-content" data-lang-content="en">
+                        <div class="form-group">
+                            <label>Features (one per line) - English</label>
+                            <textarea name="features_en" id="features_en" rows="6">{{ villa.features_en if villa else '' }}</textarea>
+                        </div>
                     </div>
                 </div>
 
                 <div class="section">
                     <h2>Détails Supplémentaires</h2>
-                    
-                    <div class="form-group">
-                        <label>Équipement & Confort</label>
-                        <textarea name="equipment" id="equipment" rows="6">{{ villa.equipment if villa else '' }}</textarea>
+
+                    <div class="language-tabs">
+                        <button type="button" class="lang-tab active" data-lang="fr">🇫🇷 Français</button>
+                        <button type="button" class="lang-tab" data-lang="en">🇬🇧 English</button>
                     </div>
 
-                    <div class="form-group">
-                        <label>Exploitation Commerciale</label>
-                        <textarea name="business_info" id="business_info" rows="6">{{ villa.business_info if villa else '' }}</textarea>
+                    <div class="lang-content active" data-lang-content="fr">
+                        <div class="form-group">
+                            <label>Équipement & Confort (Français)</label>
+                            <textarea name="equipment" id="equipment" rows="6">{{ villa.equipment if villa else '' }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Exploitation Commerciale (Français)</label>
+                            <textarea name="business_info" id="business_info" rows="6">{{ villa.business_info if villa else '' }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Atouts Investisseurs (Français)</label>
+                            <textarea name="investment_benefits" id="investment_benefits" rows="6">{{ villa.investment_benefits if villa else '' }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Documents Disponibles (Français)</label>
+                            <textarea name="documents" id="documents" rows="4">{{ villa.documents if villa else '' }}</textarea>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Atouts Investisseurs</label>
-                        <textarea name="investment_benefits" id="investment_benefits" rows="6">{{ villa.investment_benefits if villa else '' }}</textarea>
-                    </div>
+                    <div class="lang-content" data-lang-content="en">
+                        <div class="form-group">
+                            <label>Equipment & Comfort (English)</label>
+                            <textarea name="equipment_en" id="equipment_en" rows="6">{{ villa.equipment_en if villa else '' }}</textarea>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Documents Disponibles</label>
-                        <textarea name="documents" id="documents" rows="4">{{ villa.documents if villa else '' }}</textarea>
+                        <div class="form-group">
+                            <label>Business Information (English)</label>
+                            <textarea name="business_info_en" id="business_info_en" rows="6">{{ villa.business_info_en if villa else '' }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Investment Benefits (English)</label>
+                            <textarea name="investment_benefits_en" id="investment_benefits_en" rows="6">{{ villa.investment_benefits_en if villa else '' }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Available Documents (English)</label>
+                            <textarea name="documents_en" id="documents_en" rows="4">{{ villa.documents_en if villa else '' }}</textarea>
+                        </div>
                     </div>
                 </div>
 
@@ -260,7 +354,6 @@ Web: www.myoneart.com
         </div>
     </div>
 
-    <!-- Modal de confirmation de réinitialisation -->
     <div id="resetModal" class="modal">
         <div class="modal-content">
             <h3>⚠️ Réinitialisation Totale</h3>
@@ -274,8 +367,28 @@ Web: www.myoneart.com
         </div>
     </div>
 
-    <!-- ========== LOGIQUE JAVASCRIPT ========== -->
-    <!-- Gère le changement de mode, upload PDF, extraction IA, amélioration texte, upload images -->
     <script src="/static/js/admin.js"></script>
+    <script>
+        // Gestion des onglets de langue
+        document.querySelectorAll('.lang-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const lang = this.dataset.lang;
+                const section = this.closest('.section');
+                
+                // Active l'onglet cliqué
+                section.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Affiche le contenu correspondant
+                section.querySelectorAll('.lang-content').forEach(content => {
+                    if (content.dataset.langContent === lang) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

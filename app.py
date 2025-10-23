@@ -20,7 +20,7 @@ Web: www.myoneart.com
 """
 
 # ========== IMPORTS ==========
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session, send_from_directory
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session, send_from_directory, g
 from flask_cors import CORS
 from models import db, Villa
 import os
@@ -85,6 +85,123 @@ db.init_app(app)
 
 # Crée le dossier d'upload s'il n'existe pas
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# ========== GESTION MULTILINGUE ==========
+
+# Dictionnaire de traductions pour l'interface
+TRANSLATIONS = {
+    'fr': {
+        'no_villa_available': 'Aucune Villa Disponible',
+        'villa_not_configured': 'Les informations de la villa ne sont pas encore configurées.',
+        'access_admin': 'Accéder à l\'administration',
+        'luxury_villa': 'Villa de Prestige à Marrakech',
+        'price': 'Prix',
+        'location': 'Localisation',
+        'distance_from_city': 'Distance du centre-ville',
+        'terrain_area': 'Surface terrain',
+        'built_area': 'Surface construite',
+        'bedrooms': 'Chambres',
+        'pool': 'Piscine',
+        'features': 'Caractéristiques',
+        'equipment': 'Équipements',
+        'business_info': 'Exploitation commerciale',
+        'investment': 'Investissement',
+        'documents': 'Documents',
+        'contact': 'Contact',
+        'phone': 'Téléphone',
+        'email': 'Email',
+        'website': 'Site web',
+        'login': 'Connexion',
+        'password': 'Mot de passe',
+        'sign_in': 'Se connecter',
+        'incorrect_password': 'Mot de passe incorrect',
+        'admin_panel': 'Panneau d\'administration',
+        'logout': 'Déconnexion',
+        'save': 'Enregistrer',
+        'reference': 'Référence',
+        'title': 'Titre',
+        'description': 'Description',
+        'upload_images': 'Télécharger des images',
+        'upload_pdf': 'Télécharger un PDF',
+        'enhance_with_ai': 'Améliorer avec l\'IA',
+        'reset': 'Réinitialiser',
+        'gallery': 'Galerie'
+    },
+    'en': {
+        'no_villa_available': 'No Villa Available',
+        'villa_not_configured': 'Villa information is not yet configured.',
+        'access_admin': 'Access Administration',
+        'luxury_villa': 'Luxury Villa in Marrakech',
+        'price': 'Price',
+        'location': 'Location',
+        'distance_from_city': 'Distance from city center',
+        'terrain_area': 'Land area',
+        'built_area': 'Built area',
+        'bedrooms': 'Bedrooms',
+        'pool': 'Pool',
+        'features': 'Features',
+        'equipment': 'Equipment',
+        'business_info': 'Business Information',
+        'investment': 'Investment',
+        'documents': 'Documents',
+        'contact': 'Contact',
+        'phone': 'Phone',
+        'email': 'Email',
+        'website': 'Website',
+        'login': 'Login',
+        'password': 'Password',
+        'sign_in': 'Sign In',
+        'incorrect_password': 'Incorrect password',
+        'admin_panel': 'Admin Panel',
+        'logout': 'Logout',
+        'save': 'Save',
+        'reference': 'Reference',
+        'title': 'Title',
+        'description': 'Description',
+        'upload_images': 'Upload Images',
+        'upload_pdf': 'Upload PDF',
+        'enhance_with_ai': 'Enhance with AI',
+        'reset': 'Reset',
+        'gallery': 'Gallery'
+    }
+}
+
+def get_browser_language():
+    """Détecte la langue du navigateur depuis l'en-tête Accept-Language."""
+    accept_language = request.headers.get('Accept-Language', '')
+    if accept_language:
+        languages = accept_language.split(',')
+        for lang in languages:
+            lang_code = lang.split(';')[0].strip().lower()
+            if lang_code.startswith('fr'):
+                return 'fr'
+            elif lang_code.startswith('en'):
+                return 'en'
+    return 'fr'
+
+def get_current_language():
+    """Retourne la langue courante (depuis la session ou détection auto)."""
+    if 'language' not in session:
+        session['language'] = get_browser_language()
+    return session.get('language', 'fr')
+
+def get_translations():
+    """Retourne les traductions pour la langue courante."""
+    lang = get_current_language()
+    return TRANSLATIONS.get(lang, TRANSLATIONS['fr'])
+
+@app.before_request
+def before_request():
+    """Exécuté avant chaque requête pour initialiser la langue."""
+    g.lang = get_current_language()
+    g.t = get_translations()
+
+@app.route('/set-language/<lang>')
+def set_language(lang):
+    """Change la langue de l'interface."""
+    if lang in ['fr', 'en']:
+        session['language'] = lang
+    return redirect(request.referrer or url_for('index'))
 
 # ========== INITIALISATION DE LA BASE DE DONNÉES ==========
 def init_db():
@@ -364,19 +481,26 @@ def admin_save():
         
         villa.reference = data.get('reference', '')
         villa.title = data.get('title', '')
+        villa.title_en = data.get('title_en', '')
         villa.price = safe_int(data.get('price'), 0)
         villa.location = data.get('location', '')
         villa.distance_city = data.get('distance_city', '')
         villa.description = data.get('description', '')
+        villa.description_en = data.get('description_en', '')
         villa.terrain_area = safe_int(data.get('terrain_area'), 0)
         villa.built_area = safe_int(data.get('built_area'), 0)
         villa.bedrooms = safe_int(data.get('bedrooms'), 0)
         villa.pool_size = data.get('pool_size', '')
         villa.features = data.get('features', '')
+        villa.features_en = data.get('features_en', '')
         villa.equipment = data.get('equipment', '')
+        villa.equipment_en = data.get('equipment_en', '')
         villa.business_info = data.get('business_info', '')
+        villa.business_info_en = data.get('business_info_en', '')
         villa.investment_benefits = data.get('investment_benefits', '')
+        villa.investment_benefits_en = data.get('investment_benefits_en', '')
         villa.documents = data.get('documents', '')
+        villa.documents_en = data.get('documents_en', '')
         villa.contact_phone = data.get('contact_phone', '')
         villa.contact_email = data.get('contact_email', '')
         villa.contact_website = data.get('contact_website', '')

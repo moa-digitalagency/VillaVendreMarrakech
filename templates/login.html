@@ -1,38 +1,25 @@
 <!--
-Page de Connexion Administration - Villa à Vendre Marrakech
+Page de Connexion Administration - Villa à Vendre Marrakech (Bilingue)
 
 Interface de connexion sécurisée pour accéder au panneau d'administration.
-Design moderne avec animations CSS, gradient de couleurs luxueux (or et turquoise),
-et formulaire de saisie centré avec validation.
-
-Fonctionnalités:
-- Authentification par mot de passe simple (session-based)
-- Messages d'erreur animés
-- Design responsive et accessible
-- Animations CSS subtiles pour une expérience premium
+Support multilingue avec détection automatique.
 
 Développé par: MOA Digital Agency LLC
-Développeur: Aisance KALONJI
-Email: moa@myoneart.com
-Web: www.myoneart.com
 -->
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ g.lang }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion Admin - Villas Marrakech</title>
+    <title>{{ g.t.login }} - Admin</title>
     
-    <!-- ========== STYLES CSS INTÉGRÉS ========== -->
     <style>
-        /* Reset CSS universel */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Conteneur principal avec gradient de fond */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #fef3c7 100%);
@@ -44,7 +31,6 @@ Web: www.myoneart.com
             overflow: hidden;
         }
 
-        /* Effet de cercles flottants décoratifs (pseudo-element avant) */
         body::before {
             content: '';
             position: absolute;
@@ -57,7 +43,6 @@ Web: www.myoneart.com
             animation: float 20s ease-in-out infinite;
         }
 
-        /* Effet de cercles flottants décoratifs (pseudo-element après) */
         body::after {
             content: '';
             position: absolute;
@@ -70,13 +55,11 @@ Web: www.myoneart.com
             animation: float 25s ease-in-out infinite reverse;
         }
 
-        /* Animation de flottement pour les cercles décoratifs */
         @keyframes float {
             0%, 100% { transform: translate(0, 0) scale(1); }
             50% { transform: translate(50px, 50px) scale(1.1); }
         }
 
-        /* Carte de connexion centrale */
         .login-container {
             background: white;
             border: 2px solid rgba(212, 175, 55, 0.3);
@@ -90,7 +73,6 @@ Web: www.myoneart.com
             animation: slideIn 0.6s ease-out;
         }
 
-        /* Animation d'entrée en glissement vertical */
         @keyframes slideIn {
             from {
                 opacity: 0;
@@ -107,7 +89,6 @@ Web: www.myoneart.com
             margin-bottom: 40px;
         }
 
-        /* Icône emoji de villa avec animation pulse */
         .logo-icon {
             font-size: 4rem;
             margin-bottom: 15px;
@@ -115,13 +96,11 @@ Web: www.myoneart.com
             animation: pulse 2s ease-in-out infinite;
         }
 
-        /* Animation de pulsation pour l'icône */
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
 
-        /* Titre avec gradient or-turquoise */
         h1 {
             background: linear-gradient(135deg, #d4af37, #14b8a6);
             -webkit-background-clip: text;
@@ -154,7 +133,6 @@ Web: www.myoneart.com
             letter-spacing: 0.5px;
         }
 
-        /* Champ de saisie du mot de passe */
         input[type="password"] {
             width: 100%;
             padding: 15px 20px;
@@ -179,7 +157,6 @@ Web: www.myoneart.com
             letter-spacing: normal;
         }
 
-        /* Bouton de connexion avec gradient doré */
         .btn-login {
             width: 100%;
             padding: 16px;
@@ -206,7 +183,6 @@ Web: www.myoneart.com
             transform: translateY(0);
         }
 
-        /* Message d'erreur rouge avec animation shake */
         .error-message {
             background: #fee2e2;
             border: 2px solid #ef4444;
@@ -218,7 +194,6 @@ Web: www.myoneart.com
             animation: shake 0.5s;
         }
 
-        /* Animation de tremblement pour les erreurs */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-10px); }
@@ -233,49 +208,90 @@ Web: www.myoneart.com
             padding-top: 20px;
             border-top: 1px solid #e2e8f0;
         }
+        
+        .language-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50px;
+            padding: 8px 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .language-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        
+        .lang-option {
+            padding: 6px 12px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .lang-option.active {
+            background: linear-gradient(135deg, #D4AF37, #FFD700);
+            color: white;
+        }
+        
+        .lang-option:not(.active):hover {
+            background: #f0f0f0;
+        }
     </style>
 </head>
 <body>
-    <!-- ========== CONTENEUR DE CONNEXION ========== -->
+    <!-- Language Toggle -->
+    <div class="language-toggle">
+        <a href="/set-language/fr" class="lang-option {% if g.lang == 'fr' %}active{% endif %}">🇫🇷 FR</a>
+        <a href="/set-language/en" class="lang-option {% if g.lang == 'en' %}active{% endif %}">🇬🇧 EN</a>
+    </div>
+
     <div class="login-container">
-        <!-- Logo et titre de l'application -->
         <div class="logo">
             <span class="logo-icon">🏡</span>
-            <h1>Administration</h1>
-            <p class="subtitle">Villas à Vendre Marrakech</p>
+            <h1>{{ g.t.admin_panel }}</h1>
+            <p class="subtitle">{% if g.lang == 'en' %}Luxury Villas in Marrakech{% else %}Villas à Vendre Marrakech{% endif %}</p>
         </div>
 
-        <!-- Message d'erreur (affiché si le mot de passe est incorrect) -->
         {% if error %}
         <div class="error-message">
-            ⚠️ {{ error }}
+            ⚠️ {{ g.t.incorrect_password }}
         </div>
         {% endif %}
 
-        <!-- Formulaire de connexion -->
         <form method="POST" action="{{ url_for('login') }}">
             <div class="form-group">
-                <label for="password">Mot de Passe</label>
+                <label for="password">{{ g.t.password }}</label>
                 <input 
                     type="password" 
                     id="password" 
                     name="password" 
-                    placeholder="Entrez le mot de passe admin"
+                    placeholder="{% if g.lang == 'en' %}Enter admin password{% else %}Entrez le mot de passe admin{% endif %}"
                     required 
                     autofocus
                     autocomplete="current-password"
                 >
             </div>
 
-            <!-- Bouton de soumission -->
             <button type="submit" class="btn-login">
-                Se Connecter 🔐
+                {{ g.t.sign_in }} 🔐
             </button>
         </form>
 
-        <!-- Note de sécurité -->
         <div class="security-note">
-            🛡️ Connexion sécurisée par session
+            🛡️ {% if g.lang == 'en' %}Secure session-based connection{% else %}Connexion sécurisée par session{% endif %}
         </div>
     </div>
 </body>

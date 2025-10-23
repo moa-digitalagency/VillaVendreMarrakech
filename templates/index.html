@@ -1,26 +1,12 @@
 <!--
-Page Publique - Villa à Vendre Marrakech
+Page Publique - Villa à Vendre Marrakech (Bilingue FR/EN)
 
 Page de présentation complète d'une villa de luxe à Marrakech.
 Optimisée pour le SEO avec méta-tags complets, Open Graph, Twitter Cards,
 et Schema.org JSON-LD pour un référencement optimal sur Google.
 
-Fonctionnalités:
-- Design responsive luxueux avec gradient or-turquoise
-- Galerie photos en plein écran avec navigation
-- Sections organisées: images, caractéristiques, équipements, investissement, contact
-- Méta-tags SEO complets pour Google, Facebook, Twitter
-- Schema.org RealEstateListing pour rich snippets Google
-- Boutons d'appel (WhatsApp, email, téléphone)
-- Design thème clair moderne avec effets de lumière
-
-SEO:
-- Title et description dynamiques basés sur les données de la villa
-- Meta keywords ciblés (villa marrakech, immobilier luxe, etc.)
-- Open Graph pour partage Facebook/LinkedIn optimal
-- Twitter Cards pour aperçus riches
-- Schema.org JSON-LD pour rich results Google
-- Balises canoniques et robots
+Support multilingue: détection automatique de la langue du navigateur,
+changement de langue via toggle, traduction automatique du contenu.
 
 Développé par: MOA Digital Agency LLC
 Développeur: Aisance KALONJI
@@ -28,141 +14,76 @@ Email: moa@myoneart.com
 Web: www.myoneart.com
 -->
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ g.lang }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- ========== SEO META TAGS ========== -->
+    {% if g.lang == 'en' %}
+    <title>{% if villa %}{{ villa.title_en or villa.title }} - Luxury Villa for Sale in Marrakech | villaavendremarrakech.com{% else %}Luxury Villa for Sale in Marrakech | villaavendremarrakech.com{% endif %}</title>
+    <meta name="description" content="{% if villa %}{{ (villa.description_en or villa.description)[:155] }}... Luxury villa for sale in {{ villa.location }}, {{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €. {% endif %}Discover our luxury villas in Marrakech.">
+    {% else %}
     <title>{% if villa %}{{ villa.title }} - Villa à Vendre Marrakech | villaavendremarrakech.com{% else %}Villa à Vendre Marrakech - Immobilier de Luxe | villaavendremarrakech.com{% endif %}</title>
-    <meta name="description" content="{% if villa %}{{ villa.description[:155] }}... Villa de prestige à vendre à {{ villa.location }}, {{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €. {% endif %}Découvrez nos villas de luxe à Marrakech. Immobilier haut de gamme avec piscine, jardin et finitions premium.">
-    <meta name="keywords" content="villa à vendre marrakech, villa de luxe marrakech, immobilier marrakech, achat villa marrakech, propriété de prestige marrakech, maison à vendre marrakech, villa avec piscine marrakech, immobilier de luxe maroc, investissement immobilier marrakech, villa moderne marrakech, villa traditionnelle marrakech, riad à vendre marrakech, {% if villa %}{{ villa.location }}, {{ villa.bedrooms }} chambres{% endif %}">
-    <meta name="author" content="villaavendremarrakech.com">
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    <meta name="language" content="fr">
-    <meta name="geo.region" content="MA-15">
-    <meta name="geo.placename" content="Marrakech">
-    <link rel="canonical" href="https://villaavendremarrakech.com/">
-    
-    <!-- ========== OPEN GRAPH / FACEBOOK ========== -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://villaavendremarrakech.com/">
-    <meta property="og:title" content="{% if villa %}{{ villa.title }} - Villa à Vendre Marrakech{% else %}Villa à Vendre Marrakech - Immobilier de Luxe{% endif %}">
-    <meta property="og:description" content="{% if villa %}Villa de prestige à {{ villa.location }}, {{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €. {{ villa.bedrooms }} chambres, {{ villa.area }} m². {% endif %}Découvrez nos villas d'exception à Marrakech.">
-    <meta property="og:image" content="{% if villa and villa.get_images_list() %}https://villaavendremarrakech.com/static/uploads/{{ villa.get_images_list()[0] }}{% else %}https://villaavendremarrakech.com/static/og-default.jpg{% endif %}">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:locale" content="fr_FR">
-    <meta property="og:site_name" content="Villa à Vendre Marrakech">
-    
-    <!-- ========== TWITTER CARD ========== -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://villaavendremarrakech.com/">
-    <meta name="twitter:title" content="{% if villa %}{{ villa.title }} - Villa à Vendre Marrakech{% else %}Villa à Vendre Marrakech - Immobilier de Luxe{% endif %}">
-    <meta name="twitter:description" content="{% if villa %}Villa de prestige à {{ villa.location }}, {{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €{% endif %}">
-    <meta name="twitter:image" content="{% if villa and villa.get_images_list() %}https://villaavendremarrakech.com/static/uploads/{{ villa.get_images_list()[0] }}{% else %}https://villaavendremarrakech.com/static/og-default.jpg{% endif %}">
-    
-    {% if villa %}
-    <!-- ========== SCHEMA.ORG JSON-LD POUR RICH SNIPPETS GOOGLE ========== -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "RealEstateListing",
-      "name": "{{ villa.title }}",
-      "description": "{{ villa.description[:500] }}",
-      "url": "https://villaavendremarrakech.com/",
-      "image": [
-        {% for img in villa.get_images_list()[:5] %}
-        "https://villaavendremarrakech.com/static/uploads/{{ img }}"{% if not loop.last %},{% endif %}
-        {% endfor %}
-      ],
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "{{ villa.location }}",
-        "addressRegion": "Marrakech-Safi",
-        "addressCountry": "MA"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": "31.6295",
-        "longitude": "-7.9811"
-      },
-      "offers": {
-        "@type": "Offer",
-        "price": "{{ villa.price }}",
-        "priceCurrency": "EUR",
-        "availability": "https://schema.org/InStock",
-        "priceValidUntil": "{{ (villa.created_at.year + 1)|string }}-12-31"
-      },
-      "numberOfRooms": "{{ villa.bedrooms }}",
-      "numberOfBathroomsTotal": "{{ villa.bathrooms }}",
-      "floorSize": {
-        "@type": "QuantitativeValue",
-        "value": "{{ villa.area }}",
-        "unitCode": "MTK"
-      },
-      {% if villa.land_area %}
-      "additionalProperty": {
-        "@type": "PropertyValue",
-        "name": "Surface du terrain",
-        "value": "{{ villa.land_area }} m²"
-      },
-      {% endif %}
-      "telephone": "{{ villa.contact_phone }}",
-      "email": "{{ villa.contact_email }}"
-    }
-    </script>
-    
-    <!-- Organization Schema -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "RealEstateAgent",
-      "name": "Villa à Vendre Marrakech",
-      "url": "https://villaavendremarrakech.com",
-      "logo": "https://villaavendremarrakech.com/static/logo.png",
-      "description": "Agence immobilière spécialisée dans la vente de villas de luxe et propriétés de prestige à Marrakech",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Marrakech",
-        "addressCountry": "MA"
-      },
-      "telephone": "{{ villa.contact_phone }}",
-      "email": "{{ villa.contact_email }}",
-      "areaServed": {
-        "@type": "City",
-        "name": "Marrakech"
-      }
-    }
-    </script>
-    
-    <!-- Breadcrumb Schema -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Accueil",
-          "item": "https://villaavendremarrakech.com/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "{{ villa.title }}",
-          "item": "https://villaavendremarrakech.com/"
-        }
-      ]
-    }
-    </script>
+    <meta name="description" content="{% if villa %}{{ villa.description[:155] }}... Villa de prestige à vendre à {{ villa.location }}, {{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €. {% endif %}Découvrez nos villas de luxe à Marrakech.">
     {% endif %}
+    
+    <meta name="keywords" content="villa à vendre marrakech, villa de luxe marrakech, immobilier marrakech, luxury villa marrakech, villa for sale marrakech">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="{{ g.lang }}">
     
     <!-- ========== FEUILLE DE STYLE ========== -->
     <link rel="stylesheet" href="/static/css/style.css">
+    
+    <style>
+        .language-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50px;
+            padding: 8px 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .language-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        
+        .lang-option {
+            padding: 6px 12px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+        
+        .lang-option.active {
+            background: linear-gradient(135deg, #D4AF37, #FFD700);
+            color: white;
+        }
+        
+        .lang-option:not(.active):hover {
+            background: #f0f0f0;
+        }
+    </style>
 </head>
 <body>
+    <!-- Language Toggle -->
+    <div class="language-toggle">
+        <a href="/set-language/fr" class="lang-option {% if g.lang == 'fr' %}active{% endif %}">🇫🇷 FR</a>
+        <a href="/set-language/en" class="lang-option {% if g.lang == 'en' %}active{% endif %}">🇬🇧 EN</a>
+    </div>
+
     <!-- ========== PAGE PUBLIQUE VILLA DE LUXE ========== -->
     {% if villa %}
     
@@ -171,32 +92,34 @@ Web: www.myoneart.com
         <div class="hero-slider">
             {% for img in villa.get_images_list()[:3] %}
             <div class="hero-slide {% if loop.first %}active{% endif %}">
-                <img src="/static/uploads/{{ img }}" alt="Villa de luxe à vendre à {{ villa.location }}, Marrakech - Photo {{ loop.index }} - {{ villa.title }}">
+                <img src="/static/uploads/{{ img }}" alt="{{ g.t.luxury_villa }} - {{ villa.location }}">
             </div>
             {% endfor %}
         </div>
         <div class="hero-overlay-modern"></div>
         <div class="hero-content-modern">
-            <h1>{{ villa.title }}</h1>
-            <p class="subtitle-large">Découvrez cette villa d'exception à Marrakech</p>
+            <h1>{{ (villa.title_en or villa.title) if g.lang == 'en' else villa.title }}</h1>
+            <p class="subtitle-large">{% if g.lang == 'en' %}Discover this exceptional villa in Marrakech{% else %}Découvrez cette villa d'exception à Marrakech{% endif %}</p>
             <div class="hero-search-bar">
                 <div class="search-item">
-                    <span class="search-label">Localisation</span>
+                    <span class="search-label">{{ g.t.location }}</span>
                     <span class="search-value">📍 {{ villa.location }}</span>
                 </div>
                 <div class="search-item">
-                    <span class="search-label">Prix</span>
+                    <span class="search-label">{{ g.t.price }}</span>
                     <span class="search-value">{{ '{:,.0f}'.format(villa.price).replace(',', ' ') }} €</span>
                 </div>
                 {% set whatsapp_number = villa.contact_phone.replace('+', '').replace(' ', '').replace('-', '') if villa.contact_phone else '' %}
                 {% set site_url = request.url_root %}
-                {% set whatsapp_message = "Bonjour, je souhaite prendre rendez-vous pour visiter la villa " ~ villa.title ~ " et obtenir plus d'informations. Lien: " ~ site_url %}
-                <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-search">
-                    Nous Contacter
-                </a>
+                {% if g.lang == 'en' %}
+                    {% set whatsapp_message = "Hello, I would like to schedule a visit for the villa " ~ (villa.title_en or villa.title) ~ " and get more information. Link: " ~ site_url %}
+                    <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-search">Contact Us</a>
+                {% else %}
+                    {% set whatsapp_message = "Bonjour, je souhaite prendre rendez-vous pour visiter la villa " ~ villa.title ~ " et obtenir plus d'informations. Lien: " ~ site_url %}
+                    <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-search">Nous Contacter</a>
+                {% endif %}
             </div>
         </div>
-        <!-- Dégradé de transition vers stats -->
         <div class="hero-gradient-transition"></div>
     </section>
 
@@ -208,28 +131,28 @@ Web: www.myoneart.com
                 <div class="stat-item">
                     <div class="stat-icon">🏞️</div>
                     <div class="stat-value">{{ '{:,}'.format(villa.terrain_area).replace(',', ' ') }} m²</div>
-                    <div class="stat-label">Terrain</div>
+                    <div class="stat-label">{{ g.t.terrain_area if g.lang == 'en' else 'Terrain' }}</div>
                 </div>
                 {% endif %}
                 {% if villa.built_area %}
                 <div class="stat-item">
                     <div class="stat-icon">🏠</div>
                     <div class="stat-value">{{ '{:,}'.format(villa.built_area).replace(',', ' ') }} m²</div>
-                    <div class="stat-label">Surface Bâtie</div>
+                    <div class="stat-label">{{ g.t.built_area if g.lang == 'en' else 'Surface Bâtie' }}</div>
                 </div>
                 {% endif %}
                 {% if villa.bedrooms %}
                 <div class="stat-item">
                     <div class="stat-icon">🛏️</div>
                     <div class="stat-value">{{ villa.bedrooms }}</div>
-                    <div class="stat-label">Chambres</div>
+                    <div class="stat-label">{{ g.t.bedrooms }}</div>
                 </div>
                 {% endif %}
                 {% if villa.pool_size %}
                 <div class="stat-item">
                     <div class="stat-icon">🏊</div>
                     <div class="stat-value">{{ villa.pool_size }}</div>
-                    <div class="stat-label">Piscine</div>
+                    <div class="stat-label">{{ g.t.pool }}</div>
                 </div>
                 {% endif %}
             </div>
@@ -237,36 +160,38 @@ Web: www.myoneart.com
     </section>
 
     <!-- Description avec 3 Images -->
-    {% if villa.description %}
+    {% if villa.description or villa.description_en %}
     <section class="content-image-section">
         <div class="container-wide">
             <div class="content-image-grid">
                 <div class="content-block">
-                    <h2 class="section-title-left">Une Villa d'Exception</h2>
-                    <div class="text-content">{{ villa.description }}</div>
+                    <h2 class="section-title-left">{% if g.lang == 'en' %}An Exceptional Villa{% else %}Une Villa d'Exception{% endif %}</h2>
+                    <div class="text-content">{{ (villa.description_en or villa.description) if g.lang == 'en' else villa.description }}</div>
                     
                     {% set whatsapp_number = villa.contact_phone.replace('+', '').replace(' ', '').replace('-', '') if villa.contact_phone else '' %}
                     {% set site_url = request.url_root %}
-                    {% set whatsapp_message = "Bonjour, je souhaite prendre rendez-vous pour visiter la villa " ~ villa.title ~ " et obtenir plus d'informations. Lien: " ~ site_url %}
-                    
-                    <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-description">
-                        📱 Prendre Rendez-vous sur WhatsApp
-                    </a>
+                    {% if g.lang == 'en' %}
+                        {% set whatsapp_message = "Hello, I would like to schedule a visit for the villa " ~ (villa.title_en or villa.title) ~ " and get more information. Link: " ~ site_url %}
+                        <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-description">📱 Schedule a Visit on WhatsApp</a>
+                    {% else %}
+                        {% set whatsapp_message = "Bonjour, je souhaite prendre rendez-vous pour visiter la villa " ~ villa.title ~ " et obtenir plus d'informations. Lien: " ~ site_url %}
+                        <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-description">📱 Prendre Rendez-vous sur WhatsApp</a>
+                    {% endif %}
                 </div>
                 <div class="image-block-triple">
                     {% if villa.get_images_list()|length > 3 %}
                     <div class="triple-img-main">
-                        <img src="/static/uploads/{{ villa.get_images_list()[3] }}" alt="Intérieur villa de luxe Marrakech - {{ villa.location }} - Pièce principale">
+                        <img src="/static/uploads/{{ villa.get_images_list()[3] }}" alt="{{ g.t.luxury_villa }}">
                     </div>
                     {% endif %}
                     {% if villa.get_images_list()|length > 4 %}
                     <div class="triple-img-small">
-                        <img src="/static/uploads/{{ villa.get_images_list()[4] }}" alt="Détail villa de prestige Marrakech - {{ villa.bedrooms }} chambres - {{ villa.location }}">
+                        <img src="/static/uploads/{{ villa.get_images_list()[4] }}" alt="{{ g.t.luxury_villa }}">
                     </div>
                     {% endif %}
                     {% if villa.get_images_list()|length > 5 %}
                     <div class="triple-img-small">
-                        <img src="/static/uploads/{{ villa.get_images_list()[5] }}" alt="Espace de vie villa luxueuse Marrakech - {{ villa.area }} m² - {{ villa.location }}">
+                        <img src="/static/uploads/{{ villa.get_images_list()[5] }}" alt="{{ g.t.luxury_villa }}">
                     </div>
                     {% endif %}
                 </div>
@@ -278,56 +203,58 @@ Web: www.myoneart.com
     <!-- Section Créative: Pourquoi Choisir Cette Villa -->
     <section class="why-choose">
         <div class="container">
-            <h2 class="section-title-center">Pourquoi Choisir Cette Villa ?</h2>
+            <h2 class="section-title-center">{% if g.lang == 'en' %}Why Choose This Villa?{% else %}Pourquoi Choisir Cette Villa ?{% endif %}</h2>
             <div class="why-grid">
                 <div class="why-card">
                     <div class="why-icon">🌟</div>
-                    <h3>Emplacement Premium</h3>
-                    <p>Située à {{ villa.location }}, dans l'un des quartiers les plus prisés de Marrakech</p>
+                    <h3>{% if g.lang == 'en' %}Premium Location{% else %}Emplacement Premium{% endif %}</h3>
+                    <p>{% if g.lang == 'en' %}Located in {{ villa.location }}, one of Marrakech's most sought-after areas{% else %}Située à {{ villa.location }}, dans l'un des quartiers les plus prisés de Marrakech{% endif %}</p>
                 </div>
                 <div class="why-card">
                     <div class="why-icon">🏗️</div>
-                    <h3>Architecture Moderne</h3>
-                    <p>Design contemporain alliant luxe, confort et authenticité marocaine</p>
+                    <h3>{% if g.lang == 'en' %}Modern Architecture{% else %}Architecture Moderne{% endif %}</h3>
+                    <p>{% if g.lang == 'en' %}Contemporary design combining luxury, comfort and Moroccan authenticity{% else %}Design contemporain alliant luxe, confort et authenticité marocaine{% endif %}</p>
                 </div>
                 <div class="why-card">
                     <div class="why-icon">💎</div>
-                    <h3>Finitions Haut de Gamme</h3>
-                    <p>Matériaux nobles et équipements premium pour un confort optimal</p>
+                    <h3>{% if g.lang == 'en' %}Premium Finishes{% else %}Finitions Haut de Gamme{% endif %}</h3>
+                    <p>{% if g.lang == 'en' %}Noble materials and premium equipment for optimal comfort{% else %}Matériaux nobles et équipements premium pour un confort optimal{% endif %}</p>
                 </div>
                 <div class="why-card">
                     <div class="why-icon">🌴</div>
-                    <h3>Espaces Extérieurs</h3>
-                    <p>Jardin paysager, terrasses et espaces de vie en plein air exceptionnels</p>
+                    <h3>{% if g.lang == 'en' %}Outdoor Spaces{% else %}Espaces Extérieurs{% endif %}</h3>
+                    <p>{% if g.lang == 'en' %}Landscaped garden, terraces and exceptional outdoor living spaces{% else %}Jardin paysager, terrasses et espaces de vie en plein air exceptionnels{% endif %}</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Features avec Background Image -->
-    {% if villa.features %}
+    {% if villa.features or villa.features_en %}
     <section class="features-parallax" {% if villa.get_images_list()|length > 6 %}style="background-image: url('/static/uploads/{{ villa.get_images_list()[6] }}')"{% endif %}>
         <div class="parallax-overlay"></div>
         <div class="container">
-            <h2 class="section-title-center white">Caractéristiques Principales</h2>
+            <h2 class="section-title-center white">{{ g.t.features }}</h2>
             <div class="features-modern-grid">
                 <div class="feature-modern-card">
                     <div class="feature-icon-large">🏡</div>
-                    <h3>Équipements</h3>
+                    <h3>{{ g.t.equipment }}</h3>
                     <ul class="feature-list-clean">
-                        {% for feature in villa.features.split('\n')[:6] %}
+                        {% set features_text = (villa.features_en or villa.features) if g.lang == 'en' else villa.features %}
+                        {% for feature in features_text.split('\n')[:6] %}
                         {% if feature.strip() %}
                         <li>{{ feature.strip() }}</li>
                         {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
-                {% if villa.equipment %}
+                {% if villa.equipment or villa.equipment_en %}
                 <div class="feature-modern-card">
                     <div class="feature-icon-large">⭐</div>
-                    <h3>Confort Premium</h3>
+                    <h3>{% if g.lang == 'en' %}Premium Comfort{% else %}Confort Premium{% endif %}</h3>
                     <ul class="feature-list-clean">
-                        {% for item in villa.equipment.split('\n')[:6] %}
+                        {% set equipment_text = (villa.equipment_en or villa.equipment) if g.lang == 'en' else villa.equipment %}
+                        {% for item in equipment_text.split('\n')[:6] %}
                         {% if item.strip() %}
                         <li>{{ item.strip() }}</li>
                         {% endif %}
@@ -335,12 +262,13 @@ Web: www.myoneart.com
                     </ul>
                 </div>
                 {% endif %}
-                {% if villa.investment_benefits %}
+                {% if villa.investment_benefits or villa.investment_benefits_en %}
                 <div class="feature-modern-card">
                     <div class="feature-icon-large">💎</div>
-                    <h3>Avantages</h3>
+                    <h3>{% if g.lang == 'en' %}Benefits{% else %}Avantages{% endif %}</h3>
                     <ul class="feature-list-clean">
-                        {% for benefit in villa.investment_benefits.split('\n')[:6] %}
+                        {% set benefits_text = (villa.investment_benefits_en or villa.investment_benefits) if g.lang == 'en' else villa.investment_benefits %}
+                        {% for benefit in benefits_text.split('\n')[:6] %}
                         {% if benefit.strip() %}
                         <li>{{ benefit.strip() }}</li>
                         {% endif %}
@@ -357,11 +285,11 @@ Web: www.myoneart.com
     {% if villa.get_images_list()|length > 6 %}
     <section class="gallery-modern">
         <div class="container">
-            <h2 class="section-title-center">Galerie Photos</h2>
+            <h2 class="section-title-center">{{ g.t.gallery }}</h2>
             <div class="gallery-masonry">
                 {% for img in villa.get_images_list()[6:] %}
                 <div class="gallery-item-modern">
-                    <img src="/static/uploads/{{ img }}" alt="Villa à vendre Marrakech {{ villa.location }} - Photo {{ loop.index + 6 }} - {{ villa.title }} - Immobilier de luxe">
+                    <img src="/static/uploads/{{ img }}" alt="{{ g.t.luxury_villa }} - {{ villa.location }}">
                     <div class="gallery-hover">
                         <span class="zoom-icon">🔍</span>
                     </div>
@@ -372,20 +300,20 @@ Web: www.myoneart.com
     </section>
     {% endif %}
 
-    <!-- Contact Section avec Background Image -->
+    <!-- Contact Section -->
     <section class="contact-modern" id="contact" {% if villa.get_images_list()|length > 7 %}style="background-image: url('/static/uploads/{{ villa.get_images_list()[7] }}')"{% endif %}>
         <div class="contact-overlay"></div>
         <div class="container">
             <div class="contact-box">
-                <h2>Intéressé par cette Villa ?</h2>
-                <p class="contact-subtitle">Contactez-nous dès aujourd'hui pour organiser une visite privée</p>
+                <h2>{% if g.lang == 'en' %}Interested in this Villa?{% else %}Intéressé par cette Villa ?{% endif %}</h2>
+                <p class="contact-subtitle">{% if g.lang == 'en' %}Contact us today to arrange a private viewing{% else %}Contactez-nous dès aujourd'hui pour organiser une visite privée{% endif %}</p>
                 
                 <div class="contact-methods">
                     {% if villa.contact_phone %}
                     <div class="contact-method">
                         <div class="contact-icon">📞</div>
                         <div class="contact-details">
-                            <span class="contact-label">Téléphone</span>
+                            <span class="contact-label">{{ g.t.phone }}</span>
                             <a href="tel:{{ villa.contact_phone }}">{{ villa.contact_phone }}</a>
                         </div>
                     </div>
@@ -394,7 +322,7 @@ Web: www.myoneart.com
                     <div class="contact-method">
                         <div class="contact-icon">✉️</div>
                         <div class="contact-details">
-                            <span class="contact-label">Email</span>
+                            <span class="contact-label">{{ g.t.email }}</span>
                             <a href="mailto:{{ villa.contact_email }}">{{ villa.contact_email }}</a>
                         </div>
                     </div>
@@ -403,11 +331,13 @@ Web: www.myoneart.com
                 
                 {% set whatsapp_number = villa.contact_phone.replace('+', '').replace(' ', '').replace('-', '') if villa.contact_phone else '' %}
                 {% set site_url = request.url_root %}
-                {% set whatsapp_message = "Bonjour, je souhaite prendre rendez-vous pour visiter la villa " ~ villa.title ~ " et obtenir plus d'informations. Lien: " ~ site_url %}
-                
-                <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-contact-large">
-                    📱 Prendre Rendez-vous sur WhatsApp
-                </a>
+                {% if g.lang == 'en' %}
+                    {% set whatsapp_message = "Hello, I would like to schedule a visit for the villa " ~ (villa.title_en or villa.title) ~ " and get more information. Link: " ~ site_url %}
+                    <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-contact-large">📱 Schedule a Visit on WhatsApp</a>
+                {% else %}
+                    {% set whatsapp_message = "Bonjour, je souhaite prendre rendez-vous pour visiter la villa " ~ villa.title ~ " et obtenir plus d'informations. Lien: " ~ site_url %}
+                    <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-contact-large">📱 Prendre Rendez-vous sur WhatsApp</a>
+                {% endif %}
             </div>
         </div>
     </section>
@@ -418,12 +348,12 @@ Web: www.myoneart.com
         <span class="lightbox-nav lightbox-prev">‹</span>
         <span class="lightbox-nav lightbox-next">›</span>
         <div class="lightbox-content">
-            <img src="" alt="Villa de luxe à vendre Marrakech - Photo agrandie" id="lightbox-img">
+            <img src="" alt="{{ g.t.luxury_villa }}" id="lightbox-img">
         </div>
     </div>
 
     <script>
-        // Hero Slider (3 photos)
+        // Hero Slider
         let currentSlide = 0;
         const slides = document.querySelectorAll('.hero-slide');
         
@@ -443,7 +373,7 @@ Web: www.myoneart.com
             setInterval(nextSlide, 5000);
         }
 
-        // Lightbox pour Galerie
+        // Lightbox
         const galleryItems = document.querySelectorAll('.gallery-item-modern');
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
@@ -490,24 +420,13 @@ Web: www.myoneart.com
             if (e.key === 'ArrowLeft') showPrevImage();
             if (e.key === 'ArrowRight') showNextImage();
         });
-
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
     </script>
 
     {% else %}
     <div class="empty-state">
-        <h1>Aucune Villa Disponible</h1>
-        <p>Les informations de la villa ne sont pas encore configurées.</p>
-        <a href="/login" class="btn-admin">Accéder à l'administration</a>
+        <h1>{{ g.t.no_villa_available }}</h1>
+        <p>{{ g.t.villa_not_configured }}</p>
+        <a href="/login" class="btn-admin">{{ g.t.access_admin }}</a>
     </div>
     {% endif %}
 </body>
