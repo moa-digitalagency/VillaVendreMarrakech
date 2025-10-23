@@ -447,6 +447,102 @@ def enhance_text_with_ai(text, context=""):
         print(f"AI enhancement error: {e}")
         return text
 
+def translate_villa_data_to_english(french_data):
+    """
+    Traduit automatiquement toutes les données d'une villa du français vers l'anglais.
+    Utilise Claude 3.5 Sonnet via OpenRouter pour des traductions de haute qualité
+    adaptées au contexte de l'immobilier de luxe à Marrakech.
+    
+    Args:
+        french_data: Dictionnaire contenant les données en français
+    
+    Returns:
+        Dictionnaire avec les mêmes clés mais suffixées par _en avec les traductions
+    """
+    openrouter_key = os.environ.get('OPENROUTER_API_KEY')
+    if not openrouter_key:
+        return {}
+    
+    try:
+        fields_to_translate = {
+            'title': french_data.get('title', ''),
+            'description': french_data.get('description', ''),
+            'features': french_data.get('features', ''),
+            'equipment': french_data.get('equipment', ''),
+            'business_info': french_data.get('business_info', ''),
+            'investment_benefits': french_data.get('investment_benefits', ''),
+            'documents': french_data.get('documents', '')
+        }
+        
+        non_empty_fields = {k: v for k, v in fields_to_translate.items() if v and v.strip()}
+        
+        if not non_empty_fields:
+            return {}
+        
+        prompt = f"""Translate the following luxury villa real estate content from French to English. 
+Maintain the professional, luxurious tone appropriate for high-end Marrakech real estate.
+Preserve all line breaks and formatting exactly as shown.
+
+French content to translate:
+{json.dumps(non_empty_fields, ensure_ascii=False, indent=2)}
+
+Respond ONLY with a valid JSON object containing the translations, using the same keys with "_en" suffix:
+{{
+    "title_en": "English translation of title",
+    "description_en": "English translation of description",
+    "features_en": "English translation of features (preserve line breaks)",
+    "equipment_en": "English translation of equipment (preserve line breaks)",
+    "business_info_en": "English translation of business_info",
+    "investment_benefits_en": "English translation of investment_benefits (preserve line breaks)",
+    "documents_en": "English translation of documents"
+}}
+
+Only include fields that were provided in the French content."""
+
+        response = requests.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {openrouter_key}",
+                "Content-Type": "application/json",
+                "HTTP-Referer": "https://villaeden.replit.app",
+                "X-Title": "Villa Eden Admin - Translation"
+            },
+            json={
+                "model": "anthropic/claude-3.5-sonnet",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                "temperature": 0.3,
+                "max_tokens": 4000
+            },
+            timeout=90
+        )
+        
+        if response.status_code == 200:
+            result = response.json()
+            content = result['choices'][0]['message']['content'].strip()
+            
+            if content.startswith('```json'):
+                content = content[7:]
+            if content.startswith('```'):
+                content = content[3:]
+            if content.endswith('```'):
+                content = content[:-3]
+            content = content.strip()
+            
+            translations = json.loads(content)
+            print(f"✅ Successfully translated {len(translations)} fields to English")
+            return translations
+        else:
+            print(f"OpenRouter translation API error: {response.status_code}")
+            return {}
+    except Exception as e:
+        print(f"Translation error: {e}")
+        return {}
+
 # ========== ROUTES PUBLIQUES ==========
 
 @app.route('/')
@@ -609,7 +705,10 @@ def delete_image(filename):
 @app.route('/admin/upload-pdf', methods=['POST'])
 @login_required
 def upload_pdf():
-    """Upload un PDF, extrait le texte et utilise l'IA pour extraire les données de villa."""
+    """
+    Upload un PDF, extrait le texte et utilise l'IA pour extraire les données de villa.
+    Traduit automatiquement le contenu français vers l'anglais pour remplir les deux langues.
+    """
     if 'pdf' not in request.files:
         return jsonify({'error': 'No PDF file'}), 400
     
@@ -626,6 +725,7 @@ def upload_pdf():
         temp_filepath = os.path.join(app.config['UPLOAD_FOLDER'], temp_filename)
         file.save(temp_filepath)
         
+        print("📄 Extracting text from PDF...")
         pdf_text = extract_text_from_pdf(temp_filepath)
         
         os.remove(temp_filepath)
@@ -633,10 +733,20 @@ def upload_pdf():
         if not pdf_text:
             return jsonify({'error': 'Could not extract text from PDF'}), 400
         
+        print("🤖 Extracting French villa data with AI...")
         villa_data = extract_villa_data_with_ai(pdf_text)
         
         if not villa_data:
             return jsonify({'error': 'Could not extract villa data. Make sure OPENROUTER_API_KEY is configured.'}), 400
+        
+        print("🌍 Translating French content to English...")
+        english_translations = translate_villa_data_to_english(villa_data)
+        
+        if english_translations:
+            villa_data.update(english_translations)
+            print(f"✅ Added {len(english_translations)} English translations to villa data")
+        else:
+            print("⚠️  Translation failed or returned no data - English fields will be empty")
         
         return jsonify({'success': True, 'data': villa_data})
     
