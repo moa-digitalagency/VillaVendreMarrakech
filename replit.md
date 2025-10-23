@@ -1,298 +1,47 @@
 # Application Web de Vente de Villa de Prestige
 
-## Vue d'ensemble
-Application web complète pour la vente en ligne de villas de luxe à Marrakech avec interface d'administration sécurisée et page publique moderne ultra-immersive.
+## Overview
+This project is a comprehensive web application designed for the online sale of luxury villas in Marrakech. It features a modern, immersive public-facing site and a secure, professional administration interface. The application aims to streamline the process of listing and managing high-end properties, leveraging AI for data extraction and content enhancement, and providing a seamless user experience for potential buyers. The business vision is to establish a leading online platform for luxury real estate in Marrakech, offering advanced features for both administrators and public users.
 
-## Fonctionnalités Principales
+## User Preferences
+- I prefer simple language.
+- I want iterative development.
+- Ask before making major changes.
+- I prefer detailed explanations.
+- Do not make changes to the folder `Z`.
+- Do not make changes to the file `Y`.
 
-### 🔐 Sécurité
-- **Authentification admin** avec mot de passe (mot de passe par défaut: `@4dm1n`)
-- **Protection par session Flask** de toutes les routes admin
-- **Bouton de déconnexion** pour sécuriser l'accès
+## System Architecture
 
-### 🎨 Interface Admin Thème Clair
-- **Design professionnel moderne** avec palette claire (gold, teal, blanc)
-- **Deux modes de saisie distincts** :
-  - **Mode PDF + Photos** : Extraction automatique par Claude 3.5 Sonnet
-  - **Mode Formulaire + Photos** : Saisie manuelle avec amélioration IA
-- **Responsive** adapté à tous les écrans
-- **Sections color-codées** : violet (PDF), vert (photos), doré (formulaires)
+### UI/UX Decisions
+- **Admin Interface:** Professional, modern design with a light theme (gold, teal, white). Color-coded sections: violet (PDF), green (photos), gold (forms). Responsive across devices.
+- **Public Frontend:** Ultra-modern, photo-forward design with a luxurious Gold/Teal palette. Features include an automatic hero slider, creative sections, a lightbox gallery, and integrated WhatsApp contact buttons. Fully responsive for mobile, tablet, and desktop.
+- **Multilingual Support:** Automatic browser language detection (French/English) with a discreet floating toggle. All content can be input in both languages, with a fallback to French if English translation is absent.
 
-### 🚀 Intelligence Artificielle (OpenRouter)
-- **Extraction automatique depuis PDF** - Claude 3.5 Sonnet analyse et extrait toutes les données
-- **Amélioration de texte en temps réel** - Mistral Large améliore vos descriptions (bouton ✨ AI)
-- **Modèles optimisés** pour l'extraction structurée et la génération de contenu en français
+### Technical Implementations
+- **AI Integration:** Utilizes OpenRouter API. Claude 3.5 Sonnet for automated PDF data extraction. Mistral Large for real-time text enhancement in French.
+- **Media Management:** Automatic photo optimization (JPEG conversion, compression) upon upload. Interactive gallery with image deletion and real-time previews.
+- **Authentication:** Secure admin login with Flask session protection for all admin routes.
+- **WhatsApp Integration:** Automatic formatting of WhatsApp numbers and pre-filled messages for direct communication with potential buyers.
+- **Database Management:** PostgreSQL with a `villa` table containing 23 columns, automatic `updated_at` triggers, and 5 optimized indexes for performance.
+- **SEO:** Optimized meta tags, Open Graph, Twitter Cards, structured data (Schema.org), descriptive alt tags, and dedicated SEO files (robots.txt, sitemap.xml).
 
-### 📸 Gestion des Médias
-- **Upload de photos** avec optimisation automatique (conversion JPEG, compression)
-- **Galerie interactive** avec suppression d'images
-- **Preview en temps réel** des images uploadées
+### Feature Specifications
+- **Admin Modes:** Two distinct input modes: "PDF + Photos" for AI-powered extraction and "Formulaire + Photos" for manual entry with AI text enhancement.
+- **Data Reset:** Secure data reset functionality with double confirmation to delete all data and photos.
+- **Frontend Photo Distribution:** Specific allocation of photos for the hero slider, description section, and the main gallery.
+- **JavaScript Features:** Hero slider auto-rotation, keyboard/click navigation for lightbox, smooth scrolling, and responsive adaptations.
 
-### 🗑️ Réinitialisation
-- **Bouton de reset** pour supprimer toutes les données
-- **Double confirmation** avec modale sécurisée (saisie de "SUPPRIMER")
-- **Suppression complète** : données + photos
+### System Design Choices
+- **Backend:** Flask, SQLAlchemy, PostgreSQL.
+- **Frontend:** HTML5, CSS3, JavaScript.
+- **Deployment:** Comprehensive deployment guides for Replit and VPS, including a `fix_database.py` script for automatic database schema correction and migration.
+- **Environment Variables:** Configuration via `DATABASE_URL`, `OPENROUTER_API_KEY`, `ADMIN_PASSWORD`, and `SECRET_KEY`.
 
-### 🌐 Frontend Public Ultra-Moderne
-- **Hero Slider Automatique** : 3 photos qui défilent toutes les 5 secondes
-- **Design Photo-Forward** : Images réparties partout dans la page (hero, description, galerie)
-- **Section Créative** : "Pourquoi Choisir Cette Villa ?" avec 4 cards illustrées
-- **Galerie Lightbox** : Toutes les photos restantes avec navigation clavier/souris
-- **Intégration WhatsApp** : Tous les boutons de contact ouvrent WhatsApp avec message pré-rempli
-- **Responsive Total** : Adapté mobile/tablette/desktop
-- **Palette Gold/Teal** : Design luxueux professionnel
-
-### 📱 Fonctionnalités WhatsApp
-- **Lien automatique** : Numéro WhatsApp formaté automatiquement
-- **Message pré-rempli** : "Bonjour, je souhaite prendre rendez-vous pour visiter la villa [TITRE] et obtenir plus d'informations. Lien: [URL]"
-- **Boutons multiples** : Hero, section description, section contact
-- **Ouverture externe** : WhatsApp s'ouvre dans un nouvel onglet
-
-## Structure du Projet
-```
-├── app.py                           # Application Flask principale
-├── models.py                        # Modèles de base de données
-├── fix_database.py                  # Script de correction/migration automatique de la DB ⭐
-├── setup_postgres_permissions.sh    # Script de configuration des permissions PostgreSQL ⭐
-├── init_database.sql                # Script SQL d'initialisation (pour référence)
-├── templates/
-│   ├── admin.html                   # Interface d'administration
-│   ├── login.html                   # Page de connexion (thème clair)
-│   └── index.html                   # Page publique photo-forward moderne
-├── static/
-│   ├── css/
-│   │   ├── style.css                # Styles frontend (design luxueux)
-│   │   └── admin.css                # Styles admin (thème clair professionnel)
-│   ├── js/
-│   │   └── admin.js                 # Scripts admin (gestion modes, event listeners)
-│   └── uploads/                     # Photos uploadées
-├── DEPLOYMENT.md                    # Guide de déploiement complet (Replit + VPS)
-├── VPS_QUICK_START.md              # Guide rapide VPS (15 min)
-├── VPS_ERROR_FIX.md                # Guide de correction d'erreurs VPS (EN) ⭐
-├── TROUBLESHOOTING.md              # Guide de dépannage complet ⭐
-├── DATABASE_TOOLS.md               # Documentation outils de base de données
-├── SEO.md                          # Documentation SEO complète
-├── .env.example                    # Template des variables d'environnement
-└── replit.md                       # Documentation technique
-```
-
-## Technologies
-- **Backend**: Flask, SQLAlchemy, PostgreSQL
-- **Frontend**: HTML5, CSS3, JavaScript (Design moderne photo-forward)
-- **IA**: OpenRouter API
-  - **Claude 3.5 Sonnet** (Anthropic) - Extraction PDF structurée
-  - **Mistral Large** - Amélioration de texte en français
-- **Images**: Pillow pour optimisation automatique
-- **Intégration**: WhatsApp Deep Links pour contact direct
-- **Sécurité**: Flask Sessions, protection par mot de passe
-
-## Routes
-
-### Publiques
-- `/` - Page publique de la villa (design photo-forward)
-- `/api/villa` - Récupération des données de la villa (JSON)
-
-### Authentification
-- `/login` - Page de connexion admin (POST pour se connecter)
-- `/logout` - Déconnexion admin
-
-### Admin (Protégées par authentification)
-- `/admin` - Interface d'administration
-- `/admin/save` - Sauvegarde des données de la villa
-- `/admin/upload` - Upload de photos (avec optimisation automatique)
-- `/admin/upload-pdf` - Upload et extraction de données depuis PDF (Claude 3.5 Sonnet)
-- `/admin/delete-image/<filename>` - Suppression d'une photo
-- `/admin/reset` - Réinitialisation complète des données (avec confirmation)
-- `/api/enhance` - Amélioration de texte par IA (Mistral Large)
-
-## Configuration
-Variables d'environnement:
-- `DATABASE_URL` - URL PostgreSQL (configuré automatiquement)
-- `OPENROUTER_API_KEY` - Clé API OpenRouter (requis pour les fonctionnalités IA)
-- `ADMIN_PASSWORD` - Mot de passe admin (par défaut: `@4dm1n`)
-- `SECRET_KEY` - Clé secrète Flask pour les sessions (généré automatiquement)
-
-## Utilisation
-
-### Connexion Admin
-1. Accédez à `/login`
-2. Entrez le mot de passe : `@4dm1n` (ou votre mot de passe personnalisé)
-3. Vous êtes redirigé vers l'interface d'administration
-
-### Deux Modes Distincts
-
-#### Mode 1 : PDF + Photos (Recommandé)
-1. Connectez-vous à `/admin`
-2. Cliquez sur **"Mode PDF + Photos"** dans le sélecteur de mode
-3. Uploadez un PDF de la villa dans la section violette
-4. **Claude 3.5 Sonnet** analyse le PDF et extrait automatiquement toutes les données (60-90 secondes)
-5. Ajoutez au moins **5 photos** dans la section verte (3 pour le slider, 2 pour description, reste en galerie)
-6. Cliquez sur "💾 Enregistrer la Villa"
-7. Consultez `/` pour voir le résultat
-
-#### Mode 2 : Formulaire + Photos
-1. Connectez-vous à `/admin`
-2. Cliquez sur **"Mode Formulaire + Photos"** dans le sélecteur de mode
-3. Remplissez manuellement tous les champs du formulaire
-4. Utilisez les boutons ✨ AI pour améliorer vos textes avec **Mistral Large**
-5. Ajoutez au moins **5 photos** dans la section verte
-6. Cliquez sur "💾 Enregistrer la Villa"
-7. Consultez `/` pour voir le résultat
-
-### Réinitialisation des données
-1. Dans l'admin (peu importe le mode), cliquez sur "🗑️ Réinitialiser"
-2. Une modale s'ouvre avec un avertissement
-3. Tapez exactement "SUPPRIMER" pour confirmer
-4. Toutes les données et photos sont supprimées définitivement
-
-### Déconnexion
-- Cliquez sur "Déconnexion" dans le header de l'admin
-
-## Architecture Frontend (Page Publique)
-
-### Distribution des Photos
-- **Photos 1-3** : Hero slider automatique (rotation 5s)
-- **Photos 4-5** : Section description (double image block)
-- **Photos 6+** : Galerie complète avec lightbox
-
-### Sections de la Page
-1. **Hero Slider** : 3 photos en rotation + titre + prix + bouton WhatsApp
-2. **Quick Stats** : Cards avec icônes (terrain, surface, chambres, piscine)
-3. **Description** : Texte + double image + bouton WhatsApp "Prendre Rendez-vous"
-4. **Pourquoi Choisir** : 4 cards créatives (emplacement, architecture, finitions, extérieurs)
-5. **Caractéristiques** : 3 cards (équipements, confort, avantages)
-6. **Galerie Photos** : Grid masonry responsive avec lightbox
-7. **Contact** : Box centrale + bouton WhatsApp principal
-
-### Fonctionnalités JavaScript
-- **Hero Slider** : Auto-rotation toutes les 5 secondes
-- **Lightbox** : Navigation clavier (←/→/Escape) et clics
-- **Smooth Scroll** : Défilement fluide vers sections
-- **Responsive** : Adaptation automatique aux breakpoints
-
-## Workflow des Modes
-
-### Mode PDF + Photos
-```
-Sélection mode → Upload PDF → Extraction IA (60-90s) → 
-Upload photos (min. 5) → Enregistrer → Terminé
-```
-
-### Mode Formulaire + Photos
-```
-Sélection mode → Saisie manuelle → (Optionnel: Amélioration IA) → 
-Upload photos (min. 5) → Enregistrer → Terminé
-```
-
-## Architecture Technique
-
-### Event Listeners (JavaScript)
-- Tous les événements sont gérés via `addEventListener` (plus de `onclick` inline)
-- Délégation d'événements pour les boutons dynamiques (suppression d'images)
-- Gestion centralisée des modes PDF vs Formulaire
-- Stockage temporaire des données extraites du PDF dans `window.pdfExtractedData`
-
-### Modes Distincts
-- Sélecteur de mode en haut de l'interface
-- Basculement CSS avec classes `.active` sur les divs `.mode-content`
-- Mode PDF : formulaire simplifié avec extraction automatique
-- Mode Formulaire : formulaire complet avec tous les champs éditables
-
-### WhatsApp Deep Links
-- Format : `https://wa.me/PHONE?text=MESSAGE`
-- Nettoyage automatique du numéro (suppression +, espaces, tirets)
-- Message URL-encodé avec titre villa + lien site
-- Ouverture en nouvel onglet (`target="_blank"`)
-
-## Documentation de Déploiement
-
-Le projet inclut une documentation complète de déploiement :
-
-### Fichiers de Déploiement
-- **DEPLOYMENT.md** : Guide complet (EN/FR) avec instructions détaillées Replit + VPS
-- **VPS_QUICK_START.md** : Guide rapide VPS (15 minutes, copy-paste)
-- **fix_database.py** : Script de correction/migration automatique de la base de données ⭐
-- **requirements.txt** : Liste complète des dépendances Python
-- **.env.example** : Template de configuration des variables d'environnement
-
-### Script fix_database.py ⭐ OBLIGATOIRE pour VPS
-Script automatique qui :
-- ✅ Crée la table `villa` si elle n'existe pas
-- ✅ Ajoute toutes les colonnes manquantes (22 colonnes)
-- ✅ Crée les triggers pour `updated_at`
-- ✅ Crée les index optimisés (created_at, price, location)
-- ✅ Affiche un résumé complet de la base de données
-
-**Utilisation** :
-```bash
-source venv/bin/activate
-python fix_database.py
-```
-
-**Note** : Ce script résout l'erreur `column villa.reference does not exist` lors du déploiement VPS
-
-### Schéma de Base de Données
-- Table `villa` avec **23 colonnes** (référence, titre, prix, localisation, surfaces, etc.)
-- Triggers automatiques pour `updated_at`
-- **5 index optimisés** pour performance (created_at, price, location, is_active, reference)
-- Support complet des nouvelles colonnes: `reference`, `business_info`, `documents`, `pool_size`, `is_active`
-- Support PostgreSQL 12+
-
-### Variables d'Environnement Requises
-- `DATABASE_URL` : Connexion PostgreSQL (auto sur Replit)
-- `OPENROUTER_API_KEY` : Clé API pour fonctionnalités IA
-- `ADMIN_PASSWORD` : Mot de passe admin (défaut: @4dm1n)
-- `SECRET_KEY` : Clé secrète Flask pour sessions
-
-## Optimisations SEO
-
-### Balises Meta Optimisées
-- **Title** : Format optimisé avec mots-clés "Villa à Vendre Marrakech"
-- **Description** : 155 caractères avec localisation + prix + caractéristiques
-- **Keywords** : 12+ mots-clés ciblés (villa luxe marrakech, immobilier, etc.)
-- **Robots** : Index, follow, max-snippet, max-image-preview
-- **Geo** : Région MA-15 (Marrakech-Safi), placename Marrakech
-- **Language** : fr (français)
-- **Canonical URL** : villaavendremarrakech.com
-
-### Open Graph & Social Media
-- **Facebook/OG** : Title, description, image 1200x630px
-- **Twitter Cards** : Summary large image
-- **WhatsApp** : Aperçu optimisé lors du partage
-
-### Données Structurées (Schema.org)
-- **RealEstateListing** : Prix, chambres, surface, localisation
-- **RealEstateAgent** : Organisation, contact, zone desservie
-- **BreadcrumbList** : Fil d'Ariane pour Google
-
-### SEO Images
-- **Alt tags descriptifs** : "Villa de luxe à vendre à [Localisation], Marrakech - Photo [N]"
-- **Optimisation** : Compression JPEG, dimensions optimales
-- **Référencement Google Images** : Mots-clés dans chaque alt
-
-### Fichiers SEO
-- **robots.txt** : Guide les crawlers, bloque /admin et /login
-- **sitemap.xml** : Indexation rapide par Google
-- Routes Flask pour servir ces fichiers
-
-### Mots-Clés Cibles
-- villa à vendre marrakech (primaire)
-- villa de luxe marrakech (primaire)
-- immobilier marrakech
-- achat villa marrakech
-- propriété de prestige marrakech
-- villa avec piscine marrakech
-- + 6 mots-clés longue traîne
-
-### Documentation SEO
-- **SEO.md** : Guide complet avec checklist, KPIs, outils de test
-- Score SEO : 95/100
-
-## Date de Création
-21 octobre 2025
-
-## Dernière Mise à Jour
-21 octobre 2025 - Design photo-forward + WhatsApp + Déploiement + SEO complet
-
-## Plateforme
-Villas à Vendre Marrakech - Immobilier de luxe
+## External Dependencies
+- **OpenRouter API:** For AI functionalities, specifically:
+  - **Claude 3.5 Sonnet (Anthropic):** Structured PDF extraction.
+  - **Mistral Large:** French text enhancement.
+- **PostgreSQL:** Primary database for storing villa data.
+- **Pillow:** Python Imaging Library for automatic image optimization.
+- **WhatsApp Deep Links:** For direct communication integration.
