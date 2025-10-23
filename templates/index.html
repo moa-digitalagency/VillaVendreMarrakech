@@ -32,6 +32,43 @@ Web: www.myoneart.com
     <meta name="robots" content="index, follow">
     <meta name="language" content="{{ g.lang }}">
     
+    <!-- ========== SEO MULTILINGUE (HREFLANG) ========== -->
+    <link rel="alternate" hreflang="fr" href="{{ request.url_root }}?lang=fr">
+    <link rel="alternate" hreflang="en" href="{{ request.url_root }}?lang=en">
+    <link rel="alternate" hreflang="x-default" href="{{ request.url_root }}">
+    
+    <!-- ========== OPEN GRAPH (FACEBOOK, LINKEDIN) ========== -->
+    {% if g.lang == 'en' %}
+    <meta property="og:title" content="{% if villa %}{{ villa.title_en if villa.title_en else 'Luxury Villa for Sale in Marrakech' }}{% else %}Luxury Villa for Sale in Marrakech{% endif %}">
+    <meta property="og:description" content="{% if villa %}{{ villa.description_en[:155] if villa.description_en else 'Luxury villa for sale in Marrakech with premium features and exceptional location.' }}{% else %}Discover our luxury villas in Marrakech{% endif %}">
+    {% else %}
+    <meta property="og:title" content="{% if villa %}{{ villa.title }}{% else %}Villa de Luxe à Vendre à Marrakech{% endif %}">
+    <meta property="og:description" content="{% if villa %}{{ villa.description[:155] }}{% else %}Découvrez nos villas de luxe à Marrakech{% endif %}">
+    {% endif %}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:locale" content="{% if g.lang == 'en' %}en_US{% else %}fr_FR{% endif %}">
+    <meta property="og:locale:alternate" content="{% if g.lang == 'en' %}fr_FR{% else %}en_US{% endif %}">
+    {% if villa and villa.get_images_list() %}
+    <meta property="og:image" content="{{ request.url_root }}static/uploads/{{ villa.get_images_list()[0] }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    {% endif %}
+    <meta property="og:site_name" content="Villa à Vendre Marrakech">
+    
+    <!-- ========== TWITTER CARDS ========== -->
+    <meta name="twitter:card" content="summary_large_image">
+    {% if g.lang == 'en' %}
+    <meta name="twitter:title" content="{% if villa %}{{ villa.title_en if villa.title_en else 'Luxury Villa for Sale in Marrakech' }}{% else %}Luxury Villa for Sale in Marrakech{% endif %}">
+    <meta name="twitter:description" content="{% if villa %}{{ villa.description_en[:155] if villa.description_en else 'Luxury villa for sale in Marrakech with premium features and exceptional location.' }}{% else %}Discover our luxury villas in Marrakech{% endif %}">
+    {% else %}
+    <meta name="twitter:title" content="{% if villa %}{{ villa.title }}{% else %}Villa de Luxe à Vendre à Marrakech{% endif %}">
+    <meta name="twitter:description" content="{% if villa %}{{ villa.description[:155] }}{% else %}Découvrez nos villas de luxe à Marrakech{% endif %}">
+    {% endif %}
+    {% if villa and villa.get_images_list() %}
+    <meta name="twitter:image" content="{{ request.url_root }}static/uploads/{{ villa.get_images_list()[0] }}">
+    {% endif %}
+    
     <!-- ========== FEUILLE DE STYLE ========== -->
     <link rel="stylesheet" href="/static/css/style.css">
     
@@ -80,9 +117,15 @@ Web: www.myoneart.com
 <body>
     <!-- Language Toggle -->
     <div class="language-toggle">
-        <a href="/set-language/fr" class="lang-option {% if g.lang == 'fr' %}active{% endif %}">🇫🇷 FR</a>
-        <a href="/set-language/en" class="lang-option {% if g.lang == 'en' %}active{% endif %}">🇬🇧 EN</a>
+        <a href="#" onclick="changeLanguage('fr'); return false;" class="lang-option {% if g.lang == 'fr' %}active{% endif %}">🇫🇷 FR</a>
+        <a href="#" onclick="changeLanguage('en'); return false;" class="lang-option {% if g.lang == 'en' %}active{% endif %}">🇬🇧 EN</a>
     </div>
+    
+    <script>
+        function changeLanguage(lang) {
+            window.location.href = '/set-language/' + lang;
+        }
+    </script>
 
     <!-- ========== PAGE PUBLIQUE VILLA DE LUXE ========== -->
     {% if villa %}
