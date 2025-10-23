@@ -72,6 +72,53 @@ class Villa(db.Model):
     contact_email = db.Column(db.String(100))  # Email de contact
     contact_website = db.Column(db.String(200))  # Site web de l'agence
     
+    # ========== TEXTES PERSONNALISABLES DU SITE WEB ==========
+    # Section Héro
+    hero_subtitle_fr = db.Column(db.String(200))  # Sous-titre héro (français)
+    hero_subtitle_en = db.Column(db.String(200))  # Sous-titre héro (anglais)
+    contact_button_fr = db.Column(db.String(100))  # Texte bouton contact (français)
+    contact_button_en = db.Column(db.String(100))  # Texte bouton contact (anglais)
+    
+    # Section Description
+    description_title_fr = db.Column(db.String(200))  # Titre section description (français)
+    description_title_en = db.Column(db.String(200))  # Titre section description (anglais)
+    whatsapp_button_fr = db.Column(db.String(100))  # Texte bouton WhatsApp (français)
+    whatsapp_button_en = db.Column(db.String(100))  # Texte bouton WhatsApp (anglais)
+    
+    # Section "Pourquoi Choisir Cette Villa"
+    why_choose_title_fr = db.Column(db.String(200))  # Titre section (français)
+    why_choose_title_en = db.Column(db.String(200))  # Titre section (anglais)
+    
+    # Carte 1 - Emplacement
+    why_card1_title_fr = db.Column(db.String(200))
+    why_card1_title_en = db.Column(db.String(200))
+    why_card1_desc_fr = db.Column(db.Text)
+    why_card1_desc_en = db.Column(db.Text)
+    
+    # Carte 2 - Architecture
+    why_card2_title_fr = db.Column(db.String(200))
+    why_card2_title_en = db.Column(db.String(200))
+    why_card2_desc_fr = db.Column(db.Text)
+    why_card2_desc_en = db.Column(db.Text)
+    
+    # Carte 3 - Finitions
+    why_card3_title_fr = db.Column(db.String(200))
+    why_card3_title_en = db.Column(db.String(200))
+    why_card3_desc_fr = db.Column(db.Text)
+    why_card3_desc_en = db.Column(db.Text)
+    
+    # Carte 4 - Espaces Extérieurs
+    why_card4_title_fr = db.Column(db.String(200))
+    why_card4_title_en = db.Column(db.String(200))
+    why_card4_desc_fr = db.Column(db.Text)
+    why_card4_desc_en = db.Column(db.Text)
+    
+    # Section Contact
+    contact_title_fr = db.Column(db.String(200))  # Titre contact (français)
+    contact_title_en = db.Column(db.String(200))  # Titre contact (anglais)
+    contact_subtitle_fr = db.Column(db.String(200))  # Sous-titre contact (français)
+    contact_subtitle_en = db.Column(db.String(200))  # Sous-titre contact (anglais)
+    
     # ========== MÉTADONNÉES ==========
     is_active = db.Column(db.Boolean, default=True)  # Villa active/visible sur le site
     created_at = db.Column(db.DateTime, default=datetime.utcnow)  # Date de création

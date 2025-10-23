@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Éditer les Textes du Site - Admin</title>
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <style>
+        .language-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+            padding: 10px 0;
+        }
+        
+        .lang-tab {
+            padding: 12px 24px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+        
+        .lang-tab.active {
+            background: linear-gradient(135deg, #d4af37, #14b8a6);
+            color: white;
+            transform: translateY(2px);
+        }
+        
+        .lang-content {
+            display: none;
+        }
+        
+        .lang-content.active {
+            display: block;
+        }
+        
+        .text-section {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .text-section h3 {
+            color: #d4af37;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #334155;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .info-text {
+            background: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #0c4a6e;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <header>
+            <h1>✏️ Éditer les Textes du Site Web</h1>
+            <div class="header-actions">
+                <a href="/admin" class="btn-preview">← Retour Admin</a>
+                <a href="/" class="btn-preview">Voir le site</a>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Déconnexion</a>
+            </div>
+        </header>
+
+        <div class="info-text">
+            💡 <strong>Personnalisez tous les textes du site</strong> - Modifiez les titres, sous-titres et descriptions qui apparaissent sur la page publique en français et en anglais.
+        </div>
+
+        <div class="language-tabs">
+            <button type="button" class="lang-tab active" data-lang="fr">🇫🇷 Français</button>
+            <button type="button" class="lang-tab" data-lang="en">🇬🇧 English</button>
+        </div>
+
+        <form id="websiteTextForm" method="POST" action="/admin/save-website-text">
+            
+            <!-- FRENCH CONTENT -->
+            <div class="lang-content active" data-lang-content="fr">
+                <div class="text-section">
+                    <h3>🏡 Section Héro</h3>
+                    <div class="form-group">
+                        <label>Sous-titre principal</label>
+                        <input type="text" name="hero_subtitle_fr" value="{{ villa.hero_subtitle_fr if villa and villa.hero_subtitle_fr else 'Découvrez cette villa d\'exception à Marrakech' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Texte du bouton contact</label>
+                        <input type="text" name="contact_button_fr" value="{{ villa.contact_button_fr if villa and villa.contact_button_fr else 'Nous Contacter' }}">
+                    </div>
+                </div>
+
+                <div class="text-section">
+                    <h3>📝 Section Description</h3>
+                    <div class="form-group">
+                        <label>Titre de la section</label>
+                        <input type="text" name="description_title_fr" value="{{ villa.description_title_fr if villa and villa.description_title_fr else 'Une Villa d\'Exception' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Texte du bouton WhatsApp</label>
+                        <input type="text" name="whatsapp_button_fr" value="{{ villa.whatsapp_button_fr if villa and villa.whatsapp_button_fr else '📱 Prendre Rendez-vous sur WhatsApp' }}">
+                    </div>
+                </div>
+
+                <div class="text-section">
+                    <h3>⭐ Section "Pourquoi Choisir Cette Villa"</h3>
+                    <div class="form-group">
+                        <label>Titre de la section</label>
+                        <input type="text" name="why_choose_title_fr" value="{{ villa.why_choose_title_fr if villa and villa.why_choose_title_fr else 'Pourquoi Choisir Cette Villa ?' }}">
+                    </div>
+                    
+                    <h4>Carte 1 - Emplacement</h4>
+                    <div class="form-group">
+                        <label>Titre</label>
+                        <input type="text" name="why_card1_title_fr" value="{{ villa.why_card1_title_fr if villa and villa.why_card1_title_fr else 'Emplacement Premium' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="why_card1_desc_fr" rows="2">{{ villa.why_card1_desc_fr if villa and villa.why_card1_desc_fr else 'Située à {location}, dans l\'un des quartiers les plus prisés de Marrakech' }}</textarea>
+                    </div>
+                    
+                    <h4>Carte 2 - Architecture</h4>
+                    <div class="form-group">
+                        <label>Titre</label>
+                        <input type="text" name="why_card2_title_fr" value="{{ villa.why_card2_title_fr if villa and villa.why_card2_title_fr else 'Architecture Moderne' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="why_card2_desc_fr" rows="2">{{ villa.why_card2_desc_fr if villa and villa.why_card2_desc_fr else 'Design contemporain alliant luxe, confort et authenticité marocaine' }}</textarea>
+                    </div>
+                    
+                    <h4>Carte 3 - Finitions</h4>
+                    <div class="form-group">
+                        <label>Titre</label>
+                        <input type="text" name="why_card3_title_fr" value="{{ villa.why_card3_title_fr if villa and villa.why_card3_title_fr else 'Finitions Haut de Gamme' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="why_card3_desc_fr" rows="2">{{ villa.why_card3_desc_fr if villa and villa.why_card3_desc_fr else 'Matériaux nobles et équipements premium pour un confort optimal' }}</textarea>
+                    </div>
+                    
+                    <h4>Carte 4 - Espaces Extérieurs</h4>
+                    <div class="form-group">
+                        <label>Titre</label>
+                        <input type="text" name="why_card4_title_fr" value="{{ villa.why_card4_title_fr if villa and villa.why_card4_title_fr else 'Espaces Extérieurs' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="why_card4_desc_fr" rows="2">{{ villa.why_card4_desc_fr if villa and villa.why_card4_desc_fr else 'Jardin paysager, terrasses et espaces de vie en plein air exceptionnels' }}</textarea>
+                    </div>
+                </div>
+
+                <div class="text-section">
+                    <h3>📞 Section Contact</h3>
+                    <div class="form-group">
+                        <label>Titre principal</label>
+                        <input type="text" name="contact_title_fr" value="{{ villa.contact_title_fr if villa and villa.contact_title_fr else 'Intéressé par cette Villa ?' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Sous-titre</label>
+                        <input type="text" name="contact_subtitle_fr" value="{{ villa.contact_subtitle_fr if villa and villa.contact_subtitle_fr else 'Contactez-nous dès aujourd\'hui pour organiser une visite privée' }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENGLISH CONTENT -->
+            <div class="lang-content" data-lang-content="en">
+                <div class="text-section">
+                    <h3>🏡 Hero Section</h3>
+                    <div class="form-group">
+                        <label>Main Subtitle</label>
+                        <input type="text" name="hero_subtitle_en" value="{{ villa.hero_subtitle_en if villa and villa.hero_subtitle_en else 'Discover this exceptional villa in Marrakech' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Button Text</label>
+                        <input type="text" name="contact_button_en" value="{{ villa.contact_button_en if villa and villa.contact_button_en else 'Contact Us' }}">
+                    </div>
+                </div>
+
+                <div class="text-section">
+                    <h3>📝 Description Section</h3>
+                    <div class="form-group">
+                        <label>Section Title</label>
+                        <input type="text" name="description_title_en" value="{{ villa.description_title_en if villa and villa.description_title_en else 'An Exceptional Villa' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>WhatsApp Button Text</label>
+                        <input type="text" name="whatsapp_button_en" value="{{ villa.whatsapp_button_en if villa and villa.whatsapp_button_en else '📱 Schedule a Visit on WhatsApp' }}">
+                    </div>
+                </div>
+
+                <div class="text-section">
+                    <h3>⭐ "Why Choose This Villa" Section</h3>
+                    <div class="form-group">
+                        <label>Section Title</label>
+                        <input type="text" name="why_choose_title_en" value="{{ villa.why_choose_title_en if villa and villa.why_choose_title_en else 'Why Choose This Villa?' }}">
+                    </div>
+                    
+                    <h4>Card 1 - Location</h4>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" name="why_card1_title_en" value="{{ villa.why_card1_title_en if villa and villa.why_card1_title_en else 'Premium Location' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="why_card1_desc_en" rows="2">{{ villa.why_card1_desc_en if villa and villa.why_card1_desc_en else 'Located in {location}, one of Marrakech\'s most sought-after areas' }}</textarea>
+                    </div>
+                    
+                    <h4>Card 2 - Architecture</h4>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" name="why_card2_title_en" value="{{ villa.why_card2_title_en if villa and villa.why_card2_title_en else 'Modern Architecture' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="why_card2_desc_en" rows="2">{{ villa.why_card2_desc_en if villa and villa.why_card2_desc_en else 'Contemporary design combining luxury, comfort and Moroccan authenticity' }}</textarea>
+                    </div>
+                    
+                    <h4>Card 3 - Finishes</h4>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" name="why_card3_title_en" value="{{ villa.why_card3_title_en if villa and villa.why_card3_title_en else 'Premium Finishes' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="why_card3_desc_en" rows="2">{{ villa.why_card3_desc_en if villa and villa.why_card3_desc_en else 'Noble materials and premium equipment for optimal comfort' }}</textarea>
+                    </div>
+                    
+                    <h4>Card 4 - Outdoor Spaces</h4>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" name="why_card4_title_en" value="{{ villa.why_card4_title_en if villa and villa.why_card4_title_en else 'Outdoor Spaces' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="why_card4_desc_en" rows="2">{{ villa.why_card4_desc_en if villa and villa.why_card4_desc_en else 'Landscaped garden, terraces and exceptional outdoor living spaces' }}</textarea>
+                    </div>
+                </div>
+
+                <div class="text-section">
+                    <h3>📞 Contact Section</h3>
+                    <div class="form-group">
+                        <label>Main Title</label>
+                        <input type="text" name="contact_title_en" value="{{ villa.contact_title_en if villa and villa.contact_title_en else 'Interested in this Villa?' }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Subtitle</label>
+                        <input type="text" name="contact_subtitle_en" value="{{ villa.contact_subtitle_en if villa and villa.contact_subtitle_en else 'Contact us today to arrange a private viewing' }}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">💾 Enregistrer les Textes</button>
+                <a href="/admin" class="btn-reset">Annuler</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Language tab switching
+        document.querySelectorAll('.lang-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const lang = this.dataset.lang;
+                
+                // Activate clicked tab
+                document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show corresponding content
+                document.querySelectorAll('.lang-content').forEach(content => {
+                    if (content.dataset.langContent === lang) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Form submission
+        document.getElementById('websiteTextForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('/admin/save-website-text', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ Textes enregistrés avec succès !');
+                } else {
+                    alert('❌ Erreur: ' + (result.error || 'Erreur inconnue'));
+                }
+            } catch (error) {
+                alert('❌ Erreur lors de la sauvegarde: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -651,6 +651,63 @@ def reset_data():
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
+@app.route('/admin/edit-website')
+@login_required
+def edit_website():
+    """Page d'édition des textes personnalisables du site web."""
+    villa = Villa.query.first()
+    return render_template('edit_website.html', villa=villa)
+
+@app.route('/admin/save-website-text', methods=['POST'])
+@login_required
+def save_website_text():
+    """Enregistre les textes personnalisés du site web."""
+    try:
+        villa = Villa.query.first()
+        if not villa:
+            return jsonify({'success': False, 'error': 'Aucune villa trouvée. Créez d\'abord une villa.'}), 404
+        
+        # French texts
+        villa.hero_subtitle_fr = request.form.get('hero_subtitle_fr', '')
+        villa.contact_button_fr = request.form.get('contact_button_fr', '')
+        villa.description_title_fr = request.form.get('description_title_fr', '')
+        villa.whatsapp_button_fr = request.form.get('whatsapp_button_fr', '')
+        villa.why_choose_title_fr = request.form.get('why_choose_title_fr', '')
+        villa.why_card1_title_fr = request.form.get('why_card1_title_fr', '')
+        villa.why_card1_desc_fr = request.form.get('why_card1_desc_fr', '')
+        villa.why_card2_title_fr = request.form.get('why_card2_title_fr', '')
+        villa.why_card2_desc_fr = request.form.get('why_card2_desc_fr', '')
+        villa.why_card3_title_fr = request.form.get('why_card3_title_fr', '')
+        villa.why_card3_desc_fr = request.form.get('why_card3_desc_fr', '')
+        villa.why_card4_title_fr = request.form.get('why_card4_title_fr', '')
+        villa.why_card4_desc_fr = request.form.get('why_card4_desc_fr', '')
+        villa.contact_title_fr = request.form.get('contact_title_fr', '')
+        villa.contact_subtitle_fr = request.form.get('contact_subtitle_fr', '')
+        
+        # English texts
+        villa.hero_subtitle_en = request.form.get('hero_subtitle_en', '')
+        villa.contact_button_en = request.form.get('contact_button_en', '')
+        villa.description_title_en = request.form.get('description_title_en', '')
+        villa.whatsapp_button_en = request.form.get('whatsapp_button_en', '')
+        villa.why_choose_title_en = request.form.get('why_choose_title_en', '')
+        villa.why_card1_title_en = request.form.get('why_card1_title_en', '')
+        villa.why_card1_desc_en = request.form.get('why_card1_desc_en', '')
+        villa.why_card2_title_en = request.form.get('why_card2_title_en', '')
+        villa.why_card2_desc_en = request.form.get('why_card2_desc_en', '')
+        villa.why_card3_title_en = request.form.get('why_card3_title_en', '')
+        villa.why_card3_desc_en = request.form.get('why_card3_desc_en', '')
+        villa.why_card4_title_en = request.form.get('why_card4_title_en', '')
+        villa.why_card4_desc_en = request.form.get('why_card4_desc_en', '')
+        villa.contact_title_en = request.form.get('contact_title_en', '')
+        villa.contact_subtitle_en = request.form.get('contact_subtitle_en', '')
+        
+        db.session.commit()
+        
+        return jsonify({'success': True, 'message': 'Textes enregistrés avec succès !'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': f'Erreur lors de la sauvegarde: {str(e)}'}), 500
+
 # ========== API JSON ==========
 
 @app.route('/api/villa', methods=['GET'])

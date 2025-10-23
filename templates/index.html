@@ -99,7 +99,7 @@ Web: www.myoneart.com
         <div class="hero-overlay-modern"></div>
         <div class="hero-content-modern">
             <h1>{{ (villa.title_en or villa.title) if g.lang == 'en' else villa.title }}</h1>
-            <p class="subtitle-large">{% if g.lang == 'en' %}Discover this exceptional villa in Marrakech{% else %}Découvrez cette villa d'exception à Marrakech{% endif %}</p>
+            <p class="subtitle-large">{% if g.lang == 'en' %}{{ villa.hero_subtitle_en or 'Discover this exceptional villa in Marrakech' }}{% else %}{{ villa.hero_subtitle_fr or 'Découvrez cette villa d\'exception à Marrakech' }}{% endif %}</p>
             <div class="hero-search-bar">
                 <div class="search-item">
                     <span class="search-label">{{ g.t.location }}</span>
@@ -113,10 +113,10 @@ Web: www.myoneart.com
                 {% set site_url = request.url_root %}
                 {% if g.lang == 'en' %}
                     {% set whatsapp_message = "Hello, I would like to schedule a visit for the villa " ~ (villa.title_en or villa.title) ~ " and get more information. Link: " ~ site_url %}
-                    <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-search">Contact Us</a>
+                    <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-search">{{ villa.contact_button_en or 'Contact Us' }}</a>
                 {% else %}
                     {% set whatsapp_message = "Bonjour, je souhaite prendre rendez-vous pour visiter la villa " ~ villa.title ~ " et obtenir plus d'informations. Lien: " ~ site_url %}
-                    <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-search">Nous Contacter</a>
+                    <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-search">{{ villa.contact_button_fr or 'Nous Contacter' }}</a>
                 {% endif %}
             </div>
         </div>
@@ -165,17 +165,17 @@ Web: www.myoneart.com
         <div class="container-wide">
             <div class="content-image-grid">
                 <div class="content-block">
-                    <h2 class="section-title-left">{% if g.lang == 'en' %}An Exceptional Villa{% else %}Une Villa d'Exception{% endif %}</h2>
+                    <h2 class="section-title-left">{% if g.lang == 'en' %}{{ villa.description_title_en or 'An Exceptional Villa' }}{% else %}{{ villa.description_title_fr or 'Une Villa d\'Exception' }}{% endif %}</h2>
                     <div class="text-content">{{ (villa.description_en or villa.description) if g.lang == 'en' else villa.description }}</div>
                     
                     {% set whatsapp_number = villa.contact_phone.replace('+', '').replace(' ', '').replace('-', '') if villa.contact_phone else '' %}
                     {% set site_url = request.url_root %}
                     {% if g.lang == 'en' %}
                         {% set whatsapp_message = "Hello, I would like to schedule a visit for the villa " ~ (villa.title_en or villa.title) ~ " and get more information. Link: " ~ site_url %}
-                        <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-description">📱 Schedule a Visit on WhatsApp</a>
+                        <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-description">{{ villa.whatsapp_button_en or '📱 Schedule a Visit on WhatsApp' }}</a>
                     {% else %}
                         {% set whatsapp_message = "Bonjour, je souhaite prendre rendez-vous pour visiter la villa " ~ villa.title ~ " et obtenir plus d'informations. Lien: " ~ site_url %}
-                        <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-description">📱 Prendre Rendez-vous sur WhatsApp</a>
+                        <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-description">{{ villa.whatsapp_button_fr or '📱 Prendre Rendez-vous sur WhatsApp' }}</a>
                     {% endif %}
                 </div>
                 <div class="image-block-triple">
@@ -203,27 +203,27 @@ Web: www.myoneart.com
     <!-- Section Créative: Pourquoi Choisir Cette Villa -->
     <section class="why-choose">
         <div class="container">
-            <h2 class="section-title-center">{% if g.lang == 'en' %}Why Choose This Villa?{% else %}Pourquoi Choisir Cette Villa ?{% endif %}</h2>
+            <h2 class="section-title-center">{% if g.lang == 'en' %}{{ villa.why_choose_title_en or 'Why Choose This Villa?' }}{% else %}{{ villa.why_choose_title_fr or 'Pourquoi Choisir Cette Villa ?' }}{% endif %}</h2>
             <div class="why-grid">
                 <div class="why-card">
                     <div class="why-icon">🌟</div>
-                    <h3>{% if g.lang == 'en' %}Premium Location{% else %}Emplacement Premium{% endif %}</h3>
-                    <p>{% if g.lang == 'en' %}Located in {{ villa.location }}, one of Marrakech's most sought-after areas{% else %}Située à {{ villa.location }}, dans l'un des quartiers les plus prisés de Marrakech{% endif %}</p>
+                    <h3>{% if g.lang == 'en' %}{{ villa.why_card1_title_en or 'Premium Location' }}{% else %}{{ villa.why_card1_title_fr or 'Emplacement Premium' }}{% endif %}</h3>
+                    <p>{% if g.lang == 'en' %}{{ (villa.why_card1_desc_en or 'Located in {location}, one of Marrakech\'s most sought-after areas').replace('{location}', villa.location) }}{% else %}{{ (villa.why_card1_desc_fr or 'Située à {location}, dans l\'un des quartiers les plus prisés de Marrakech').replace('{location}', villa.location) }}{% endif %}</p>
                 </div>
                 <div class="why-card">
                     <div class="why-icon">🏗️</div>
-                    <h3>{% if g.lang == 'en' %}Modern Architecture{% else %}Architecture Moderne{% endif %}</h3>
-                    <p>{% if g.lang == 'en' %}Contemporary design combining luxury, comfort and Moroccan authenticity{% else %}Design contemporain alliant luxe, confort et authenticité marocaine{% endif %}</p>
+                    <h3>{% if g.lang == 'en' %}{{ villa.why_card2_title_en or 'Modern Architecture' }}{% else %}{{ villa.why_card2_title_fr or 'Architecture Moderne' }}{% endif %}</h3>
+                    <p>{% if g.lang == 'en' %}{{ villa.why_card2_desc_en or 'Contemporary design combining luxury, comfort and Moroccan authenticity' }}{% else %}{{ villa.why_card2_desc_fr or 'Design contemporain alliant luxe, confort et authenticité marocaine' }}{% endif %}</p>
                 </div>
                 <div class="why-card">
                     <div class="why-icon">💎</div>
-                    <h3>{% if g.lang == 'en' %}Premium Finishes{% else %}Finitions Haut de Gamme{% endif %}</h3>
-                    <p>{% if g.lang == 'en' %}Noble materials and premium equipment for optimal comfort{% else %}Matériaux nobles et équipements premium pour un confort optimal{% endif %}</p>
+                    <h3>{% if g.lang == 'en' %}{{ villa.why_card3_title_en or 'Premium Finishes' }}{% else %}{{ villa.why_card3_title_fr or 'Finitions Haut de Gamme' }}{% endif %}</h3>
+                    <p>{% if g.lang == 'en' %}{{ villa.why_card3_desc_en or 'Noble materials and premium equipment for optimal comfort' }}{% else %}{{ villa.why_card3_desc_fr or 'Matériaux nobles et équipements premium pour un confort optimal' }}{% endif %}</p>
                 </div>
                 <div class="why-card">
                     <div class="why-icon">🌴</div>
-                    <h3>{% if g.lang == 'en' %}Outdoor Spaces{% else %}Espaces Extérieurs{% endif %}</h3>
-                    <p>{% if g.lang == 'en' %}Landscaped garden, terraces and exceptional outdoor living spaces{% else %}Jardin paysager, terrasses et espaces de vie en plein air exceptionnels{% endif %}</p>
+                    <h3>{% if g.lang == 'en' %}{{ villa.why_card4_title_en or 'Outdoor Spaces' }}{% else %}{{ villa.why_card4_title_fr or 'Espaces Extérieurs' }}{% endif %}</h3>
+                    <p>{% if g.lang == 'en' %}{{ villa.why_card4_desc_en or 'Landscaped garden, terraces and exceptional outdoor living spaces' }}{% else %}{{ villa.why_card4_desc_fr or 'Jardin paysager, terrasses et espaces de vie en plein air exceptionnels' }}{% endif %}</p>
                 </div>
             </div>
         </div>
@@ -305,8 +305,8 @@ Web: www.myoneart.com
         <div class="contact-overlay"></div>
         <div class="container">
             <div class="contact-box">
-                <h2>{% if g.lang == 'en' %}Interested in this Villa?{% else %}Intéressé par cette Villa ?{% endif %}</h2>
-                <p class="contact-subtitle">{% if g.lang == 'en' %}Contact us today to arrange a private viewing{% else %}Contactez-nous dès aujourd'hui pour organiser une visite privée{% endif %}</p>
+                <h2>{% if g.lang == 'en' %}{{ villa.contact_title_en or 'Interested in this Villa?' }}{% else %}{{ villa.contact_title_fr or 'Intéressé par cette Villa ?' }}{% endif %}</h2>
+                <p class="contact-subtitle">{% if g.lang == 'en' %}{{ villa.contact_subtitle_en or 'Contact us today to arrange a private viewing' }}{% else %}{{ villa.contact_subtitle_fr or 'Contactez-nous dès aujourd\'hui pour organiser une visite privée' }}{% endif %}</p>
                 
                 <div class="contact-methods">
                     {% if villa.contact_phone %}
@@ -333,10 +333,10 @@ Web: www.myoneart.com
                 {% set site_url = request.url_root %}
                 {% if g.lang == 'en' %}
                     {% set whatsapp_message = "Hello, I would like to schedule a visit for the villa " ~ (villa.title_en or villa.title) ~ " and get more information. Link: " ~ site_url %}
-                    <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-contact-large">📱 Schedule a Visit on WhatsApp</a>
+                    <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-contact-large">{{ villa.whatsapp_button_en or '📱 Schedule a Visit on WhatsApp' }}</a>
                 {% else %}
                     {% set whatsapp_message = "Bonjour, je souhaite prendre rendez-vous pour visiter la villa " ~ villa.title ~ " et obtenir plus d'informations. Lien: " ~ site_url %}
-                    <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-contact-large">📱 Prendre Rendez-vous sur WhatsApp</a>
+                    <a href="https://wa.me/{{ whatsapp_number }}?text={{ whatsapp_message | urlencode }}" target="_blank" class="btn-contact-large">{{ villa.whatsapp_button_fr or '📱 Prendre Rendez-vous sur WhatsApp' }}</a>
                 {% endif %}
             </div>
         </div>
