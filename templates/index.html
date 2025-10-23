@@ -131,14 +131,14 @@ Web: www.myoneart.com
                 <div class="stat-item">
                     <div class="stat-icon">🏞️</div>
                     <div class="stat-value">{{ '{:,}'.format(villa.terrain_area).replace(',', ' ') }} m²</div>
-                    <div class="stat-label">{{ g.t.terrain_area if g.lang == 'en' else 'Terrain' }}</div>
+                    <div class="stat-label">{{ g.t.terrain_area }}</div>
                 </div>
                 {% endif %}
                 {% if villa.built_area %}
                 <div class="stat-item">
                     <div class="stat-icon">🏠</div>
                     <div class="stat-value">{{ '{:,}'.format(villa.built_area).replace(',', ' ') }} m²</div>
-                    <div class="stat-label">{{ g.t.built_area if g.lang == 'en' else 'Surface Bâtie' }}</div>
+                    <div class="stat-label">{{ g.t.built_area }}</div>
                 </div>
                 {% endif %}
                 {% if villa.bedrooms %}
