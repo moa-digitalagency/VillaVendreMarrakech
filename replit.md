@@ -36,7 +36,8 @@ This project is a comprehensive web application designed for the online sale of 
 - **Backend:** Flask, SQLAlchemy, PostgreSQL.
 - **Frontend:** HTML5, CSS3, JavaScript.
 - **Deployment:** Comprehensive deployment guides for Replit and VPS, including a `fix_database.py` script for automatic database schema correction and migration.
-- **Environment Variables:** Configuration via `DATABASE_URL`, `OPENROUTER_API_KEY`, `ADMIN_PASSWORD`, and `SECRET_KEY`.
+- **Environment Variables:** Configuration via `DATABASE_URL`, `OPENROUTER_API_KEY`, `ADMIN_PASSWORD`, and `SESSION_SECRET`.
+- **Security:** Mandatory validation of required environment variables (`OPENROUTER_API_KEY`, `SESSION_SECRET`) at application startup. The application will refuse to start with a clear error message if any required variable is missing.
 
 ## External Dependencies
 - **OpenRouter API:** For AI functionalities, specifically:

@@ -203,6 +203,36 @@ def set_language(lang):
         session['language'] = lang
     return redirect(request.referrer or url_for('index'))
 
+# ========== VALIDATION DES VARIABLES D'ENVIRONNEMENT ==========
+def validate_required_env_vars():
+    """
+    Vérifie que toutes les variables d'environnement obligatoires sont définies.
+    Arrête l'application avec un message clair si une variable manque.
+    """
+    required_vars = {
+        'OPENROUTER_API_KEY': 'Clé API OpenRouter requise pour les fonctionnalités IA (extraction PDF, amélioration de texte)',
+        'SESSION_SECRET': 'Clé secrète de session requise pour la sécurité de l\'application'
+    }
+    
+    missing_vars = []
+    for var_name, description in required_vars.items():
+        if not os.environ.get(var_name):
+            missing_vars.append(f"  ❌ {var_name}: {description}")
+    
+    if missing_vars:
+        print("\n" + "="*80)
+        print("🚨 ERREUR: Variables d'environnement manquantes")
+        print("="*80)
+        print("\nLes variables suivantes sont obligatoires mais non définies:\n")
+        for var in missing_vars:
+            print(var)
+        print("\n" + "="*80)
+        print("💡 Configurez ces variables dans les Secrets Replit")
+        print("="*80 + "\n")
+        raise SystemExit("Application arrêtée: variables d'environnement manquantes")
+    
+    print("✅ All required environment variables are configured")
+
 # ========== INITIALISATION DE LA BASE DE DONNÉES ==========
 def init_db():
     """Initialize database tables if they don't exist"""
@@ -229,6 +259,9 @@ def init_db():
             print("💡 If you see 'column does not exist', run: python fix_database.py")
             # Don't raise - allow app to continue
             pass
+
+# Valide les variables d'environnement requises au démarrage
+validate_required_env_vars()
 
 # Initialise la base de données au démarrage de l'application
 init_db()
