@@ -91,6 +91,107 @@ detect_environment() {
     fi
 }
 
+# Vérifier et créer le fichier .env sur VPS uniquement
+check_and_create_env() {
+    # Skip sur Replit
+    if [ "$ENV_TYPE" = "replit" ]; then
+        log_info "Environnement Replit : fichier .env non requis"
+        return 0
+    fi
+    
+    log_info "Vérification du fichier .env..."
+    cd "$APP_DIR" || return 1
+    
+    if [ -f ".env" ]; then
+        log_success "Fichier .env détecté"
+        
+        # Vérifier les variables obligatoires
+        source .env 2>/dev/null || true
+        
+        local missing_vars=()
+        [ -z "$OPENROUTER_API_KEY" ] && missing_vars+=("OPENROUTER_API_KEY")
+        [ -z "$SESSION_SECRET" ] && missing_vars+=("SESSION_SECRET")
+        
+        if [ ${#missing_vars[@]} -gt 0 ]; then
+            log_warning "Variables manquantes dans .env:"
+            for var in "${missing_vars[@]}"; do
+                echo "  ❌ $var"
+            done
+            log_info "Complétez ces variables dans le fichier .env"
+        else
+            log_success "Toutes les variables obligatoires sont présentes"
+        fi
+    else
+        log_warning "Fichier .env non trouvé, création automatique..."
+        
+        # Générer une SESSION_SECRET aléatoire
+        local random_secret=""
+        if command -v python3 &> /dev/null; then
+            random_secret=$(python3 -c "import secrets; print(secrets.token_hex(32))" 2>/dev/null || echo "CHANGE_ME_$(date +%s)")
+        else
+            random_secret="CHANGE_ME_$(date +%s)"
+        fi
+        
+        # Créer le fichier .env avec template
+        cat > .env << EOF
+# === CONFIGURATION VPS - Villa à Vendre Marrakech ===
+# Fichier créé automatiquement par update_vps.sh
+
+# === VARIABLES OBLIGATOIRES ===
+
+# Clé API OpenRouter (pour les fonctionnalités IA)
+# Obtenez votre clé sur : https://openrouter.ai/
+OPENROUTER_API_KEY=
+
+# Clé secrète de session (pour la sécurité de l'application)
+# Valeur aléatoire générée automatiquement
+SESSION_SECRET=$random_secret
+
+# Mot de passe admin (pour accéder au panneau d'administration)
+ADMIN_PASSWORD=@4dm1n
+
+# === BASE DE DONNÉES PostgreSQL ===
+
+# Option 1 : URL complète de la base de données
+DATABASE_URL=postgresql://postgres:@localhost:5432/villa_sales
+
+# Option 2 : Variables individuelles (si DATABASE_URL non définie)
+PGUSER=postgres
+PGPASSWORD=
+PGHOST=localhost
+PGPORT=5432
+PGDATABASE=villa_sales
+
+# === NOTES ===
+# - SESSION_SECRET a été générée automatiquement (ne pas modifier)
+# - OPENROUTER_API_KEY : obligatoire pour l'IA (extraction PDF, traduction)
+# - ADMIN_PASSWORD : changez @4dm1n par votre mot de passe
+# - Configurez vos identifiants PostgreSQL ci-dessus
+EOF
+        
+        # Sécuriser le fichier
+        chmod 600 .env 2>/dev/null || true
+        
+        log_success "Fichier .env créé : $APP_DIR/.env"
+        echo ""
+        log_warning "⚠️  CONFIGURATION REQUISE ⚠️"
+        echo ""
+        echo "Le fichier .env a été créé avec des valeurs par défaut."
+        echo "Vous devez modifier les variables suivantes :"
+        echo ""
+        echo "  1. OPENROUTER_API_KEY  (obligatoire pour l'IA)"
+        echo "  2. ADMIN_PASSWORD      (pour la sécurité)"
+        echo "  3. DATABASE_URL ou PGPASSWORD (connexion base de données)"
+        echo ""
+        echo "Commandes :"
+        echo "  nano $APP_DIR/.env"
+        echo ""
+        log_info "Obtenir OPENROUTER_API_KEY : https://openrouter.ai/"
+        echo ""
+        read -p "Appuyez sur Entrée pour continuer après avoir configuré .env..."
+    fi
+}
+
 # Vérifier si on a besoin d'être root
 check_permissions() {
     if [ "$NEEDS_SUDO" = true ] && [ $EUID -ne 0 ]; then
@@ -419,6 +520,9 @@ full_update() {
     check_permissions
     check_app_dir
     
+    # Vérifier/créer .env (VPS uniquement)
+    check_and_create_env
+    
     # Point de restauration
     create_rollback_point
     
@@ -463,6 +567,9 @@ quick_update() {
     check_permissions
     check_app_dir
     
+    # Vérifier/créer .env (VPS uniquement)
+    check_and_create_env
+    
     create_rollback_point
     update_code
     update_dependencies
@@ -480,6 +587,9 @@ update_no_restart() {
     detect_environment
     check_permissions
     check_app_dir
+    
+    # Vérifier/créer .env (VPS uniquement)
+    check_and_create_env
     
     create_rollback_point
     backup_database
